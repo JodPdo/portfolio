@@ -19,8 +19,8 @@ A build-ready blueprint: tech stack, page structure, real content, and 4 case st
 ## 1. Tech stack (and why)
 | Layer | Choice | Why |
 |---|---|---|
-| Framework | **Next.js 15 (App Router, TypeScript)** | SSR/SSG + SEO, modern, industry-standard React; shows real frontend |
-| Styling | **Tailwind CSS** | fast, consistent, responsive utilities |
+| Framework | **Next.js 16 (App Router, TypeScript)** | SSR/SSG + SEO, modern, industry-standard React; shows real frontend. _(current stable as of scaffold — see Appendix B / ADR-0001)_ |
+| Styling | **Tailwind CSS v4** (CSS-first `@theme`) | fast, consistent, responsive utilities; design tokens live in `app/globals.css` |
 | Content | **MDX** for case studies | write case studies as Markdown + React components |
 | UI/Icons | lucide-react, minimal custom components | no heavy UI kit |
 | Animation | **Framer Motion** (subtle only) | tasteful entrance/hover; don't overdo |
@@ -185,3 +185,26 @@ Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<
 2. **Resume page is download-first** (buttons + thumbnails); inline PDF embed is a desktop-only enhancement (amends §4.3).
 3. Verify the contact email with the product owner before shipping any page containing it.
 4. Site targets **all roles** (SE / Backend / QA) — case-study order stays AiKlao → Typing Race → Tiger Kick → JPD.
+
+---
+
+## Appendix B — Architecture decisions (ADRs)
+
+### ADR-0001 — Framework: stay on Next.js 16 (not 15) — 2026-07-05
+**Status:** Accepted (architect). **Escalated by:** frontend-engineer during PF-M0-01.
+
+**Context.** The spec and CLAUDE.md were written specifying "Next.js 15", but `create-next-app@latest` (2026-07-05) scaffolded **Next.js 16.2.10** with react 19.2.4, Tailwind **v4** (CSS-first `@theme`, no `tailwind.config.js`), and eslint 9. `npm run build` and `npm run lint` are green on the scaffold. The scaffold also dropped an `AGENTS.md` warning that Next 16 has breaking changes vs older conventions.
+
+**Decision.** Stay on Next.js 16.2.10 + Tailwind v4 as scaffolded. Update docs to match. Do **not** downgrade/re-scaffold to 15.
+
+**Rationale.**
+- **Current stable + Vercel-native.** As of 2026-07-05 Next 16 is the current stable line; Vercel authors Next.js and fully supports latest stable — deploy support is a non-issue. Pinning to 15 means fighting `create-next-app`'s default and running an older line for no benefit.
+- **Design tokens fit v4 cleanly.** DESIGN_SYSTEM.md tokens (teal `primary #0F766E`, `accent #5EEAD4`, `ink`, `bg`, `gold`, dark-mode class strategy) map directly onto Tailwind v4's CSS-first `@theme` in `app/globals.css` (already present in the scaffold). PF-M0-03 is implementable as-is; no `tailwind.config.js` needed.
+- **Downstream compatibility holds.** MDX (M2) via `@next/mdx` supports Next 16; `next-intl` (M4, optional) supports the App Router on 15/16. Nothing on the roadmap requires 15.
+- **Quality bar favors newer.** React 19 + newer Next defaults help the Lighthouse ≥ 95 target rather than hurt it.
+- **Lower risk.** Re-scaffolding to 15 is more work and more surface area for breakage than accepting a green, current build.
+
+**Consequences.**
+- Agents must treat `AGENTS.md` as authoritative: Next 16 conventions may differ from training-data-era Next; consult `node_modules/next/dist/docs/` before writing framework code.
+- Design tokens are configured in `app/globals.css` via `@theme` (CSS-first), **not** a JS config file — PF-M0-03 owner should follow the v4 pattern.
+- `_backlog.json` PF-M0-01 card text still reads "Next.js 15" as a historical instruction; it is superseded by this ADR and needs no edit.
