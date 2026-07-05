@@ -208,3 +208,27 @@ Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<
 - Agents must treat `AGENTS.md` as authoritative: Next 16 conventions may differ from training-data-era Next; consult `node_modules/next/dist/docs/` before writing framework code.
 - Design tokens are configured in `app/globals.css` via `@theme` (CSS-first), **not** a JS config file — PF-M0-03 owner should follow the v4 pattern.
 - `_backlog.json` PF-M0-01 card text still reads "Next.js 15" as a historical instruction; it is superseded by this ADR and needs no edit.
+
+### ADR-0002 — MDX pipeline & content model: `next-mdx-remote/rsc` + `gray-matter` — 2026-07-05
+**Status:** Accepted (architect). **Card:** PF-M0-02. **Full detail:** `docs/ARCHITECTURE.md`.
+
+**Context.** M2 ships 4 case studies as MDX in `content/projects/`, and the `/projects` grid + Home
+featured cards need the same content's *metadata* (title, order, summary, stack, metrics, links) as
+queryable data. Candidate pipelines on Next 16: `@next/mdx`, `next-mdx-remote`, contentlayer-style.
+
+**Decision.** Use **`next-mdx-remote` (RSC entry `next-mdx-remote/rsc`)** to render the MDX body inside
+Server Components, with **`gray-matter`** parsing frontmatter into a typed `Project` model. Content lives in
+`content/projects/*.mdx` (not under `app/`); `lib/projects.ts` is the single loader/type. `/projects/[slug]`
+is fully static via `generateStaticParams()` + `dynamicParams = false`. Canonical JPD slug is **`jpd-api`**
+(per SPEC section 2), not "jpd".
+
+**Rationale.** `@next/mdx` maps one MDX file to one route/import and gives no queryable collection, making
+the grid awkward; contentlayer is heavy and a Next-16 maintenance risk — both over-engineer a 4-file site.
+`next-mdx-remote/rsc` renders with no client boundary/hydration cost and pairs cleanly with frontmatter-as-data.
+
+**Pre-approved dependencies (M2, architect sign-off given).** `next-mdx-remote`, `gray-matter`,
+`remark-gfm`, `rehype-slug`, `rehype-autolink-headings`; **optional** `rehype-pretty-code` (shiki) only if a
+case study ships code blocks. Any package beyond this list still needs architect approval.
+
+**Consequences.** Frontend-engineer implements PF-M2 against `docs/ARCHITECTURE.md` sections 1–4 with no
+follow-up structural questions. `content/` folder is created under this decision (DOCUMENT_ROUTING rule).

@@ -7,6 +7,7 @@ backlog_cards: _backlog.json
 
 site_spec_and_content: docs/SPEC.md          # pages, copy, case-study source material
 design_tokens: docs/DESIGN_SYSTEM.md          # palette, type, spacing, dark mode, motion
+architecture: docs/ARCHITECTURE.md            # routes, folder structure, MDX content model, dependency pre-approvals (PF-M0-02)
 qa_checklist: docs/QA_CHECKLIST.md            # Lighthouse / a11y / links / responsive gates
 
 agent_contracts: .claude/agents/              # one file per agent, do not edit others' contracts
