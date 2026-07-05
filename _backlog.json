@@ -33,17 +33,18 @@
       "id": "PF-M0-04",
       "milestone": "M0",
       "owner_agent": "producer",
-      "status": "todo",
+      "status": "done",
       "depends_on": ["PF-M0-01"],
       "summary": "Connect GitHub repo to Vercel with the human product owner; deploy skeleton.",
-      "dod": "live Vercel URL loads the skeleton"
+      "dod": "live Vercel URL loads the skeleton",
+      "evidence": "https://portfolio-zeta-gilt-mm7bxjobci.vercel.app — all 6 routes HTTP 200, theme-init present (verified 2026-07-05)"
     },
 
     {
       "id": "PF-M1-01",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "doing",
       "depends_on": ["PF-M0-03", "PF-M0-04"],
       "summary": "Global layout: sticky header (name, nav, GitHub link, theme toggle) + footer.",
       "dod": "sticky, responsive, keyboard-navigable, visible focus rings"
@@ -52,7 +53,7 @@
       "id": "PF-M1-02",
       "milestone": "M1",
       "owner_agent": "content-writer",
-      "status": "backlog",
+      "status": "doing",
       "depends_on": [],
       "summary": "Home copy from docs/SPEC.md 4.1: hero, trust strip (real clickable claims), skills groups, closing CTA.",
       "dod": "facts verifiable, links real, reviewed"
@@ -70,7 +71,7 @@
       "id": "PF-M1-04",
       "milestone": "M1",
       "owner_agent": "content-writer",
-      "status": "backlog",
+      "status": "doing",
       "depends_on": [],
       "summary": "About copy from docs/SPEC.md 4.2: the pivot, how-I-work, timeline (2022 police -> 2024 42 Bangkok -> 2025 AiKlao -> 2026 resigned), certifications with verify links.",
       "dod": "honest, verifiable, reviewed"
