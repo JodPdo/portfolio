@@ -44,19 +44,21 @@
       "id": "PF-M1-01",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "doing",
+      "status": "review",
       "depends_on": ["PF-M0-03", "PF-M0-04"],
       "summary": "Global layout: sticky header (name, nav, GitHub link, theme toggle) + footer.",
-      "dod": "sticky, responsive, keyboard-navigable, visible focus rings"
+      "dod": "sticky, responsive, keyboard-navigable, visible focus rings",
+      "evidence": "components/sections/header.tsx, components/sections/footer.tsx, components/sections/nav-link.tsx, components/ui/icons.tsx; wired into app/layout.tsx (header/main/footer landmarks + skip link); build+lint green; verified single <main id=main-content>, aria-current=page on active nav link (checked /about), all 6 routes + 404 return correct HTTP status on prod server"
     },
     {
       "id": "PF-M1-02",
       "milestone": "M1",
       "owner_agent": "content-writer",
-      "status": "doing",
+      "status": "review",
       "depends_on": [],
       "summary": "Home copy from docs/SPEC.md 4.1: hero, trust strip (real clickable claims), skills groups, closing CTA.",
-      "dod": "facts verifiable, links real, reviewed"
+      "dod": "facts verifiable, links real, reviewed",
+      "evidence": "docs/copy/home.md — 2 [NEEDS-VERIFICATION] URLs flagged (APK releases link, CI/CD evidence link) with safe interim targets"
     },
     {
       "id": "PF-M1-03",
@@ -71,7 +73,7 @@
       "id": "PF-M1-04",
       "milestone": "M1",
       "owner_agent": "content-writer",
-      "status": "doing",
+      "status": "review",
       "depends_on": [],
       "summary": "About copy from docs/SPEC.md 4.2: the pivot, how-I-work, timeline (2022 police -> 2024 42 Bangkok -> 2025 AiKlao -> 2026 resigned), certifications with verify links.",
       "dod": "honest, verifiable, reviewed"

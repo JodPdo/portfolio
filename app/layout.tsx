@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Header } from "@/components/sections/header";
+import { Footer } from "@/components/sections/footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,8 +32,8 @@ export const metadata: Metadata = {
 // synchronous inline <script> tag in the HTML, which the browser executes
 // as soon as the parser reaches it — before it parses/paints anything
 // after it in the document. Placing it as the first child of <body>
-// (before the toggle and {children}) makes it run before any visible
-// content paints.
+// (before the skip link, Header, and {children}) makes it run before any
+// visible content paints.
 const THEME_INIT_SCRIPT = `(function () {
   try {
     var stored = localStorage.getItem('theme');
@@ -64,12 +65,17 @@ export default function RootLayout({
           id="theme-init"
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
-        {/* Minimal, unobtrusive placement for M0. A proper Header (with
-            nav + this same toggle) lands in PF-M1-01. */}
-        <div className="fixed right-4 top-4 z-50">
-          <ThemeToggle />
-        </div>
-        {children}
+        <a
+          href="#main-content"
+          className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:left-4 focus-visible:top-4 focus-visible:z-50 focus-visible:rounded-md focus-visible:bg-background focus-visible:px-4 focus-visible:py-2 focus-visible:text-foreground focus-visible:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          Skip to content
+        </a>
+        <Header />
+        <main id="main-content" className="flex flex-1 flex-col">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
