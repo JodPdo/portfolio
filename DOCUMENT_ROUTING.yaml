@@ -1,0 +1,17 @@
+# Topic → exact file. If it's not routed here, ask producer before creating a new doc.
+
+shared_context: CLAUDE.md
+current_milestone: CURRENT_PHASE.md
+team_roster: AGENT_INDEX.md
+backlog_cards: _backlog.json
+
+site_spec_and_content: docs/SPEC.md          # pages, copy, case-study source material
+design_tokens: docs/DESIGN_SYSTEM.md          # palette, type, spacing, dark mode, motion
+qa_checklist: docs/QA_CHECKLIST.md            # Lighthouse / a11y / links / responsive gates
+
+agent_contracts: .claude/agents/              # one file per agent, do not edit others' contracts
+
+rules:
+  - Case-study MDX lives in content/projects/ (created at PF-M0-02 by architect decision)
+  - Never duplicate spec content into new docs — link to docs/SPEC.md sections
+  - Decisions that change structure are recorded by architect as a dated note in docs/DESIGN_SYSTEM.md or docs/SPEC.md appendix
