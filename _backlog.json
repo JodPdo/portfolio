@@ -64,10 +64,11 @@
       "id": "PF-M1-03",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": ["PF-M1-01", "PF-M1-02"],
       "summary": "Build Home page from approved copy.",
-      "dod": "matches design system, responsive, dark mode OK"
+      "dod": "matches design system, responsive, dark mode OK",
+      "evidence": "QA PASS 2026-07-06: build+lint green; prod server (localhost:3000) curl of / — 1 h1, h2s for Featured projects/Skills, all 4 trust-strip items present, /projects/aiklao|typing-race|tiger-kick all 200, github.com/JodPdo + race.aiklaotrip.com present with rel=noopener noreferrer and both HTTP 200; headless-Edge CDP on / — no horizontal overflow at 375/768/1280 (scrollWidth===clientWidth), zero console errors/exceptions, dark-mode toggle confirmed (body bg rgb(17,24,39)=#111827, hero/trust-strip/cards/skills/CTA all render dark tokens, screenshots taken both themes); sticky header stays top:0 after scrolling to scrollY=965; no mailto: link, no phone number, no email string found on page"
     },
     {
       "id": "PF-M1-04",
