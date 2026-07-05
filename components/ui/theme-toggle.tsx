@@ -25,8 +25,16 @@ function notify() {
 
 function subscribe(callback: () => void) {
   listeners.push(callback);
+  // Cross-tab sync: the `storage` event only fires in *other* tabs, and
+  // only reports that localStorage changed elsewhere — it does not touch
+  // this tab's DOM. So we apply the new value to this tab's <html> class
+  // ourselves before notifying, otherwise getSnapshot() would keep
+  // reading this tab's (unchanged) class and nothing would happen.
   const onStorage = (e: StorageEvent) => {
-    if (e.key === "theme") callback();
+    if (e.key !== "theme") return;
+    const next: Theme = e.newValue === "dark" ? "dark" : "light";
+    document.documentElement.classList.toggle("dark", next === "dark");
+    callback();
   };
   window.addEventListener("storage", onStorage);
   return () => {

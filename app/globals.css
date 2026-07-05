@@ -26,7 +26,15 @@
   --palette-ink: #263238; /* body text, light mode */
   --palette-bg: #ffffff; /* page background, light mode */
   --palette-bg-subtle: #f3faf9; /* card/section background, light mode */
-  --palette-gold: #b8860b; /* special links / metric highlights, light mode */
+  /* Special links / metric highlights, light mode. CAUTION: #b8860b on
+     white (--palette-bg) is ~3.25:1 contrast — fails WCAG AA for normal
+     text (needs 4.5:1). Only safe as: large/bold text (>=3:1 threshold),
+     a decorative accent (underline, icon, border), or paired with a
+     darker background. Do not use `text-gold` for body-size copy on a
+     light background without also darkening it or adding a dark
+     background behind it. Nothing uses `text-gold` yet (M0) — flag this
+     to whoever reaches for it first in M1+. */
+  --palette-gold: #b8860b;
   --palette-dark-bg: #111827; /* page background, dark mode */
   --palette-dark-bg-subtle: #0b1b1a; /* card/section background, dark mode */
   --palette-dark-ink: #e6f2f0; /* body text, dark mode */

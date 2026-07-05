@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
 
@@ -21,9 +20,19 @@ export const metadata: Metadata = {
 };
 
 // Sets the correct `.dark` class on <html> before first paint (no-FOUC).
-// Runs via next/script strategy="beforeInteractive", which Next always
-// injects into <head> and executes before hydration, regardless of where
-// the component is placed in the tree (see next/script docs).
+//
+// IMPORTANT: this must be a plain native <script> rendered directly in
+// JSX (see below), NOT next/script. Verified against this build
+// (Next 16 / Turbopack, App Router): `next/script strategy="beforeInteractive"`
+// does NOT emit a synchronous inline <script> here — its body is queued
+// via `self.__next_s.push(...)` and drained by framework chunks that load
+// `async`, i.e. *after* first paint. A plain <script> with
+// dangerouslySetInnerHTML is rendered by React/Next as a literal,
+// synchronous inline <script> tag in the HTML, which the browser executes
+// as soon as the parser reaches it — before it parses/paints anything
+// after it in the document. Placing it as the first child of <body>
+// (before the toggle and {children}) makes it run before any visible
+// content paints.
 const THEME_INIT_SCRIPT = `(function () {
   try {
     var stored = localStorage.getItem('theme');
@@ -51,9 +60,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Script
+        <script
           id="theme-init"
-          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
         {/* Minimal, unobtrusive placement for M0. A proper Header (with
