@@ -84,10 +84,11 @@
       "id": "PF-M1-05",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "review",
       "depends_on": ["PF-M1-01", "PF-M1-04"],
       "summary": "Build About page + vertical timeline component.",
-      "dod": "responsive, a11y (semantic list, contrast AA)"
+      "dod": "responsive, a11y (semantic list, contrast AA)",
+      "evidence": "app/about/page.tsx (all 5 sections + closing CTA, copy verbatim from docs/copy/about.md), components/sections/timeline.tsx (server component, <ol>/<li>, CSS-only aria-hidden connector/markers, no client JS); B.Sc. 2026 entry uses the copy doc's own unconfirmed-completion fallback phrasing ('Finishing a B.Sc. in Computer Science…') per its interim rendering rule; certifications render name · issuer with zero <a> tags (all 6 verify URLs still NEEDS-VERIFICATION); build+lint green; prod server curl of /about — exactly one <h1> ('About'), one <ol> with exactly 4 <li> (years 2022/2024/2025/2026 in order), 0 anchors inside the Certifications section, no mailto:/tel: anywhere on the page; design tokens only (primary/foreground/border/background-subtle/ring), focus-visible rings + motion-reduce on CTA links, dark mode via semantic tokens (no ad-hoc colors); no phone number, no email address on this page."
     },
     {
       "id": "PF-M1-06",
