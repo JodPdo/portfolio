@@ -24,7 +24,7 @@
       "id": "PF-M0-03",
       "milestone": "M0",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
+      "status": "review",
       "depends_on": ["PF-M0-02"],
       "summary": "Implement design tokens from docs/DESIGN_SYSTEM.md (teal palette, type, spacing) in Tailwind config + dark-mode setup with toggle.",
       "dod": "tokens usable in components, dark mode toggles and persists, no FOUC"
