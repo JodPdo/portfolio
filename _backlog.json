@@ -64,7 +64,7 @@
       "id": "PF-M1-03",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "review",
       "depends_on": ["PF-M1-01", "PF-M1-02"],
       "summary": "Build Home page from approved copy.",
       "dod": "matches design system, responsive, dark mode OK"
