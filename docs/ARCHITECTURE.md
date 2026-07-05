@@ -47,7 +47,7 @@ All routes are **static (SSG)** — no runtime data, no server actions. Prerende
 
 ```
 app/
-  layout.tsx              # root layout; no-FOUC dark-mode inline script in <head>
+  layout.tsx              # root layout; no-FOUC dark-mode inline script (first child of <body>)
   globals.css             # design tokens: @theme + @custom-variant dark (ADR-0001) — the ONLY token file
   not-found.tsx           # global 404 (add M1)
   page.tsx                # /
@@ -170,9 +170,11 @@ Why this over the alternatives:
   scaffold's placeholder `--background/--foreground` block.
 - **Dark-mode strategy:** class-based on `<html>` (`.dark`). Wire the variant in globals.css:
   `@custom-variant dark (&:where(.dark, .dark *));` (per DESIGN_SYSTEM decision log). Use `dark:` utilities.
-- **No FOUC:** a small inline script in `app/layout.tsx` `<head>` (runs before paint) reads
-  `localStorage.theme` else `prefers-color-scheme` and sets `document.documentElement.classList`. Inline,
-  not a component — must run before hydration.
+- **No FOUC:** a small native inline script in `app/layout.tsx`, rendered as the **first child of
+  `<body>`** (runs before anything paints — nothing renders ahead of it), reads `localStorage.theme` else
+  `prefers-color-scheme` and sets `document.documentElement.classList`. Must be a literal
+  `<script dangerouslySetInnerHTML>` — `next/script strategy="beforeInteractive"` does NOT emit a
+  synchronous script in Next 16/Turbopack (verified in PF-M0-03 review) and reintroduces the FOUC.
 - **Toggle location:** `components/ui/theme-toggle.tsx` — a `"use client"` component that flips the `.dark`
   class and persists to `localStorage`, rendered inside `components/sections/Header`. The only client
   component required for theming.
