@@ -6,7 +6,7 @@
       "id": "PF-M0-01",
       "milestone": "M0",
       "owner_agent": "frontend-engineer",
-      "status": "doing",
+      "status": "review",
       "depends_on": [],
       "summary": "Scaffold Next.js 15 (TS, App Router) + Tailwind + Prettier/ESLint. NOTE: repo root is non-empty — scaffold into a temp dir (npx create-next-app@latest tmp-scaffold --ts --tailwind --app --eslint) then merge files into root, keep our CLAUDE.md/docs/.claude intact.",
       "dod": "npm run build + npm run lint green, repo pushed to GitHub"
