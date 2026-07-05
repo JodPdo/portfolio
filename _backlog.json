@@ -204,6 +204,16 @@
     },
 
     {
+      "id": "PF-M3-05",
+      "milestone": "M3",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": [],
+      "summary": "Header nav links measure ~22px tall at 375px viewport — below WCAG 2.2 SC 2.5.8 minimum target size (24px) and the 44px best-practice guideline. Increase vertical padding/hit area on nav links (and audit other small targets) before the M3 a11y gate. Filed from PF-M1-07 QA observation.",
+      "dod": "all interactive targets >= 24px (prefer >= 44px on touch), no layout regression at 375/768/1280"
+    },
+
+    {
       "id": "PF-M4-01",
       "milestone": "M4",
       "owner_agent": "frontend-engineer",
