@@ -103,7 +103,7 @@
       "id": "PF-M1-07",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "review",
       "depends_on": ["PF-M1-01"],
       "summary": "Contact page: email (verify with product owner first), LinkedIn, GitHub. NO phone number (product-owner decision).",
       "dod": "links correct and clickable, mailto works"
