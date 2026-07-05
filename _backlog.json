@@ -103,10 +103,11 @@
       "id": "PF-M1-07",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": ["PF-M1-01"],
       "summary": "Contact page: email (verify with product owner first), LinkedIn, GitHub. NO phone number (product-owner decision).",
-      "dod": "links correct and clickable, mailto works"
+      "dod": "links correct and clickable, mailto works",
+      "evidence": "commit f554a96; code review passed prior (email char-by-char vs SPEC incl. intentional 'aekkarut' spelling, mailto no target=_blank, no phone digits, tokens clean). QA 2026-07-06: build+lint green; prod server curl /contact 200, exactly one <h1>, mailto:fontong.jod.aekkarut@gmail.com present as href AND visible text, GitHub href=https://github.com/JodPdo and LinkedIn href=https://www.linkedin.com/in/aekkarut-fontong both target=_blank rel=noopener noreferrer, mailto anchor isolated and confirmed no target attribute, grep for +66/94-861/8164/086/089 = zero matches; headless-Edge CDP (Emulation.setDeviceMetricsOverride) on /contact: no horizontal overflow at 375/768/1280 (scrollWidth===innerWidth all three), zero console/exception entries across all navigations + after interaction; dark-mode toggle clicked -> html gains .dark, body bg rgb(17,24,39)=#111827, contact rows adopt distinct dark tokens (bg rgb(11,27,26), border color(srgb .90 .95 .94 /0.18), text rgb(230,242,240)) vs header/footer nav links (transparent bg, solid teal border) confirming page-level dark styling applied; tap targets for the three contact rows (mailto/GitHub/LinkedIn) measured via getBoundingClientRect = 343x74px each, well over the 44px minimum; curl -L https://github.com/JodPdo = 200, curl -L https://www.linkedin.com/in/aekkarut-fontong = 999 (known LinkedIn anti-bot response, recorded not failed, consistent with PF-M1-01 precedent). Observation (non-blocking, out of scope for this card): header nav links (Projects/About/Resume/Contact) measured 22px tall at 375px viewport, below the 44px tap-target guideline -- pre-existing from PF-M1-01 (already Done/QA-passed), flagged for exit-gate re-check, not a regression introduced by this card. Verdict: PASS."
     },
 
     {
