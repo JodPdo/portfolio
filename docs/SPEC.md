@@ -184,6 +184,7 @@ Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<
 1. **No phone number on the site.** Contact = email + LinkedIn + GitHub only (overrides §4.4).
 2. **Resume page is download-first** (buttons + thumbnails); inline PDF embed is a desktop-only enhancement (amends §4.3).
 3. Verify the contact email with the product owner before shipping any page containing it.
+   **RESOLVED 2026-07-05:** product owner confirmed `fontong.jod.aekkarut@gmail.com` (matches §4.4). Cleared to ship on /contact and footer where specified.
 4. Site targets **all roles** (SE / Backend / QA) — case-study order stays AiKlao → Typing Race → Tiger Kick → JPD.
 
 ---
