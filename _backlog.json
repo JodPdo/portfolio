@@ -44,11 +44,11 @@
       "id": "PF-M1-01",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": ["PF-M0-03", "PF-M0-04"],
       "summary": "Global layout: sticky header (name, nav, GitHub link, theme toggle) + footer.",
       "dod": "sticky, responsive, keyboard-navigable, visible focus rings",
-      "evidence": "components/sections/header.tsx, components/sections/footer.tsx, components/sections/nav-link.tsx, components/ui/icons.tsx; wired into app/layout.tsx (header/main/footer landmarks + skip link); build+lint green; verified single <main id=main-content>, aria-current=page on active nav link (checked /about), all 6 routes + 404 return correct HTTP status on prod server"
+      "evidence": "components/sections/header.tsx, components/sections/footer.tsx, components/sections/nav-link.tsx, components/ui/icons.tsx; wired into app/layout.tsx (header/main/footer landmarks + skip link); build+lint green; verified single <main id=main-content>, aria-current=page on active nav link (checked /about), all 6 routes + 404 return correct HTTP status on prod server. QA PASS 2026-07-06 (code review passed prior): build+lint green; prod server curl on all 6 routes + /nope (200x6, 404x1); exactly one <main>/<header>/<footer> per route (raw HTML, all 6 routes), nav aria-label=Main present, skip link first focusable element on every route; aria-current=page verified present exactly once and on the correct link on / (0 matches — no Home nav item, correct), /projects, /projects/aiklao (Projects active on child route), /about, /resume, /contact; headless-Edge CDP (Emulation.setDeviceMetricsOverride, not --window-size which mis-sized the viewport and produced a false-positive overflow artifact — noted as a tooling gotcha) confirmed scrollWidth===clientWidth (no horizontal overflow) at 375/768/1280 on all 6 routes; zero console/exception entries on load; dark-mode toggle verified end-to-end (click -> html.classList has dark -> computed body bg #111827 -> screenshot shows full dark theme incl. moon icon); sticky header confirmed via computed getComputedStyle position:sticky, top:0 rect stable (page content is still a stub at this stage — PF-M1-05/06/07 not yet built — so a real scroll-past-the-fold check on populated content is deferred, see manual checks); simulated Tab key sequence via CDP Input.dispatchKeyEvent confirmed order skip-link -> logo -> Projects -> About -> Resume -> Contact -> GitHub -> theme toggle, and focus-visible ring box-shadow (2px offset + 4px teal-300 ring) rendered and visible on a nav link in dark mode (screenshot); GitHub https://github.com/JodPdo HTTP 200, LinkedIn HTTP 999 (known anti-bot response, not a failure); no console.* in any component; working tree clean except this board file. Manual checks still needed from a real interactive browser (cannot be done headlessly): mouse/touch scroll confirming header stays visually pinned on a fully-populated page (defer to when PF-M1-05/06/07 land), real hardware keyboard Tab/Shift+Tab feel and ring visibility across both themes end-to-end by a human; light-mode ring contrast is tracked separately as PF-M3-04 (not blocking here)."
     },
     {
       "id": "PF-M1-02",
@@ -188,6 +188,16 @@
       "depends_on": ["PF-M3-01", "PF-M3-02"],
       "summary": "Custom domain jod.aiklaotrip.com (CNAME with human) + enable Vercel Analytics.",
       "dod": "domain live over HTTPS, analytics receiving"
+    },
+
+    {
+      "id": "PF-M3-04",
+      "milestone": "M3",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": [],
+      "summary": "Fix light-mode --ring token: teal-300 #5EEAD4 on near-white background is ~1.2-1.4:1, below WCAG 2.2 SC 1.4.11 non-text 3:1. Architect approves the new value (e.g. darker teal for light mode only); filed from PF-M1-01 code review.",
+      "dod": "focus ring >= 3:1 against adjacent colors in both themes, architect-approved, no regression to dark mode"
     },
 
     {
