@@ -40,6 +40,15 @@ const TIMELINE_ITEMS: { year: string; title: string; description: string }[] =
 // decoration (aria-hidden); the actual sequence is carried by the <ol>/<li>
 // semantics and visible text, so the timeline reads correctly with CSS off
 // or with a screen reader.
+//
+// Geometry note: the connector (border-l-2) is drawn at the <ol>'s
+// border-box edge, but each <li> is offset from that edge by the <ol>'s own
+// pl-6/sm:pl-8 padding. A marker positioned at the <li>'s `left-0` would
+// therefore land pl-6/pl-8 to the right of the line, not on it. Instead the
+// marker is offset by the negative of that same padding (-left-6/sm:-left-8)
+// so its un-translated position lands back on the ol's border edge, then
+// `-translate-x-1/2` centers the dot on that edge — keeping marker and
+// connector in the same coordinate space regardless of viewport width.
 export function Timeline() {
   return (
     <ol className="relative mt-8 flex flex-col gap-10 border-l-2 border-border pl-6 sm:pl-8">
@@ -47,7 +56,7 @@ export function Timeline() {
         <li key={item.year} className="relative">
           <span
             aria-hidden="true"
-            className="absolute top-1 left-0 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-primary bg-background"
+            className="absolute top-1 -left-6 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-primary bg-background sm:-left-8"
           />
           <p className="text-sm font-semibold uppercase tracking-wide text-primary">
             {item.year}
