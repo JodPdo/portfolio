@@ -71,6 +71,35 @@ body {
   line-height: 1.7;
 }
 
+/*
+ * E3 marquee (Design Brief V2 §3 — components/motion/marquee.tsx).
+ * Pure CSS keyframes: the track holds two copies of its content, so
+ * translating -50% loops seamlessly. Duration/direction are set inline by
+ * the component.
+ */
+.motion-marquee-track {
+  animation-name: motion-marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes motion-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Brief §5: E3 pauses under reduced motion (the global rule below also
+   collapses it, but the paused state is the specified behavior). */
+@media (prefers-reduced-motion: reduce) {
+  .motion-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
 /* Respect prefers-reduced-motion everywhere (docs/DESIGN_SYSTEM.md). */
 @media (prefers-reduced-motion: reduce) {
   *,
