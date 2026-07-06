@@ -50,6 +50,7 @@ Semantic landmarks (`header/nav/main/footer`), visible focus rings, alt text on 
 - 2026-07-05 — **Tailwind v4 (CSS-first) confirmed** for token implementation (architect, ADR-0001 in docs/SPEC.md Appendix B). PF-M0-03 defines the palette above as CSS variables + `@theme` in `app/globals.css` — **no `tailwind.config.js`**. Dark mode stays class-strategy (`dark:`) with the no-FOUC inline `<head>` script; under v4, wire the dark variant via `@custom-variant dark (&:where(.dark, .dark *))` in globals.css.
 - 2026-07-05 — **Routes, folder structure & MDX content model defined** (architect, PF-M0-02) in `docs/ARCHITECTURE.md`; MDX pipeline pre-approved in ADR-0002 (SPEC Appendix B). PF-M0-03's structural needs (token file location, `.dark` class strategy, no-FOUC inline script, `ThemeToggle` at `components/ui/theme-toggle.tsx`) are specified in ARCHITECTURE.md section 5 — implement against it.
 - 2026-07-06 — **V2 "Editorial Dark" ratified** (architect, ADR-0003, SPEC Appendix B; ratifies `docs/DESIGN_BRIEF_V2.md`). Dark-only; GSAP + lazy pixi.js (no Framer Motion); Archivo + JetBrains Mono via `next/font`; semantic token names kept, values repointed. Light-mode/toggle/Framer sections above marked SUPERSEDED. Full V2 spec in the section below.
+- 2026-07-07 — **`--foreground-muted` #666666 restricted to large-text/decorative use; small labels use `--foreground-secondary` #999999** (architect ruling; flagged in PF-V2-02 review + PF-V2-03 handoff). #666666 on #0A0A0A = 3.45:1 fails WCAG AA for normal text (needs 4.5:1); #999999 = 6.95:1 passes. **Usage constraint only — no locked palette values changed**, so no product-owner sign-off required and PF-V2-04/05/06 may proceed. Full rule in the V2 section ("V2 contrast & muted-token usage rule"). Notify producer + implementing frontend-engineer. Option (a) chosen over editing the muted hex (which would touch a PO-locked brief §2 value).
 
 ---
 
@@ -84,13 +85,39 @@ in V2** — `--gold` / `--palette-gold` and `text-gold` are retired.
 - **Display — Archivo, weight 500**, uppercase, **tight leading**, size `clamp(40px, …, 96px)`. Hero name,
   section headlines, big numbers. Tighten tracking on huge sizes; never below ~1.0 line-height at 96px.
 - **Labels / metadata — JetBrains Mono**, letter-spacing **.14–.2em**, **10–12px**, often uppercase.
-- **Numbered section labels:** `01 — SELECTED WORKS` pattern (mono, muted, the number and rule in
-  `--foreground-muted`).
+- **Numbered section labels:** `01 — SELECTED WORKS` pattern (mono). At the 10–14px label sizes the
+  **informative text (the number and the words) uses `--foreground-secondary` #999999**, not
+  `--foreground-muted` — see "V2 contrast & muted-token usage rule" below. The purely decorative connecting
+  rule / em-dash may stay `--foreground-muted` to keep the divider quiet.
 - **Body — 13–14px / line-height 1.7.** JetBrains Mono for short metadata/captions; body prose may use a
   neutral system/JetBrains stack — no separate UI sans is loaded (display = Archivo, else mono/system).
 - **Image captions:** mono, `FIG. 01 — THE ENGINEER` pattern.
 - Fonts via `next/font/google` (self-hosted, zero layout shift): `Archivo` → `--font-display`,
   `JetBrains Mono` → `--font-mono`. No Inter/Geist.
+
+### V2 contrast & muted-token usage rule (a11y-binding — 2026-07-07)
+
+`--foreground-muted` **#666666 on the page `#0A0A0A` computes to 3.45:1** (verified). WCAG AA requires
+**4.5:1 for normal text** and allows **3:1 only for large text** (≥24px, or ≥18.66px at weight ≥700) and for
+purely decorative / non-informational elements. So #666666 is **not** AA-legible at the 10–12px label sizes
+brief §2 implies. `--foreground-secondary` **#999999 = 6.95:1** and passes AA at any size. (On the card
+surface `#111111`: #666666 = 3.29:1 still fails; #999999 = 6.63:1 still passes — the rule holds on surfaces
+too.) This is a **usage constraint only — no ratified/locked palette hex changes** (both #666666 and #999999
+stay exactly as ratified in brief §2 / the token table above).
+
+**Binding rule for PF-V2-04/05/06 and all V2 work:**
+
+1. `--foreground-muted` #666666 is permitted **only** on (i) **large text** — ≥24px, or ≥18.66px at weight
+   ≥700 (e.g. big display numerals, oversized editorial digits); and (ii) **purely decorative, non-textual
+   elements** carrying no information (hairline rules, divider dashes, ornamental glyphs). It **must not**
+   style any text below those sizes.
+2. **Any informative text at normal sizes (< 24px), including all mono labels, section-number labels,
+   metadata, captions, and body — uses `--foreground-secondary` #999999 or lighter** (`--foreground`
+   #F5F5F0). This covers the `01 — SELECTED WORKS` number+words and `FIG. 01 — …` caption text.
+3. If a design later needs the *dim* look of #666666 on small informative text, the fix is to raise the
+   **muted token value** (≥ ~#797979 reaches 4.5:1 on #0A0A0A) — but that edits a **product-owner-locked
+   brief §2 value and requires product-owner sign-off**, so it is not done here. This ruling deliberately
+   avoids that by leaving values untouched and constraining usage instead.
 
 ### V2 Layout language
 
