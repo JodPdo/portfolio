@@ -1,6 +1,6 @@
 {
   "$schema_note": "Cards for the portfolio build. status: backlog|todo|doing|review|done. Agents pick cards where owner_agent = you, status = todo, and all depends_on are done. Every card also passes code-reviewer -> qa-engineer -> producer before done.",
-  "milestones": ["M0", "M1", "M2", "M3", "M4"],
+  "milestones": ["M0", "M1", "M1.5", "M2", "M3", "M4"],
   "cards": [
     {
       "id": "PF-M0-01",
@@ -111,6 +111,70 @@
     },
 
     {
+      "id": "PF-V2-01",
+      "milestone": "M1.5",
+      "owner_agent": "architect",
+      "status": "doing",
+      "depends_on": [],
+      "summary": "ADR-0003: ratify Design Brief V2 (docs/DESIGN_BRIEF_V2.md) — direction, deps (gsap + ScrollTrigger, pixi.js dynamic-only), dark-only (remove toggle/light tokens/no-FOUC script), framer-motion decision (brief recommends: GSAP only), display font choice, components/motion/ home. Brief §1 decisions are product-owner-locked.",
+      "dod": "documented, no contradiction"
+    },
+    {
+      "id": "PF-V2-02",
+      "milestone": "M1.5",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": ["PF-V2-01"],
+      "summary": "Tokens v2 (brief §2 palette/typography) + remove light mode, theme toggle, no-FOUC script + next/font for JetBrains Mono + display face per ADR-0003. Resume/Contact restyle by inheritance.",
+      "dod": "build green, all routes render V2 base"
+    },
+    {
+      "id": "PF-V2-03",
+      "milestone": "M1.5",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": ["PF-V2-02"],
+      "summary": "Motion primitives in components/motion/: <Scramble> (E2), <Marquee> (E3, CSS keyframes), <Reveal> (E8), <PinnedHorizontal> (E7, GSAP ScrollTrigger) + reduced-motion plumbing per brief §5.",
+      "dod": "each demoed on a scratch route, reduced-motion verified"
+    },
+    {
+      "id": "PF-V2-04",
+      "milestone": "M1.5",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": ["PF-V2-03"],
+      "summary": "Home rework per brief §2-3: preloader (E1), hero (scramble name E2, jod-hero photo mat, pixi displacement E4 lazy desktop-only + parallax E5), teal stats marquee (E3), numbered header nav. Photos in docs/assets/ (PNG — optimize/duotone before ship).",
+      "dod": "matches brief §2-3, budget §5 (JS < 250KB gzip excl. lazy pixi)"
+    },
+    {
+      "id": "PF-V2-05",
+      "milestone": "M1.5",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": ["PF-V2-03"],
+      "summary": "Work rows (typographic, replaces card grid on /projects) + hover video previews (E6): muted looping webm <=300KB, preload=none, load on first hover, poster fallback, tap=navigate on touch. Producer sources 4 webm clips with product owner; poster-only acceptable to pass.",
+      "dod": "hover/touch/keyboard all correct"
+    },
+    {
+      "id": "PF-V2-06",
+      "milestone": "M1.5",
+      "owner_agent": "frontend-engineer",
+      "status": "todo",
+      "depends_on": ["PF-V2-03"],
+      "summary": "About/How-I-work rework: pinned horizontal 5-step (E7), jod-working photo mat, timeline restyle to V2. Mobile/reduced-motion degrade to vertical stack.",
+      "dod": "mobile degrade correct"
+    },
+    {
+      "id": "PF-V2-07",
+      "milestone": "M1.5",
+      "owner_agent": "qa-engineer",
+      "status": "todo",
+      "depends_on": ["PF-V2-04", "PF-V2-05", "PF-V2-06"],
+      "summary": "Full V2 gate per brief §5: JS budget (<250KB gzip on / excl. lazy pixi), Lighthouse mobile Perf >= 90 + A11y/BP/SEO >= 95 + CLS < 0.1, explicit prefers-reduced-motion pass (E2 final text, E3 paused, E4/E5 off, E7 vertical, E8 instant), keyboard/a11y AA, link-check.",
+      "dod": "all pass or bug cards filed"
+    },
+
+    {
       "id": "PF-M2-01",
       "milestone": "M2",
       "owner_agent": "frontend-engineer",
@@ -165,9 +229,9 @@
       "milestone": "M2",
       "owner_agent": "frontend-engineer",
       "status": "backlog",
-      "depends_on": ["PF-M2-01", "PF-M2-02", "PF-M2-03", "PF-M2-04", "PF-M2-05"],
-      "summary": "MDX case-study layout: code blocks, callouts, metric highlights; render all 4 studies.",
-      "dod": "all 4 render, responsive, dark mode, no CLS"
+      "depends_on": ["PF-M2-01", "PF-M2-02", "PF-M2-03", "PF-M2-04", "PF-M2-05", "PF-V2-07"],
+      "summary": "MDX case-study layout: code blocks, callouts, metric highlights; render all 4 studies. Build directly on V2 (Design Brief V2 §6) — gated on PF-V2-07. Also wire generateStaticParams + dynamicParams=false on /projects/[slug] (QA-flagged gap).",
+      "dod": "all 4 render, responsive, dark-only V2 theme, no CLS, unknown slug -> 404"
     },
 
     {
@@ -185,7 +249,7 @@
       "owner_agent": "qa-engineer",
       "status": "backlog",
       "depends_on": ["PF-M2-06"],
-      "summary": "Full QA pass per docs/QA_CHECKLIST.md: Lighthouse >= 95 all categories, a11y AA (keyboard, contrast, landmarks), link-check, responsive 375/768/1280, dark mode.",
+      "summary": "Full QA pass per docs/QA_CHECKLIST.md, gate amended by Design Brief V2 §5: Lighthouse mobile Perf >= 90 (target 95) + A11y/BP/SEO >= 95 + CLS < 0.1, a11y AA (keyboard, contrast, landmarks), link-check, responsive 375/768/1280, dark-only.",
       "dod": "checklist all pass or bugs filed as new cards"
     },
     {
@@ -202,10 +266,10 @@
       "id": "PF-M3-04",
       "milestone": "M3",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
+      "status": "done",
       "depends_on": [],
-      "summary": "Fix light-mode --ring token: teal-300 #5EEAD4 on near-white background is ~1.2-1.4:1, below WCAG 2.2 SC 1.4.11 non-text 3:1. Architect approves the new value (e.g. darker teal for light mode only); filed from PF-M1-01 code review.",
-      "dod": "focus ring >= 3:1 against adjacent colors in both themes, architect-approved, no regression to dark mode"
+      "summary": "OBSOLETE (closed by producer 2026-07-06): light-mode --ring contrast fix superseded by Design Brief V2 dark-only decision (ADR-0003) — light mode is being removed entirely in PF-V2-02. Dark-mode ring contrast (teal-300 on #0A0A0A ~12:1) passes. Original finding: PF-M1-01 code review.",
+      "dod": "n/a — superseded; PF-V2-07 verifies focus-ring contrast on the V2 dark theme"
     },
 
     {
