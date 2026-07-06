@@ -80,6 +80,14 @@ Rules:
   Do not introduce a second source of colors/spacing.
 - `content/` is **not** under `app/` — it is data, read at build time by `lib/projects.ts`.
 
+> **Note 2026-07-06 (ADR-0003 — Design V2).** Add **`components/motion/`** to the structure above: the
+> isolated home for all `"use client"` motion islands (`<Scramble>`, `<Marquee>`, `<Reveal>`,
+> `<PinnedHorizontal>`, the lazy pixi hero wrapper, preloader, work-row hover-video). `components/sections/*`
+> and pages stay **server** components and mount motion islands only where needed. **Removed** under dark-only:
+> `components/ui/theme-toggle.tsx` and the no-FOUC inline script in `app/layout.tsx` (§5 below is superseded on
+> those points). `globals.css` keeps `@theme` (ADR-0001) but drops `@custom-variant dark` and the `.dark`
+> block — `:root` is the single dark palette. No other structure changes.
+
 ---
 
 ## 3. Content model — case-study MDX
@@ -180,13 +188,19 @@ Why this over the alternatives:
 - **Code syntax highlighting:** if a case study ships code blocks, use **`rehype-pretty-code`** (bundles
   `shiki`) — **pre-approved as optional**, add only when actually needed. Prefer build-time highlighting
   (no client JS).
-- **Not part of the MDX pipeline** and approved elsewhere: `lucide-react`, `framer-motion`,
-  `@vercel/analytics` are SPEC-stack items handled in their own M1/M3 cards, not here.
+- **Not part of the MDX pipeline** and approved elsewhere: `lucide-react`, `@vercel/analytics` are
+  SPEC-stack items handled in their own M1/M3 cards, not here. **Motion:** `gsap` (+ ScrollTrigger) and
+  lazy `pixi.js` per ADR-0003 — **`framer-motion` is NOT used** (removed from the stack, ADR-0003).
 - **Any package beyond this table still needs architect sign-off** before install.
 
 ---
 
 ## 5. Structural needs for PF-M0-03 (design tokens + dark mode)
+
+> **Partly SUPERSEDED 2026-07-06 (ADR-0003, dark-only).** The dark-mode *class strategy*, no-FOUC inline
+> script, `@custom-variant dark`, and `theme-toggle.tsx` below are **removed** in PF-V2-02 — V2 is dark-only
+> with a single `:root` palette. The token-file location (`app/globals.css`, `@theme`, no JS config) still
+> holds. Values migrate to the V2 palette per DESIGN_SYSTEM "V2 token migration rule".
 
 - **Tokens:** define the DESIGN_SYSTEM palette (`primary #0F766E`, `accent #5EEAD4`, `ink`, `bg`, `gold`,
   dark bg/text) as CSS variables + `@theme` in `app/globals.css` (no JS config — ADR-0001). Replace the

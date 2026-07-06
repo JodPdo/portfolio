@@ -23,11 +23,11 @@ A build-ready blueprint: tech stack, page structure, real content, and 4 case st
 | Styling | **Tailwind CSS v4** (CSS-first `@theme`) | fast, consistent, responsive utilities; design tokens live in `app/globals.css` |
 | Content | **MDX** for case studies | write case studies as Markdown + React components |
 | UI/Icons | lucide-react, minimal custom components | no heavy UI kit |
-| Animation | **Framer Motion** (subtle only) | tasteful entrance/hover; don't overdo |
+| Animation | ~~**Framer Motion** (subtle only)~~ → **GSAP + ScrollTrigger; `pixi.js` (lazy, hero only)** | one motion engine, less JS — **SUPERSEDED by ADR-0003** (V2). Framer Motion is not used. |
 | Analytics | **Vercel Analytics** (privacy-friendly) | see real visits (a small impact metric later) |
 | Deploy | **Vercel** (free Hobby) | 1-click, preview deploys, custom domain |
 | Domain | `jod.aiklaotrip.com` **or** `aekkarat.dev` | you already own aiklaotrip.com → free subdomain |
-| Quality | ESLint + Prettier + `next/image` + Lighthouse ≥ 95 | demonstrates the quality bar you talk about |
+| Quality | ESLint + Prettier + `next/image` + Lighthouse ≥ 95 | demonstrates the quality bar you talk about. _(V2 amendment — ADR-0003: mobile Perf ≥ 90 OK if A11y/BP/SEO ≥ 95 and CLS < 0.1; < 90 anywhere blocks.)_ |
 
 **Bilingual toggle (TH/EN) — optional but high-value:** you already did i18n on AiKlao. A working EN/TH switch here *demonstrates* i18n skill live. Use `next-intl`. Ship EN first; add TH if time allows.
 
@@ -53,8 +53,9 @@ Global: sticky header (logo/name · Projects · About · Resume · Contact · TH
 - **Palette (match your résumé):** primary teal `#0F766E`, accent `#5EEAD4`, ink `#263238`, bg `#F3FAF9`/white, gold link `#B8860B` (reuse résumé identity → cohesive personal brand).
 - **Type:** Inter (or Geist) for UI; a mono (JetBrains Mono) for code/metrics.
 - **Layout:** max-width ~1100px, generous whitespace, 8-pt spacing scale.
-- **Dark mode:** yes (you did it on mobile — show it here). `prefers-color-scheme` + toggle.
-- **Motion:** fade/slide-up on scroll (Framer Motion `whileInView`), 150–250ms, respect `prefers-reduced-motion`.
+- **Dark mode:** ~~yes … `prefers-color-scheme` + toggle.~~ **SUPERSEDED by ADR-0003:** V2 is **dark-only** — no toggle, no light theme.
+- **Motion:** ~~fade/slide-up on scroll (Framer Motion `whileInView`), 150–250ms~~ → **GSAP + ScrollTrigger** (see ADR-0003 / brief §3); respect `prefers-reduced-motion`.
+- **V2 note:** §3 above (palette/type/dark/motion) is the original résumé identity — **the live V2 "Editorial Dark" system is in `docs/DESIGN_SYSTEM.md` (V2 section) and ADR-0003.**
 - **A11y:** semantic landmarks, focus rings, alt text, color-contrast AA, keyboard-navigable — *this is you demonstrating the quality you claim.*
 
 ---
@@ -148,7 +149,7 @@ Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<
 ## 6. SEO / meta / social
 - Per-page `<title>` + meta description; JSON-LD `Person` schema on `/` (name, jobTitle, sameAs: GitHub/LinkedIn).
 - Open Graph image (auto via `next/og`) — name + role + "race.aiklaotrip.com live demo".
-- `sitemap.xml` + `robots.txt` (Next.js built-ins). Fast = SEO: target Lighthouse Performance/SEO/Best-Practices/A11y ≥ 95.
+- `sitemap.xml` + `robots.txt` (Next.js built-ins). Fast = SEO: target Lighthouse Performance/SEO/Best-Practices/A11y ≥ 95 _(V2: Perf hard-floor 90 — ADR-0003)_.
 
 ---
 
@@ -167,7 +168,7 @@ Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<
 - **Day 2:** the 4 case studies (MDX) + project cards + OG image + Lighthouse pass + custom domain.
 - **Later (optional):** TH/EN toggle, dark mode polish, Vercel Analytics, a short "How I designed the Tiger Kick SDLC" write-up.
 
-**Definition of Done:** deployed on a custom domain, Lighthouse ≥ 95 all categories, mobile-perfect, every project links to a live demo or repo, résumé downloadable, no console errors.
+**Definition of Done:** deployed on a custom domain, Lighthouse ≥ 95 all categories _(V2 amendment — ADR-0003: mobile Perf ≥ 90 acceptable if A11y/BP/SEO ≥ 95 and CLS < 0.1)_, mobile-perfect, every project links to a live demo or repo, résumé downloadable, no console errors.
 
 ---
 
@@ -233,3 +234,122 @@ case study ships code blocks. Any package beyond this list still needs architect
 
 **Consequences.** Frontend-engineer implements PF-M2 against `docs/ARCHITECTURE.md` sections 1–4 with no
 follow-up structural questions. `content/` folder is created under this decision (DOCUMENT_ROUTING rule).
+
+### ADR-0003 — Design V2 "Editorial Dark": direction, motion stack (GSAP; no framer-motion), pixi.js, dark-only — 2026-07-06
+**Status:** Accepted (architect). **Card:** PF-V2-01 (milestone M1.5 — Design V2).
+**Ratifies:** `docs/DESIGN_BRIEF_V2.md` (product-owner approved 2026-07-06).
+**Supersedes:** the light-mode/theme-toggle strategy and the "Framer Motion" motion choice in
+`docs/DESIGN_SYSTEM.md` (2026-07-05 decision log); the "Framer Motion (subtle only)" stack line in
+`CLAUDE.md` and the Framer Motion / `prefers-color-scheme` + toggle rows in SPEC §Recommended stack and
+§Design. **Amends:** the M3 "Lighthouse ≥ 95 all four" exit gate (see decision 7).
+
+**Context.** The product owner selected an editorial dark direction (reference: danielspatzek.com), captured
+in `docs/DESIGN_BRIEF_V2.md`: big type does the talking, a small set of signature effects (preloader,
+letter-scramble, marquees, hero photo displacement, mouse parallax, work-row hover video, pinned-horizontal
+"How I work", scroll reveals). §1 of the brief is **locked by the product owner** (dark-only, no
+police-uniform imagery, approved voice, exactly two photos, unchanged facts and case-study order) — this ADR
+**ratifies, it does not re-litigate** those. What requires an architect decision is the technical fallout:
+new dependencies, which animation system we standardize on, how far to simplify theming now that light mode
+is gone, fonts, where client motion lives, and the performance gate.
+
+**Decision.**
+
+1. **Adopt "Editorial Dark" as the V2 visual/motion direction.** Tokens, typography, and layout language are
+   recorded in `docs/DESIGN_SYSTEM.md` (dated V2 section). This is the base for M1 rework and all of M2.
+
+2. **Approve two new runtime dependencies — no others.**
+   - `gsap` — free core **+ ScrollTrigger** (also free core; not a Club/paid plugin). The one animation
+     engine for reveals, marquees fallback, and the pinned-horizontal section.
+   - `pixi.js` — **dynamic import only** (`next/dynamic`, `ssr:false`). Loaded exclusively on `/`, **after
+     idle**, and **only on desktop + fine pointer**; every non-qualifying visitor (touch, coarse pointer,
+     reduced-motion, or the chunk failing to load) gets the static duotone `<img>` fallback. Pixi must never
+     enter the initial `/` bundle. This is the E4 hero displacement effect and nothing else.
+
+   No other packages are pre-approved by this ADR. Anything beyond `gsap` + `pixi.js` (e.g. a smooth-scroll
+   lib, a cursor lib, Three.js) is **out of scope** per brief §3 and still needs separate architect sign-off.
+
+3. **Standardize on GSAP for all motion. Do NOT add `framer-motion`.** One animation system, less JS, one
+   mental model, one reduced-motion code path. CLAUDE.md's original stack line and SPEC's stack table name
+   Framer Motion; those are **superseded** — Framer Motion is **not** a dependency of this project.
+   *(Action: CLAUDE.md stack line updated under this card; the SPEC table rows are annotated as superseded.)*
+   Any prior "use Framer Motion" guidance in the docs is void; if `framer-motion` appears in `package.json`
+   it should be removed in PF-V2-02.
+
+4. **Dark-only. Delete the theming machinery, do not just hide it.** There is no light theme and no toggle.
+   PF-V2-02 removes, concretely:
+   - `components/ui/theme-toggle.tsx` (the only client component required purely for theming — gone).
+   - the no-FOUC inline `<script>` in `app/layout.tsx` (first child of `<body>`) and all
+     `localStorage.theme` / `prefers-color-scheme` reads. With a single always-dark palette there is nothing
+     to flash, so the whole FOUC-avoidance dance is deleted, not ported.
+   - the `.dark` override block and light-mode values in `app/globals.css`; `:root` **becomes** the (single)
+     dark palette.
+   - `@custom-variant dark (...)` in `app/globals.css` is removed, and any `dark:` utility prefixes in
+     components are dropped (they become unconditional). One palette = no variant.
+   - `<html>` may set `class="dark"` statically if convenient for third-party dark-aware widgets, but nothing
+     toggles it and no code depends on it. (`color-scheme: dark` on `:root` is the preferred signal.)
+   Dark mode is still "on" for the quality bar — it is simply the *only* mode, which is strictly simpler and
+   removes a whole class of QA surface (per-mode contrast, persistence, FOUC).
+
+5. **All client motion lives under `components/motion/`.** New folder (see ARCHITECTURE §2 note). Every
+   `"use client"` effect — `<Scramble>`, `<Marquee>`, `<Reveal>`, `<PinnedHorizontal>`, the hero
+   displacement wrapper, the preloader, work-row hover-video — is an isolated island imported into otherwise
+   **server** components. `components/sections/*` and pages stay server components; they render static markup
+   and mount a motion island only where an effect is needed. This keeps the initial JS budget honest and the
+   reduced-motion fallbacks colocated with the effect they gate.
+
+6. **Fonts via `next/font/google` (self-hosted, no layout shift):**
+   - **Body/mono:** **JetBrains Mono** — labels, metadata, captions, numbered section markers
+     (letter-spacing .14–.2em). Already the code/metrics face; now also the metadata voice.
+   - **Display:** **Archivo** (weight **500**, used uppercase with tight leading, clamp ~40–96px).
+     *Why Archivo:* it is a neo-grotesque **designed for high-impact display/headlines**, ships a true
+     weight-500 in its variable file, reads cleanly as huge uppercase, and its engineered/neutral character
+     pairs with JetBrains Mono without fighting it — matching the brief's "huge uppercase, tight leading,
+     weight 500". It is free, on Google Fonts, and `next/font/google`-compatible (self-hosted → zero layout
+     shift, satisfying budget §5's "no shift from fonts"). **Alternatives considered:** *Inter Tight* — fine
+     technically but Inter is over-exposed and carries less editorial character; kept only as a drop-in
+     fallback if Archivo ever regresses. *Anton / Oswald* — single-weight or condensed-only, no neutral
+     weight-500 neo-grotesque, rejected. The prior "Inter (or Geist)" body face from DESIGN_SYSTEM is
+     retired: V2 has no separate UI sans — display is Archivo, everything else is JetBrains Mono or system.
+
+7. **Amend the M3 Lighthouse gate (per brief §5).** The global "Lighthouse ≥ 95 all four categories" bar is
+   **amended for the effects-heavy V2 build**: on mobile emulation, **Performance ≥ 90 is acceptable IF
+   Accessibility / Best-Practices / SEO all stay ≥ 95 AND CLS < 0.1** (target Performance still 95). The
+   hard blocker remains **< 90 anywhere**. Additional V2 budget (QA gate, blocks the M1.5 milestone):
+   initial JS on `/` **< 250 KB gzip excluding the lazy pixi chunk**; pixi loads only after
+   interaction/idle on qualifying desktop. `prefers-reduced-motion` is a **required explicit QA pass**
+   (scramble → final text instantly, marquees paused, pixi/parallax disabled → static image, pinned-horizontal
+   → vertical stack, reveals → instant-show). *(docs/QA_CHECKLIST.md still states the old "≥ 95 all four"
+   gate — a qa-owned file, correctly left to PF-V2-07; this ADR flags it, it does not edit it. CURRENT_PHASE.md
+   was already amended by the producer.)*
+
+**Rationale.**
+- **Fewer dependencies, one pattern.** GSAP+ScrollTrigger covers scrub/pin/stagger that Framer Motion does
+  not do as directly; adding Framer Motion *on top* would mean two animation runtimes for one small site —
+  exactly the over-engineering the architecture principle forbids. Pixi is the only way to get the reference
+  displacement effect, but it is heavy, so it is quarantined behind a dynamic import and capability gate.
+- **Dark-only is a net *removal* of complexity.** The toggle, the persistence, the FOUC script, the dual
+  token set, and per-mode QA all disappear. That is strictly simpler and lower-risk than maintaining a light
+  theme nobody in the approved direction wants.
+- **Server-first with motion islands** protects the ≥ 90/95 performance gate: static HTML from server
+  components, JS only where an effect is mounted.
+- **`next/font` self-hosting** is the no-layout-shift guarantee the budget requires; Archivo + JetBrains Mono
+  is a two-family system (display + mono), the smallest font footprint that still delivers the editorial look.
+
+**Consequences.**
+- **Token migration rule for PF-V2-02 (binding):** keep the **semantic** custom-property names that already
+  exist so component churn stays minimal — `--background`, `--background-subtle`, `--foreground`, `--primary`,
+  `--primary-foreground`, `--accent`, `--accent-foreground`, `--border`, `--ring` survive and are simply
+  **repointed** to V2 values; the `.dark` override block collapses into `:root` (single palette). Concrete
+  mapping and the new tokens (`--foreground-secondary`, `--foreground-muted`, `--border-strong`, the two
+  image-mat surfaces) are in the DESIGN_SYSTEM V2 section. **Retire `--gold` / `--palette-gold`** and any
+  `text-gold` usage — V2 has no gold. Remove `--font-sans`/Geist; add `--font-display` (Archivo) and keep
+  `--font-mono` (JetBrains Mono).
+- **PF-V2-02** deletes `theme-toggle.tsx`, the no-FOUC script, the `.dark` block, `@custom-variant dark`, and
+  wires the two `next/font` families. `components/ui/` loses `ThemeToggle` from its inventory (ARCHITECTURE §2
+  note). **PF-V2-03..06** build under `components/motion/`.
+- **Docs updated by this card:** `docs/DESIGN_SYSTEM.md` (dated V2 section + superseded markers),
+  `CLAUDE.md` (stack line), `docs/ARCHITECTURE.md` (§2 folder note), and SPEC stack/design rows annotated.
+  `docs/QA_CHECKLIST.md` (qa) is flagged for the gate amendment but not edited here — qa owns it (PF-V2-07).
+  `CURRENT_PHASE.md` was already amended by the producer. `_backlog.json` is producer-owned and untouched.
+- **ADR-0001/0002 are unaffected** — Next 16 + Tailwind v4 CSS-first `@theme` and the MDX pipeline stand;
+  V2 changes token *values* and adds motion deps, not the framework or content pipeline.

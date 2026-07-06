@@ -114,10 +114,11 @@
       "id": "PF-V2-01",
       "milestone": "M1.5",
       "owner_agent": "architect",
-      "status": "doing",
+      "status": "done",
       "depends_on": [],
       "summary": "ADR-0003: ratify Design Brief V2 (docs/DESIGN_BRIEF_V2.md) — direction, deps (gsap + ScrollTrigger, pixi.js dynamic-only), dark-only (remove toggle/light tokens/no-FOUC script), framer-motion decision (brief recommends: GSAP only), display font choice, components/motion/ home. Brief §1 decisions are product-owner-locked.",
-      "dod": "documented, no contradiction"
+      "dod": "documented, no contradiction",
+      "qa_evidence": "QA PASS 2026-07-06 (qa-engineer). git status: exactly docs/SPEC.md, docs/DESIGN_SYSTEM.md, CLAUDE.md, docs/ARCHITECTURE.md uncommitted, nothing else. SPEC.md Appendix B ADR-0003: dated 2026-07-06, numbered after ADR-0002, complete context/decision(7 pts)/rationale/consequences; deps exactly gsap+ScrollTrigger and pixi.js (dynamic-only, desktop+fine-pointer+idle gate); framer-motion explicitly ruled out (pt.3) and confirmed absent from package.json; dark-only deletions enumerated (pt.4: theme-toggle.tsx, no-FOUC script, .dark block, @custom-variant dark, dark: prefixes); Archivo w500 ruling with alternatives considered (pt.6); Lighthouse amendment (pt.7) matches brief §5 verbatim (mobile Perf>=90 OK IF A11y/BP/SEO>=95 AND CLS<0.1). DESIGN_SYSTEM.md V2 token table: all 11 brief §2 hex values spot-checked present (#0A0A0A #111111 #1C1C1C #2A2A2A #F5F5F0 #999999 #666666 #5EEAD4 #04342C #0F1F1C #16211F); migration rule keeps semantic names/repoints values; removal list covers --gold/--palette-gold, --color-ink/text-ink, --palette-dark-*, light raws. Cross-doc grep for framer across CLAUDE.md/docs: every hit annotated superseded/ruled-out; CLAUDE.md stack line now reads GSAP+ScrollTrigger, lazy pixi.js hero-only, NOT Framer Motion, dark-only (no theme toggle). npm run build: green (8 routes, no errors). npm run lint: clean, no warnings."
     },
     {
       "id": "PF-V2-02",

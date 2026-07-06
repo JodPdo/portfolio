@@ -6,8 +6,8 @@
 
 Personal portfolio website for **Aekkarat Fontong (Jod)** — Software / QA Automation Engineer, career-changer (Royal Thai Police → software). Full spec with real content: `docs/SPEC.md`. This site targets **all roles** (SE / Backend / QA), not a single track.
 
-- **Stack:** Next.js 16 (App Router, TypeScript) + Tailwind CSS v4 (CSS-first `@theme`) + MDX case studies. Framer Motion (subtle only). Deploy: Vercel. Domain: `jod.aiklaotrip.com`. _(See docs/SPEC.md Appendix B — ADR-0001, 2026-07-05, for why we're on Next 16 not 15.)_
-- **Quality bar:** Lighthouse ≥ 95 all categories, a11y AA, responsive 375/768/1280, dark mode, zero console errors.
+- **Stack:** Next.js 16 (App Router, TypeScript) + Tailwind CSS v4 (CSS-first `@theme`) + MDX case studies. **Motion: GSAP + ScrollTrigger; `pixi.js` (lazy, hero only) — NOT Framer Motion.** **Dark-only** (no theme toggle). Deploy: Vercel. Domain: `jod.aiklaotrip.com`. _(See docs/SPEC.md Appendix B — ADR-0001 for Next 16; ADR-0003 (2026-07-06) for the V2 "Editorial Dark" direction, motion stack, and dark-only.)_
+- **Quality bar:** Lighthouse ≥ 95 all categories (V2 amendment per ADR-0003: mobile Perf ≥ 90 OK if A11y/BP/SEO ≥ 95 and CLS < 0.1; < 90 anywhere blocks), a11y AA, responsive 375/768/1280, dark mode, zero console errors.
 - **This project is also proof of process:** a review-gated AI-agent SDLC (same discipline as Tiger Kick). Follow the workflow exactly — the workflow itself is portfolio content.
 
 ## Team & workflow
