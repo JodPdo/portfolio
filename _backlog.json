@@ -134,7 +134,7 @@
       "id": "PF-V2-03",
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "doing",
       "depends_on": ["PF-V2-02"],
       "summary": "Motion primitives in components/motion/: <Scramble> (E2), <Marquee> (E3, CSS keyframes), <Reveal> (E8), <PinnedHorizontal> (E7, GSAP ScrollTrigger) + reduced-motion plumbing per brief §5.",
       "dod": "each demoed on a scratch route, reduced-motion verified"
@@ -164,7 +164,8 @@
       "status": "todo",
       "depends_on": ["PF-V2-03"],
       "summary": "About/How-I-work rework: pinned horizontal 5-step (E7), jod-working photo mat, timeline restyle to V2. Mobile/reduced-motion degrade to vertical stack.",
-      "dod": "mobile degrade correct"
+      "dod": "mobile degrade correct",
+      "note": "FORWARD-CONDITION from PF-V2-03 code review (2026-07-07): <PinnedHorizontal> (E7) as built clips panels 2+ in the narrow edge case of a motion-safe desktop with JS fully failed (content stays in DOM for SEO/reader-mode). Acceptable for the primitive, but this card ships REAL E7 content — it must NOT depend on those panels being reachable only with JS. Provide a CSS/<noscript>-reachable fallback (or equivalent) so the global 'content not lost if JS fails' DoD holds on a real page."
     },
     {
       "id": "PF-V2-07",
