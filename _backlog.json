@@ -114,7 +114,7 @@
       "id": "PF-M2-01",
       "milestone": "M2",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "review",
       "depends_on": ["PF-M1-03"],
       "summary": "Projects grid page + project card component (4 cards linking to case-study routes).",
       "dod": "4 cards route correctly, responsive grid"
