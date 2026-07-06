@@ -108,8 +108,9 @@ separate manifest.
 | `links` | object (below) | yes | Live / repo(s) / APK / docs |
 | `draft` | boolean | no | Excluded from lists when true |
 
-`links` object — every key optional individually, but at least one of `live`/`repos`/`apk` must exist
-(every case study links to a live demo or repo):
+`links` object — every key optional individually. Ideally a case study links to a live demo or repo, but
+this is a **content goal, not a schema invariant** (see the 2026-07-05 ruling below — a project may be
+link-less in the interim while URLs await product-owner verification):
 
 ```yaml
 links:
@@ -127,6 +128,28 @@ The `Project` TypeScript type lives in `lib/projects.ts` and mirrors this schema
 
 **Content integrity:** all metrics must be verifiable from real repos (CLAUDE.md gotcha).
 Do not invent numbers. Content is authored/reviewed at M2, not now — these files may be stubs until then.
+
+### Ruling 2026-07-06 — unverified URLs never enter frontmatter (escalated from PF-M2-02 review, F1)
+
+**Convention (one code path for all 4 case studies + the PF-M2-06 renderer):**
+
+1. **`links` frontmatter holds verified, working URLs ONLY.** Never a placeholder or sentinel string.
+   If a URL is not yet verified with the product owner, **omit its key** (or omit the whole `links` object).
+2. **Unverified/pending URLs live in the MDX body only**, in the Links section, as clearly-marked
+   **non-link plain text**: `[NEEDS-VERIFICATION: <what/where>]`. This marker is a human tracking note, not
+   machine-consumed — the loader/renderer never sees it, so it can never become a broken `<a href>`.
+3. **`links` and all its keys are OPTIONAL** in the `Project` type (`links?`, `live?`, `apk?`, `docs?`,
+   `repos?`). A **link-less project is valid** in the interim. The `Project` type carries no sentinel type.
+4. **Renderer contract (PF-M2-06):** emit an `<a>` **only** for a key that is present and non-empty.
+   Absent key = render nothing (no empty/`#`/placeholder anchor). This is what actually enforces global
+   DoD #4 (no broken links) — the "at least one link" idea is a content goal, not a code guard.
+5. **Rejected — the sentinel-in-frontmatter option:** storing `"[NEEDS-VERIFICATION: ...]"` as a `links`
+   value pollutes the URL type and risks a broken href the day someone forgets to special-case it.
+   Absence is unambiguous and needs no special casing. This is the typing-race.mdx pattern; standardize on it.
+
+When a URL is verified with the product owner, the writer **promotes** it: move it from the body
+`[NEEDS-VERIFICATION]` line into the correct `links` frontmatter key. AiKlao's currently-missing
+`live`/`apk`/`repos` stay body-only until the product owner confirms them.
 
 ---
 

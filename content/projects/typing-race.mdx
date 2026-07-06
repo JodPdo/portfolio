@@ -1,0 +1,100 @@
+---
+title: "Typing Race"
+slug: "typing-race"
+order: 2
+summary: "Real-time multiplayer typing game with server-authoritative anti-cheat — 60 Jest + Supertest tests at ~99% statement coverage, plus cross-browser Playwright E2E."
+tagline: "Server-authoritative real-time multiplayer — and my QA flagship."
+role: "Solo — React + TypeScript client, Node + TypeScript + Socket.IO server, PostgreSQL leaderboard"
+stack:
+  - "React"
+  - "TypeScript"
+  - "Node.js"
+  - "Socket.IO"
+  - "PostgreSQL"
+  - "Jest"
+  - "Supertest"
+  - "Playwright"
+  - "GitHub Actions"
+  - "nginx"
+  - "PM2"
+tags:
+  - "QA"
+  - "SE"
+  - "Backend"
+featured: true
+metrics:
+  - { label: "Jest + Supertest tests", value: "60" }
+  - { label: "Statement coverage", value: "~99%" }
+  - { label: "Function coverage", value: "100%" }
+  - { label: "E2E browsers", value: "3" }
+links:
+  live: "https://race.aiklaotrip.com"
+---
+
+## Overview
+
+Typing Race is a real-time multiplayer typing game, live at [race.aiklaotrip.com](https://race.aiklaotrip.com). Players race through a passage; the fastest accurate typist wins. That premise creates an obvious problem: in any typing game, the most valuable thing to fake is speed. So the whole design starts from one rule — the client is never trusted. The server owns the race.
+
+It is also the project where I built out my QA practice most deliberately: a transport-free game core under unit test, cross-browser end-to-end tests, and a formal test-strategy document behind them.
+
+## My role
+
+Solo. I built the React + TypeScript client, the Node + TypeScript + Socket.IO server, and the PostgreSQL leaderboard, plus the test suites and the CI pipeline that gates deployment.
+
+## Stack
+
+- **Client:** React, TypeScript
+- **Server:** Node.js, TypeScript, Socket.IO
+- **Data:** PostgreSQL (leaderboard)
+- **Testing:** Jest + Supertest (game core), Playwright (cross-browser E2E)
+- **Delivery:** GitHub Actions → VPS (nginx + PM2)
+
+## Architecture: the server owns the race
+
+The design is server-authoritative end to end:
+
+- **A fixed server tick loop is the single broadcaster.** Race state — everyone's progress, timing, and the eventual winner — is computed on the server and pushed out on the tick. There is exactly one source of truth and one place it leaves from.
+- **The client only reflects state.** It reports its progress; the server validates it and broadcasts the authoritative result, and the client renders that. It cannot declare a winner, rewind progress, or report a speed the server hasn't validated.
+- **Reconnect and presence come from the server too.** Because the server holds the authoritative race state, a client that drops and comes back rejoins from the server's view of the race — not from whatever its local state claimed. Who is in the race, and where they are in it, is server-derived like everything else.
+
+The payoff of this shape is that cheating stops being a client problem you chase and becomes a server invariant you enforce in one place.
+
+## The hard problem: anti-cheat without trusting the client
+
+The attack I designed against is simple: paste the entire passage. On a client-trusted design, that's an instant win.
+
+Here, it does nothing. The server clamps every progress update to a human-plausible rate (`clampProgress`). A client that suddenly claims to have typed the whole passage gets its progress capped at what a human could actually have produced in the elapsed ticks. Combined with the tick loop as the single broadcaster, the three cheats worth attempting are all closed:
+
+1. **Fake superhuman speed** — clamped by `clampProgress` on the server.
+2. **Declare yourself the winner** — the client has no channel to do that; the winner is a server-side conclusion broadcast on the tick.
+3. **Rewind or replay progress** — progress lives on the server; the client's local state is a display, not an input the server trusts.
+
+I didn't just implement this — I test it at two levels. The clamp logic is covered in the unit suite on the game core, and there is a **UI-level anti-cheat check in the Playwright E2E suite**: a test literally pastes the passage into the real UI in a real browser and asserts it can't fast-forward the race.
+
+## Testing and quality
+
+This is the project I point QA hiring managers at.
+
+- **60 Jest + Supertest tests on the transport-free game core — ~99% statements / 100% functions coverage.** The game logic is deliberately separated from Socket.IO transport, so the rules of the race (progress, clamping, timing, winning) are testable as plain code without sockets in the way.
+- **Cross-browser Playwright E2E on Chromium, Firefox, and WebKit.** The suite runs the full solo-vs-bot journey plus the UI-level anti-cheat check described above, captures trace and video on failure, and has a **live-site run mode** (`E2E_BASE_URL`) so the same suite can be pointed at production.
+- **A formal QA Test Strategy document** sits behind the suites: a risk register (P1–P3), a requirements traceability matrix, and explicit entry/exit criteria. Tests exist because a risk was identified, not because a file needed coverage.
+  - Doc link: [NEEDS-VERIFICATION: QA Test Strategy doc URL — confirm with product owner before ship; this line must not render publicly until resolved]
+- **CI gates the deploy.** A single red test blocks the GitHub Actions deploy to the VPS. No exceptions, including for me.
+
+The hardest testing problem was determinism: real-time code and wall clocks make flaky tests. I solved it with an injected clock and fake timers in the game-core suite, and range assertions where exact timing genuinely can't be pinned down.
+
+## Results
+
+- Playable instantly — open the site and race solo against a bot, no account needed.
+- Live in production at [race.aiklaotrip.com](https://race.aiklaotrip.com), deployed via GitHub Actions to a VPS running nginx + PM2.
+- Pasting the passage does nothing — verified by an automated browser test, not just by design intent.
+
+## Links
+
+- **Live:** [race.aiklaotrip.com](https://race.aiklaotrip.com)
+- **Code:** [NEEDS-VERIFICATION: Typing Race repo URL (github.com/JodPdo/...) — confirm with product owner before ship]
+- **QA Test Strategy doc:** [NEEDS-VERIFICATION: doc URL — see Testing section]
+
+## What I learned
+
+Making real-time tests deterministic. Anything that reads the clock or waits on a timer will eventually flake, so the game core takes an injected clock, the unit suite drives time with fake timers, and assertions on timing-sensitive values use ranges instead of exact numbers. That's the difference between a test suite people trust and one they rerun until it's green.

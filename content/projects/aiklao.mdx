@@ -1,0 +1,150 @@
+---
+title: "AiKlao"
+slug: "aiklao"
+order: 1
+summary: "Real-time group trip-tracking platform — a LINE bot, a LIFF web app, and a React Native app on one shared PostgreSQL database, built and run in production solo."
+tagline: "One contract, three clients — and an SOS path that can't double-fire."
+role: "Solo — mobile app, REST backend, DevOps"
+stack:
+  - "React Native / Expo (TypeScript)"
+  - "Node.js / Express"
+  - "Spring Boot 3.3 / Java 21"
+  - "PostgreSQL"
+  - "LINE Login (OAuth 2.0 + PKCE)"
+  - "JWT"
+  - "GitHub Actions"
+  - "nginx"
+  - "PM2"
+  - "Ubuntu VPS"
+tags: ["SE", "Backend", "QA"]
+featured: true
+metrics:
+  - { label: "App tests (Jest)", value: "82" }
+  - { label: "Node service tests (Jest)", value: "138" }
+  - { label: "Spring Boot tests (JUnit)", value: "84" }
+  - { label: "App function coverage", value: "~80%" }
+---
+
+{/* content-writer (PF-M2-02): every fact below traces to docs/SPEC.md §5 CS1.
+    Per architect ruling 2026-07-06 (ARCHITECTURE.md §3): frontmatter `links` is
+    omitted — unverified URLs never enter frontmatter, and none of the three URLs
+    (APK releases/latest, app repo, backend repo) are in SPEC or verified yet. The
+    pending URLs live only in the body Links section as [NEEDS-VERIFICATION] plain
+    text. When the product owner supplies real URLs, add them to frontmatter `links`
+    and have qa-engineer re-click. */}
+
+## Overview
+
+AiKlao is a real-time group trip-tracking platform. Three clients — a LINE bot, a
+LIFF web app, and a React Native mobile app — share one PostgreSQL database and one
+REST contract. The mobile app streams a rider's location; everyone in the group sees
+the same server-derived trip state: distance, ETA, break status, and SOS alerts.
+
+It runs in production on a self-managed VPS, and the Android app is a public APK
+that anyone with a LINE account can install.
+
+## My role
+
+Solo, end to end: the React Native app, the REST backend, and the DevOps to keep it
+running — CI, deploys, nginx, process management. I also migrated the live backend
+from Node.js/Express to Spring Boot without breaking the clients that depended on it.
+
+## Stack
+
+- **Mobile:** React Native / Expo, TypeScript
+- **Backend:** Node.js / Express — later ported to Spring Boot 3.3 on Java 21
+- **Database:** PostgreSQL
+- **Auth:** LINE Login (OAuth 2.0 + PKCE), JWT sessions
+- **Ops:** GitHub Actions, nginx, PM2, Ubuntu VPS
+
+## Architecture: one writer, many readers
+
+The design I'd point to first is **"Pattern A — single writer."** The mobile app is
+the *only* client allowed to write location. Every other client — the LINE bot, the
+LIFF web app, even other screens in the mobile app — reads state that the server
+derives from those writes: distance, ETA, break status, SOS.
+
+```
+React Native app ──── writes location ────▶ ┌──────────────────────────┐
+                                            │  REST API                │
+LINE bot     ◀─── reads derived state ───── │  derives distance · ETA  │ ──▶ PostgreSQL
+LIFF web app ◀─── reads derived state ───── │  · break · SOS           │
+                                            └──────────────────────────┘
+```
+
+Why it matters: with one writer there are no conflicting location writes to
+reconcile, and derived values are computed once, on the server, instead of three
+times in three clients that could drift apart. Adding a client means adding a
+reader, not renegotiating the contract.
+
+On the writer side, location tracking is an Android foreground service with
+adaptive intervals — 10 seconds normally, backing off to 30 seconds, with an
+automatic power-save mode when the battery drops below 20%. The platform also
+ships Thai/English i18n, CORS allow-listing, and rate limiting on the API.
+
+## The hard problem: a concurrency-safe SOS
+
+SOS is the one feature that must never misbehave, and it is exactly the one a naive
+design gets wrong.
+
+Two SOS requests can hit the API at effectively the same instant — a double-tap on
+the button, a client retrying over a flaky mobile network, or two group members
+reacting to the same incident. A naive handler does check-then-act: read "is there
+an active SOS for this trip?", see none, create one. Under concurrency, both
+requests pass the check before either write lands, and the trip now has duplicate
+emergency alerts for a single incident. Everything downstream of the alert is now
+processing the same emergency twice.
+
+I made the SOS write path **concurrency-safe**: however simultaneous requests
+interleave, exactly one active SOS results — the path cannot double-fire. The
+enforcement lives in the server's SOS path itself, not in trusting clients to avoid
+double-submitting, because two different members' devices can race each other no
+matter how well-behaved each client is.
+
+And it isn't a "should hold" property — it's a tested one. The automated suite
+simulates the race: fire simultaneous SOS requests at the same trip and assert that
+exactly one alert exists afterward. That test runs in CI, so the guarantee can't
+silently regress in a future change.
+
+{/* Reviewer note: SPEC §5 CS1 states the SOS path is concurrency-safe and covered by
+    a race-simulating test, but does not name the specific guard mechanism. This section
+    deliberately claims the guarantee + the test, nothing more. If the product owner
+    supplies the actual mechanism from the repo, deepen the middle paragraph. */}
+
+## Testing and quality
+
+Three codebases, three suites, one rule:
+
+- **82 Jest tests** on the React Native app — roughly 80% function coverage
+- **138 Jest tests** on the Node.js service
+- **84 JUnit tests** (Mockito + MockMvc) on the Spring Boot service
+
+That's 304 automated tests across the platform, and a **CI gate blocks the release
+build on any red test**. The suites on both backend services are also what made the
+Node-to-Spring-Boot migration survivable: the contract's expected behavior was
+pinned down in tests on each side.
+
+## Results
+
+- A **public Android APK** — anyone with a LINE account can install and use it
+- Runs **in production** on a self-managed Ubuntu VPS (nginx + PM2), deployed via
+  GitHub Actions
+
+## Links
+
+- **Android APK (latest release)** — [NEEDS-VERIFICATION: exact `releases/latest` URL from the AiKlao app repo]
+- **App repository** — [NEEDS-VERIFICATION: AiKlao app repo URL]
+- **Backend repository** — [NEEDS-VERIFICATION: AiKlao backend repo URL]
+
+{/* Do not guess GitHub URLs. Until verified, render these three as plain labels with
+    no href (or omit the section) — never a placeholder link. */}
+
+## What I learned
+
+- **Designing one contract for three clients.** When a bot, a web app, and a native
+  app all consume the same API, the contract is the product — the single-writer
+  pattern kept it coherent instead of letting each client invent its own truth.
+- **Migrating a live service without breaking it.** Porting the backend from Node to
+  Spring Boot 3.3 taught me that the framework is the easy part; the discipline is
+  holding the contract steady while everything underneath it changes, with tests as
+  the referee.

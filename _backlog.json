@@ -123,19 +123,21 @@
       "id": "PF-M2-02",
       "milestone": "M2",
       "owner_agent": "content-writer",
-      "status": "backlog",
+      "status": "done",
       "depends_on": [],
       "summary": "Case study 1 — AiKlao (docs/SPEC.md 5, CS1): single-writer architecture, concurrency-safe SOS deep-dive, 82+138+84 tests, CI gate.",
-      "dod": "template complete (problem->role->stack->architecture->hard problem->testing->results->links->learned), facts accurate"
+      "dod": "template complete (problem->role->stack->architecture->hard problem->testing->results->links->learned), facts accurate",
+      "qa": "PASS 2026-07-06 (qa-engineer): 9/9 SPEC template sections present; facts vs SPEC §5 CS1 verified (82+138+84=304 stated in body, ~80% function coverage, single-writer pattern, GPS 10s/30s + <20% power-save, role string matches); frontmatter has no `links` key and no [NEEDS-VERIFICATION] (ruling-compliant, pending URLs are body-only plain text); no import/export/JSX, only {/* comment */} braces in body; no phone/email; npm run build + lint green."
     },
     {
       "id": "PF-M2-03",
       "milestone": "M2",
       "owner_agent": "content-writer",
-      "status": "backlog",
+      "status": "done",
       "depends_on": [],
       "summary": "Case study 2 — Typing Race (CS2): server-authoritative anti-cheat, tick loop, 60 Jest ~99% stmts, Playwright cross-browser E2E, QA Test Strategy doc link.",
-      "dod": "template complete, facts accurate, live link race.aiklaotrip.com works"
+      "dod": "template complete, facts accurate, live link race.aiklaotrip.com works",
+      "qa": "PASS 2026-07-06 (qa-engineer): 9/9 SPEC template sections present; facts vs SPEC §5 CS2 verified (60 Jest+Supertest, ~99% stmts/100% functions, 3 Playwright browsers named, clampProgress + paste anti-cheat, CI gate blocks deploy); frontmatter links = {live} only, no [NEEDS-VERIFICATION] in frontmatter (repo/doc URLs are body-only pending); no import/export/JSX/expressions in body; no phone/email; `curl -L -m 10 https://race.aiklaotrip.com` -> HTTP 200; npm run build + lint green."
     },
     {
       "id": "PF-M2-04",
