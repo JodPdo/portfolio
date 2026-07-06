@@ -20,7 +20,7 @@ function ExternalLink({ href, label }: { href: string; label: string }) {
  * external link only for a `links` key that is present and non-empty.
  * An absent key renders nothing — never an empty/placeholder href.
  *
- * The card's own case-study link lives on the title (`<h3><Link>`), so
+ * The card's own case-study link lives on the title (`<h2><Link>`), so
  * these external links are siblings, not nested inside another `<a>`.
  */
 export function ProjectCard({ project }: { project: Project }) {
@@ -50,14 +50,14 @@ export function ProjectCard({ project }: { project: Project }) {
 
   return (
     <article className="flex h-full flex-col gap-3 rounded-lg border border-border bg-background-subtle p-6 transition-colors duration-200 hover:border-primary motion-reduce:transition-none">
-      <h3 className="text-lg font-semibold text-foreground">
+      <h2 className="text-lg font-semibold text-foreground">
         <Link
           href={`/projects/${slug}`}
           className="rounded-sm underline-offset-4 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
         >
           {title}
         </Link>
-      </h3>
+      </h2>
 
       {tagline ? (
         <p className="text-sm font-medium text-primary">{tagline}</p>

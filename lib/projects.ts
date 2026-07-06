@@ -130,5 +130,7 @@ export function getProjectSlugs(): string[] {
 }
 
 export function getProjectBySlug(slug: string): Project | undefined {
-  return loadAllProjects().find((project) => project.slug === slug);
+  return loadAllProjects().find(
+    (project) => !project.draft && project.slug === slug,
+  );
 }
