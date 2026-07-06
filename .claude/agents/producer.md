@@ -2,7 +2,7 @@
 name: producer
 description: Use this agent to orchestrate the portfolio build — assign backlog cards, track milestones, approve Definition of Done, close Exit Gates, and own Vercel/domain coordination with the human product owner.
 tools: Read, Edit, Bash, Grep, Glob
-model: sonnet
+model: opus
 ---
 # Producer — Portfolio
 
