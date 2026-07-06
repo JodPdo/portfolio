@@ -1,0 +1,101 @@
+---
+title: "Tiger Kick"
+slug: "tiger-kick"
+order: 3
+summary: "A multiplayer party game in Godot — built under a review-gated, agent-driven SDLC I designed: Kanban, mandatory code review, and 116 unit tests plus a headless multiplayer smoke test in CI."
+tagline: "I designed the process. The process built the game."
+role: "Process designer & architect — I designed the review-gated SDLC and owned the architecture and quality bar; AI agents executed within it"
+stack:
+  - "Godot 4.7"
+  - "GDScript"
+  - "GUT"
+  - "ENet"
+  - "Headless CI"
+tags:
+  - "SE"
+  - "QA"
+featured: true
+metrics:
+  - { label: "GUT unit tests", value: "116" }
+  - { label: "Net-smoke Godot instances", value: "2" }
+  - { label: "Role-scoped agents", value: "10" }
+  - { label: "QA strategy layers", value: "4" }
+---
+
+{/* Links frontmatter intentionally omitted — no verified URL in SPEC §5 CS3; see Links section (Ruling 2026-07-06, ARCHITECTURE §3). */}
+
+## Overview
+
+Tiger Kick is a server-authoritative multiplayer party game built in Godot 4.7 with GDScript. But the game is not the headline here. The headline is the engineering process I designed to build it.
+
+This is not a story about AI building a game. It's a story about what it takes to make AI-driven development produce software you can actually trust: a review-gated development lifecycle where AI agents do the implementation, and every change passes through gates I defined — a Kanban board, written role contracts, mandatory code review, and QA exit gates that block release on severe bugs. I set the architecture and the quality bar; the agents executed against it.
+
+If a hiring manager wants to know how I use AI, this project is my answer: as a tool, inside a process, with me owning every decision.
+
+## My role
+
+Process designer, architect, and quality owner. Concretely, I:
+
+- Designed the full development lifecycle the project runs on — the board, the roles, the review rules, the gates.
+- Wrote the contracts for **10 role-scoped agents**, each with explicit decision authority (what it MAY do, what it MUST NOT do), plus a **RACI** so responsibility is never ambiguous.
+- Set the architecture (server-authoritative multiplayer) and the **Definition of Done**, including the rule with teeth: **S0 (crash) and S1 (desync) bugs block the gate**. No release ships over them.
+- Designed the QA system — the test layers, the regression suite, and severity-based release control.
+
+## Stack
+
+- **Engine:** Godot 4.7, GDScript
+- **Multiplayer:** server-authoritative, networked over ENet
+- **Testing:** GUT (unit tests), headless 2-instance multiplayer net-smoke
+- **CI:** Godot 4.7 headless, run on every push
+
+## Architecture: a governed pipeline around a multiplayer game
+
+There are two architectures in this project, and the process one is the point.
+
+**The game** is server-authoritative multiplayer — the same trust model as my Typing Race project: the server owns the state, clients reflect it. That choice is also what makes desync the bug class that matters most (more on that below).
+
+**The process** is a governed SDLC:
+
+- **A Kanban backlog** — `Backlog → Todo → Doing → Review → Done` — so every piece of work has exactly one state and nothing skips review.
+- **10 role-scoped agents with written contracts.** Each contract states the role's decision authority as MAY / MUST NOT. An agent that hits the edge of its authority escalates instead of improvising.
+- **A RACI** mapping who is responsible, accountable, consulted, and informed for each kind of decision.
+- **Mandatory code review.** Finished work does not move to Done without passing review — no exceptions.
+- **Per-phase QA exit gates.** Each phase closes only when its QA checklist passes.
+- **A document-routing system**, so every topic has one home and agents don't produce conflicting sources of truth.
+- **A Definition of Done** where severity rules the release: an open S0 (crash) or S1 (desync) bug blocks the gate, full stop.
+
+## The hard problem: trusting code you didn't type
+
+The failure mode of AI-driven development is quiet drift: code that looks plausible, compiles, and is subtly wrong — and in a multiplayer game, "subtly wrong" usually means **desync**, where two players' worlds silently disagree. A unit test can't see desync. A human reading a diff often can't either.
+
+My answer was to make the process catch it mechanically, before merge:
+
+- **The headless 2-instance net-smoke test in CI.** On every push, CI boots **two headless Godot instances**, connects them **over ENet**, runs the smoke scenario, and greps the logs for PASS/FAIL. If the instances disagree, the run fails — a **desync (S1) is caught before merge**, not in a playtest three days later.
+- **Severity-based release control backs it up.** Because S1 blocks the gate by definition, a caught desync isn't a judgment call. The pipeline stops until it's fixed.
+
+The deeper problem this solves is the one in the section title. I don't personally type most of the implementation — so my trust can't come from having written it. It has to come from the system around it: contracts that bound what each agent may decide, review that a change cannot skip, and tests in CI that verify the property (two instances stay in sync) rather than the prose of the diff. That's how you use AI to build real software without lowering the bar.
+
+## Testing and quality
+
+The QA system is a **4-layer strategy**, each layer catching what the one below it can't:
+
+1. **GUT unit tests** — **116 of them** — on the game logic.
+2. **Headless multiplayer testing** — the 2-instance net-smoke in CI described above, catching desync between real networked instances.
+3. **Manual testing** against the QA checklists.
+4. **Playtest** — real humans playing, because a party game's final bug class is "not fun / feels wrong", and no script finds that.
+
+Behind the layers: a **growing regression suite** (a fixed bug gets a test so it stays fixed), a **requirements traceability matrix (RTM)** tying tests back to requirements, and **severity-based release control** — S0/S1 block, by rule, not by mood. All of it runs under **Godot 4.7 headless CI on every push**.
+
+## Results
+
+- A disciplined, documented, test-gated build pipeline for a real multiplayer game — 116 unit tests and a networked smoke test standing between any change and Done.
+- Multiplayer desync — the S1 bug class — is caught in CI before merge, by two real Godot instances talking over ENet.
+- A working, written-down template for AI-agent development with governance: contracts, review, gates. Process artifacts (agent contracts, agent index, project docs, tests) live in the repo as evidence, not as claims.
+
+## Links
+
+- **Code:** [NEEDS-VERIFICATION: Tiger Kick repo URL — confirm with product owner before ship; on verification, link the repo and point readers at `.claude/agents`, `AGENT_INDEX.md`, `Tiger_Kick_Project_Docs`, and `tests/` as the process evidence]
+
+## What I learned
+
+How to turn fuzzy "vibe coding" into a governed SDLC. Unstructured AI-assisted development feels fast and accumulates risk you can't see; the fix isn't less AI, it's more engineering — written authority for every role, a review no change can skip, tests that verify properties instead of prose, and a Definition of Done where severity, not enthusiasm, decides what ships. The discipline is the deliverable. The game is what it produced.

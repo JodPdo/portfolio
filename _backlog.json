@@ -143,19 +143,21 @@
       "id": "PF-M2-04",
       "milestone": "M2",
       "owner_agent": "content-writer",
-      "status": "backlog",
+      "status": "done",
       "depends_on": [],
       "summary": "Case study 3 — Tiger Kick (CS3): frame as 'I designed a review-gated SDLC and owned the architecture', 116 GUT tests, headless 2-instance net-smoke CI.",
-      "dod": "template complete, process-first framing, facts accurate"
+      "dod": "template complete, process-first framing, facts accurate",
+      "qa": "PASS 2026-07-06 (qa-engineer): 9/9 SPEC template sections present (Overview→role→stack→architecture→hard problem→testing→results→links→learned); facts vs SPEC §5 CS3 verified (116 GUT unit tests, headless 2-instance net-smoke over ENet, 10 role-scoped agents, 4-layer QA strategy, Godot 4.7); process-first framing confirmed — overview explicitly states 'not a story about AI building a game' and headlines the SDLC; no [NEEDS-VERIFICATION] in frontmatter, no links key (correct), slug=filename, order=3, featured=true; MDX safety: one {/* */} comment only, no import/export/JSX, no `<` in body; no phone/email; npm run build + lint green."
     },
     {
       "id": "PF-M2-05",
       "milestone": "M2",
       "owner_agent": "content-writer",
-      "status": "backlog",
+      "status": "done",
       "depends_on": [],
       "summary": "Case study 4 — JPD API (CS4): layered Spring Boot 3, DTO boundary, RBAC, 25 tests (Mockito + MockMvc/H2).",
-      "dod": "template complete, facts accurate"
+      "dod": "template complete, facts accurate",
+      "qa": "PASS 2026-07-06 (qa-engineer): 9/9 SPEC template sections present; facts vs SPEC §5 CS4 verified (25 tests Mockito unit + Spring MockMvc/H2 integration, ROLE_USER/ROLE_ADMIN RBAC, /api/v1 versioning, school-delete 409/400 rule, explicit no-Postgres-in-CI via H2); overview explicitly states 'No live demo, no frontend' — no implied live deployment; no [NEEDS-VERIFICATION] in frontmatter, no links key (correct), slug=filename, order=4, featured=false; MDX safety: zero brace expressions, no import/export/JSX, no `<` in body; no phone/email; npm run build + lint green."
     },
     {
       "id": "PF-M2-06",

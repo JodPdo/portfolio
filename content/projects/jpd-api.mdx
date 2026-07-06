@@ -1,0 +1,90 @@
+---
+title: "JPD School-Student Registration API"
+slug: "jpd-api"
+order: 4
+summary: "Secured Spring Boot 3 REST API — layered architecture with a DTO boundary, RBAC, and 25 Mockito + MockMvc/H2 tests. A clean backend reference."
+tagline: "A clean, layered Spring Boot 3 backend reference."
+role: "Solo — Spring Boot 3 REST API: design, security, tests"
+stack:
+  - "Spring Boot 3"
+  - "Spring Data JPA"
+  - "PostgreSQL"
+  - "Spring Security"
+  - "JWT"
+  - "BCrypt"
+  - "Mockito"
+  - "MockMvc"
+  - "H2"
+tags:
+  - "Backend"
+  - "SE"
+featured: false
+metrics:
+  - { label: "Automated tests", value: "25" }
+  - { label: "RBAC roles", value: "2" }
+  - { label: "API version", value: "v1" }
+---
+
+## Overview
+
+JPD is a secured REST API for school and student registration, built as a clean Spring Boot 3 reference: the kind of backend I'd want to inherit. No live demo, no frontend — this project is the code itself. It exists to show how I structure a Spring Boot service when nothing is improvised: layered architecture, a DTO boundary that keeps JPA entities out of the API contract, role-based access control, and tests that run anywhere without a database server.
+
+Where the other three case studies are products, this one is a standard. It's the answer to "show me how you'd build a backend from scratch."
+
+## My role
+
+Solo. I designed and built the whole service — the domain model, the security setup, the API surface, the error handling, and the test suite.
+
+## Stack
+
+- **Framework:** Spring Boot 3, Spring Data JPA
+- **Database:** PostgreSQL (H2 in-memory for tests)
+- **Security:** Spring Security, JWT, BCrypt
+- **Testing:** Mockito (unit), Spring MockMvc (integration)
+
+## Architecture: layers with a hard boundary
+
+The service is a strict **controller → service → repository** stack, and the most important line in it is the **DTO boundary**. JPA entities never cross into the API contract. Controllers accept and return DTOs; the service layer maps between DTOs and entities. That one rule buys a lot:
+
+- The persistence model can change without breaking API clients.
+- No accidental exposure of internal fields through serialization.
+- Bean Validation lives on the DTOs, so bad input is rejected at the edge, before it touches domain logic.
+
+Around that core:
+
+- **RBAC with Spring Security** — two roles, `ROLE_USER` and `ROLE_ADMIN`, gate what each caller can do. Authentication is stateless JWT; passwords are hashed with BCrypt.
+- **API versioning** — everything lives under `/api/v1`, so a future breaking change gets a new version instead of breaking existing clients.
+- **Pagination** on list endpoints, so responses stay bounded as data grows.
+- **Centralized error handling** — one exception-handling layer turns failures into consistent, predictable error responses instead of ad-hoc payloads scattered across controllers.
+
+## The hard problem: business rules that survive the API
+
+CRUD is easy. The interesting part is the rules that make the data mean something, enforced server-side where they can't be bypassed:
+
+- **A school can't be deleted while it still has students.** Deleting a school with enrolled students would orphan the student records, so the API refuses — the request is rejected with an explicit error status (409/400) through the centralized error handler, not silently ignored and not allowed to corrupt the data.
+- **Usernames and emails are unique at registration.** A duplicate registration attempt gets a clear, deliberate error response instead of a database exception leaking through the API.
+
+The point of both rules is the same discipline: invariants belong in the service, failures belong in the centralized handler, and the client always gets a response it can act on. An API that returns a stack trace when you break a rule isn't done.
+
+## Testing and quality
+
+**25 tests**, split across two levels:
+
+- **Mockito unit tests** on the service layer — business rules (like the school-deletion guard) tested in isolation, with repositories mocked.
+- **Spring MockMvc integration tests** against an **in-memory H2 database** — the full request path from HTTP to persistence, including security and error responses, with no PostgreSQL needed. That means the suite runs in CI (or on any machine) with zero infrastructure.
+
+The H2 choice is deliberate: integration tests that require a provisioned database get skipped; tests that run everywhere get run.
+
+## Results
+
+- A complete, secured Spring Boot 3 API with a documented, thorough README.
+- Every architectural claim on this page — the DTO boundary, RBAC, versioning, the business rules — is readable directly in the code.
+- The same layered, DTO-first approach shows up in AiKlao's Spring Boot service.
+
+## Links
+
+- **Code:** [NEEDS-VERIFICATION: JPD API repo URL (github.com/JodPdo/...) — confirm with product owner before ship; the README is the guided tour]
+
+## What I learned
+
+Two things stuck. First, **stateless JWT auth** — once no session lives on the server, every request must carry proof of who you are and what you're allowed to do, and the security layer has to be right on every single endpoint. Second, **keeping the API contract decoupled from persistence**: the DTO boundary felt like ceremony on day one and paid for itself the first time the entity model needed to change without breaking a consumer. Contracts and storage evolve on different clocks; the boundary is what lets them.
