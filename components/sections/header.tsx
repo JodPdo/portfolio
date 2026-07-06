@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { GitHubIcon } from "@/components/ui/icons";
 import { NavLink } from "@/components/sections/nav-link";
 
@@ -50,7 +49,6 @@ export function Header() {
           >
             <GitHubIcon />
           </a>
-          <ThemeToggle />
         </div>
       </div>
     </header>

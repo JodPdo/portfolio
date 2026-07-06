@@ -1,5 +1,4 @@
-// Small inline icon primitives (no icon-library dependency — matches the
-// pattern already used in components/ui/theme-toggle.tsx). Always render
+// Small inline icon primitives (no icon-library dependency). Always render
 // with aria-hidden; the accessible name comes from the surrounding link
 // (visible text or aria-label).
 

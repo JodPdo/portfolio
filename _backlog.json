@@ -124,7 +124,7 @@
       "id": "PF-V2-02",
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
+      "status": "review",
       "depends_on": ["PF-V2-01"],
       "summary": "Tokens v2 (brief §2 palette/typography) + remove light mode, theme toggle, no-FOUC script + next/font for JetBrains Mono + display face per ADR-0003. Resume/Contact restyle by inheritance.",
       "dod": "build green, all routes render V2 base"
