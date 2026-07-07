@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, type ElementType } from "react";
+import { prefersReducedMotion } from "./use-prefers-reduced-motion";
 
 /**
  * <Scramble> — E2 letter-scramble (Design Brief V2 §3, ADR-0003).
@@ -14,8 +15,9 @@ import { useCallback, useEffect, useRef, type ElementType } from "react";
  *   three spans, so nothing breaks without JS and there is no hydration
  *   mismatch (mutation happens only after mount).
  * - Reduced motion (brief §5): final text renders immediately; mount and
- *   hover scrambles are both no-ops. Checked live via matchMedia at start
- *   time, so flipping the OS setting mid-session is respected.
+ *   hover scrambles are both no-ops. Checked live at start time via the
+ *   shared `prefersReducedMotion()` plumbing, so flipping the OS setting
+ *   mid-session is respected.
  * - No layout shift: an invisible copy of the final text reserves the exact
  *   box; the scrambling copy is absolutely positioned on top of it.
  * - A11y: screen readers only ever see the final text (sr-only copy); the
@@ -27,10 +29,6 @@ import { useCallback, useEffect, useRef, type ElementType } from "react";
  */
 
 const DEFAULT_CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&";
-
-function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
 
 type ScrambleProps = {
   text: string;

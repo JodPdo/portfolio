@@ -3,6 +3,7 @@ import { Marquee } from "@/components/motion/marquee";
 import { PinnedHorizontal } from "@/components/motion/pinned-horizontal";
 import { Reveal } from "@/components/motion/reveal";
 import { Scramble } from "@/components/motion/scramble";
+import { ReducedMotionIndicator } from "./reduced-motion-indicator";
 
 /**
  * SCRATCH ROUTE — PF-V2-03 QA demo only. NOT site content.
@@ -90,8 +91,11 @@ export default function MotionScratchPage() {
           Rendering &gt; Emulate prefers-reduced-motion: reduce (or Windows
           Accessibility &gt; Animation effects: Off). Expected: scramble shows
           final text, marquees freeze, reveals are instant, the pinned section
-          becomes a vertical stack.
+          becomes a vertical stack. The badge below reads the shared
+          reduced-motion plumbing (usePrefersReducedMotion) and updates live
+          when the setting flips — use it to confirm emulation took effect.
         </p>
+        <ReducedMotionIndicator />
       </section>
 
       {/* ------------------------------------------------- E2: Scramble */}
