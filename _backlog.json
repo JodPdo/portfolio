@@ -134,7 +134,7 @@
       "id": "PF-V2-03",
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
-      "status": "doing",
+      "status": "review",
       "depends_on": ["PF-V2-02"],
       "summary": "Motion primitives in components/motion/: <Scramble> (E2), <Marquee> (E3, CSS keyframes), <Reveal> (E8), <PinnedHorizontal> (E7, GSAP ScrollTrigger) + reduced-motion plumbing per brief §5.",
       "dod": "each demoed on a scratch route, reduced-motion verified"
