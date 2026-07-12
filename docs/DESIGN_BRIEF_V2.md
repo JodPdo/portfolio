@@ -14,8 +14,9 @@ Dark-only editorial site. Big type does the talking; effects are few but signatu
 1. Dark-only theme. Remove the light theme and the theme toggle. (Simplifies tokens; the reference aesthetic is black.)
 2. NO police-uniform imagery anywhere on the site. The career-change story is told in text only.
 3. Voice: confident with light humor. Examples already approved: "Same discipline, better coffee." / "(Tested. Obviously.)" Facts stay verifiable — humor never at the cost of accuracy.
-4. Photos: exactly two — `docs/assets/jod-hero.jpg` (formal headshot → hero + OG) and `docs/assets/jod-working.jpg` (dark keyboard shot → About/How-I-work). Product owner saves these files; do not ship placeholders past the V2 gate.
+4. Photos: exactly two — `docs/assets/jod-hero.png` (formal headshot → hero + OG) and `docs/assets/jod-working.png` (dark keyboard shot → About/How-I-work). **Delivered 2026-07-07 (1254×1254 RGB each).** These are source files — PF-V2-04/06 convert/resize into optimized web assets under `public/` (`next/image`); do not serve the ~1–1.8MB sources directly.
 5. Keep all existing content facts and case-study order (AiKlao → Typing Race → Tiger Kick → JPD).
+6. **Contact email confirmed by product owner (2026-07-07): `fontong.jod.aekkarut@gmail.com`** — this is the email that ships on the Contact page and in mailto links (spelling "aekkarut" confirmed as-is). This closes the M1 exit-gate item "contact email verified".
 
 ## 2. Visual language
 
