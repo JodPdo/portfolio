@@ -22,9 +22,21 @@ import { gsap } from "./gsap";
  * Keyboard/a11y: the effect is driven by normal page scroll (native
  * scrolling stays — no scroll hijack), so Space/PageDown/arrow keys travel
  * through the panels exactly like any other section. Panels are 100vw with
- * horizontal overflow hidden on the section; only transform animates, so
- * no CLS. (Trade-off, documented: on a motion-safe desktop with JS failed,
+ * horizontal overflow hidden on the section; only transform animates.
+ * (Trade-off, documented: on a motion-safe desktop with JS failed,
  * panels 2+ are clipped — server markup still exists for SEO/reader mode.)
+ *
+ * CLS (brief §5 budget, QA finding 2026-07-12): ScrollTrigger's default
+ * `pinType: "fixed"` swaps the section to `position: fixed` at pin
+ * engagement; Chrome's Layout Instability API scores that swap as the
+ * element disappearing + reappearing (previousRect [0,0,0,0] → full rect),
+ * ~0.70 per engage/disengage even though nothing visually moves. We pin
+ * with `pinType: "transform"` instead: the section stays in normal flow
+ * and is held in place by a per-frame counter-translate — transform-only
+ * movement is excluded from layout-shift scoring by spec, so phased CLS
+ * across the whole pin lifecycle measures 0. (`anticipatePin` is a
+ * fixed-pin lag workaround and must NOT be combined with transform pinning
+ * — it would pre-skew the counter-translate and cause a real visual jump.)
  */
 
 const E7_QUERY = "(min-width: 768px) and (prefers-reduced-motion: no-preference)";
@@ -62,9 +74,9 @@ export function PinnedHorizontal({
           start: "top top",
           end: () => `+=${distance()}`,
           pin: true,
+          pinType: "transform",
           scrub: true,
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
       });
       // Auto-reverted by gsap.matchMedia when the query stops matching.

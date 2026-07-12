@@ -17,7 +17,7 @@ import { usePrefersReducedMotion } from "@/components/motion/use-prefers-reduced
 export function ReducedMotionIndicator() {
   const reduced = usePrefersReducedMotion();
   return (
-    <p className="mt-6 inline-flex items-center gap-3 border border-border-strong bg-background-subtle px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground-secondary">
+    <p className="mt-6 inline-flex max-w-full flex-wrap items-center gap-x-3 gap-y-1 border border-border-strong bg-background-subtle px-4 py-2 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground-secondary">
       <span
         aria-hidden="true"
         className={`h-2 w-2 rounded-full ${reduced ? "bg-primary" : "bg-border-strong"}`}
