@@ -10,6 +10,6 @@ Portfolio site for Aekkarat Fontong (Jod), built by a **review-gated AI-agent te
 4. Producer assigns `PF-M0-01` → run each card with its owner agent → every card passes `code-reviewer` → `qa-engineer` → producer marks Done.
 5. After PF-M0-04: import the repo on Vercel → live URL from day 1.
 
-> Note: agent contracts use `model: fable` for content-writer. If your Claude Code build doesn't accept `fable`, change it to `claude-fable-5` (full model id) or `opus`.
+> Note: all agent contracts use `model: opus` (as of 2026-07-12; no agent uses `fable` anymore).
 
 This README gets replaced by the real project README during M0 scaffold.

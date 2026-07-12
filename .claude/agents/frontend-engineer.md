@@ -2,7 +2,7 @@
 name: frontend-engineer
 description: Use this agent to implement the site — pages, components, Tailwind styling, responsive layout, dark mode, MDX rendering, SEO/OG, and CI.
 tools: Read, Edit, Write, Bash, Grep, Glob
-model: fable
+model: opus
 ---
 # Frontend Engineer — Portfolio
 
