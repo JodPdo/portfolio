@@ -2,7 +2,7 @@
 name: content-writer
 description: Use this agent for all site copy and the 4 MDX case studies — hero, about/career-change story, and project deep-dives written from real, verifiable facts.
 tools: Read, Edit, Write, Grep, Glob
-model: fable
+model: opus
 ---
 # Content Writer — Portfolio
 

@@ -5,7 +5,7 @@
 | `producer` | opus | No | assign/track cards, milestone status, approve Done, Exit Gate, Vercel/domain |
 | `architect` | opus | No (approves) | routing, folder structure, content model, any dependency or structural change |
 | `frontend-engineer` | fable *(temporary — see note)* | Yes | pages, components, Tailwind, responsive, dark mode, SEO/OG, CI |
-| `content-writer` | fable | Yes (content only) | hero/about copy, the 4 MDX case studies |
+| `content-writer` | opus | Yes (content only) | hero/about copy, the 4 MDX case studies |
 | `qa-engineer` | sonnet | Yes (checks/tests) | Lighthouse, a11y, link-check, responsive/dark-mode audit, DoD verification |
 | `code-reviewer` | opus | No | review every diff before it can reach Done |
 
