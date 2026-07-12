@@ -30,9 +30,13 @@ export function StatsMarquee() {
       className="h-12 border-y border-border bg-primary text-primary-foreground"
     >
       {Array.from({ length: 3 }, (_, rep) =>
+        // Visual 3× fill so the strip is wide enough to loop seamlessly.
+        // Only rep 0 is announced; reps 1–2 carry aria-hidden so each stat is
+        // read once (PF-V2-04). The <Marquee> loop-duplicate is already hidden.
         STATS.map((stat) => (
           <span
             key={`${rep}-${stat}`}
+            aria-hidden={rep > 0 || undefined}
             className="whitespace-nowrap px-6 font-mono text-xs uppercase tracking-[0.18em]"
           >
             {stat} <span aria-hidden="true">✳</span>
