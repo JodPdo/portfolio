@@ -1,6 +1,11 @@
+import { Reveal } from "@/components/motion/reveal";
+
 // Copy verbatim from docs/copy/home.md §4 (approved, PF-M1-02). Group order
 // mirrors the all-roles positioning: build -> serve -> test -> ship. Chips
 // are plain text, not links.
+//
+// V2 (card PF-V2-04, brief §2): hairline-bordered full-bleed section, mono
+// labels/chips, E8 stagger on the groups.
 const SKILL_GROUPS = [
   {
     label: "Frontend",
@@ -24,26 +29,29 @@ export function Skills() {
   return (
     <section
       aria-labelledby="skills-heading"
-      className="mx-auto w-full max-w-content px-4 py-16 sm:px-6"
+      className="w-full border-t border-border"
     >
       <h2
         id="skills-heading"
-        className="text-2xl font-semibold tracking-tight text-primary sm:text-3xl"
+        className="px-4 pb-8 pt-16 font-mono text-[11px] uppercase tracking-[0.18em] text-foreground-secondary sm:px-8"
       >
-        Skills
+        02 — Skills
       </h2>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2">
+      <Reveal
+        stagger={0.06}
+        className="grid grid-cols-1 gap-x-8 gap-y-10 px-4 pb-16 sm:grid-cols-2 sm:px-8 lg:grid-cols-4"
+      >
         {SKILL_GROUPS.map((group) => (
-          <div key={group.label}>
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-foreground">
+          <div key={group.label} className="border-t border-border-strong pt-4">
+            <h3 className="font-mono text-xs font-semibold uppercase tracking-[0.16em] text-foreground">
               {group.label}
             </h3>
-            <ul className="mt-3 flex flex-wrap gap-2">
+            <ul className="mt-4 flex flex-col gap-1.5">
               {group.chips.map((chip) => (
                 <li
                   key={chip}
-                  className="rounded-full border border-border bg-background-subtle px-3 py-1 text-sm text-foreground"
+                  className="font-mono text-sm text-foreground-secondary"
                 >
                   {chip}
                 </li>
@@ -51,7 +59,7 @@ export function Skills() {
             </ul>
           </div>
         ))}
-      </div>
+      </Reveal>
     </section>
   );
 }
