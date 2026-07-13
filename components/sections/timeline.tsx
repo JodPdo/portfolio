@@ -51,20 +51,20 @@ const TIMELINE_ITEMS: { year: string; title: string; description: string }[] =
 // connector in the same coordinate space regardless of viewport width.
 export function Timeline() {
   return (
-    <ol className="relative mt-8 flex flex-col gap-10 border-l-2 border-border pl-6 sm:pl-8">
+    <ol className="relative mt-10 flex flex-col gap-12 border-l border-border-strong pl-6 sm:pl-8">
       {TIMELINE_ITEMS.map((item) => (
         <li key={item.year} className="relative">
           <span
             aria-hidden="true"
-            className="absolute top-1 -left-6 h-3 w-3 -translate-x-1/2 rounded-full border-2 border-primary bg-background sm:-left-8"
+            className="absolute top-1.5 -left-6 h-2.5 w-2.5 -translate-x-1/2 rounded-full border border-primary bg-background sm:-left-8"
           />
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">
+          <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-primary">
             {item.year}
           </p>
-          <h3 className="mt-1 text-lg font-semibold text-foreground">
+          <h3 className="mt-3 font-display text-2xl font-medium uppercase leading-none tracking-tight text-foreground sm:text-3xl">
             {item.title}
           </h3>
-          <p className="mt-2 text-sm leading-relaxed text-foreground sm:text-base">
+          <p className="mt-4 max-w-prose text-base leading-relaxed text-foreground-secondary">
             {item.description}
           </p>
         </li>
