@@ -160,7 +160,8 @@
       "status": "todo",
       "depends_on": ["PF-V2-03"],
       "summary": "Work rows (typographic, replaces card grid on /projects) + hover video previews (E6): muted looping webm <=300KB, preload=none, load on first hover, poster fallback, tap=navigate on touch. Producer sources 4 webm clips with product owner; poster-only acceptable to pass.",
-      "dod": "hover/touch/keyboard all correct"
+      "dod": "hover/touch/keyboard all correct",
+      "po_decision": "PRODUCT-OWNER DECISION 2026-07-13: SHIP POSTER-ONLY with a designed token-based placeholder. Repo has NO project screenshots and NO webm clips (only the two Jod photos), so E6 has no source media. Build the typographic work rows (replace the /projects card grid, order AiKlao->Typing Race->Tiger Kick->JPD) + the FULL E6 hover/touch/keyboard mechanism, but the hover 'poster' is a clean V2 duotone/typographic panel per project (no screenshot required) rather than a video frame. Wire the <video> path so real muted-looping webm <=300KB (preload=none, load-on-first-hover, poster fallback, tap=navigate on touch) 'just drops in' when the product owner later delivers clips. DoD 'hover/touch/keyboard all correct' still fully applies to the mechanism. The 4 webm clips + real posters remain an OUTSTANDING product-owner asset delivery, tracked but non-blocking for this card."
     },
     {
       "id": "PF-V2-06",
