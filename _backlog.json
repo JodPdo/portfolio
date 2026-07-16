@@ -181,7 +181,7 @@
       "id": "PF-V2-07",
       "milestone": "M1.5",
       "owner_agent": "qa-engineer",
-      "status": "todo",
+      "status": "doing",
       "depends_on": ["PF-V2-04", "PF-V2-05", "PF-V2-06"],
       "summary": "Full V2 gate per brief §5: JS budget (<250KB gzip on / excl. lazy pixi), Lighthouse mobile Perf >= 90 + A11y/BP/SEO >= 95 + CLS < 0.1, explicit prefers-reduced-motion pass (E2 final text, E3 paused, E4/E5 off, E7 vertical, E8 instant), keyboard/a11y AA, link-check.",
       "dod": "all pass or bug cards filed"
