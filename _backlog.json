@@ -157,7 +157,7 @@
       "id": "PF-V2-05",
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
+      "status": "doing",
       "depends_on": ["PF-V2-03"],
       "summary": "Work rows (typographic, replaces card grid on /projects) + hover video previews (E6): muted looping webm <=300KB, preload=none, load on first hover, poster fallback, tap=navigate on touch. Producer sources 4 webm clips with product owner; poster-only acceptable to pass.",
       "dod": "hover/touch/keyboard all correct",
