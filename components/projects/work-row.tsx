@@ -71,10 +71,14 @@ function WorkPoster({
 }) {
   return (
     <div className="absolute inset-0 flex flex-col justify-between overflow-hidden bg-surface-mat p-5">
-      {/* Faint oversized ordinal — duotone depth, purely decorative. */}
+      {/* Oversized ordinal — duotone depth, purely decorative (aria-hidden).
+          Opacity is 0.38 (not lower) so the composited numeral color over the
+          opaque #0f1f1c mat clears WCAG 1.4.3 large-text 3:1 (measured 3.34:1);
+          axe/Lighthouse treat this <span> as text regardless of its decorative
+          intent, so it must pass contrast. See PF-V2-08. */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -right-3 -top-8 font-display text-[8rem] font-medium leading-none text-foreground/[0.05] sm:text-[10rem]"
+        className="pointer-events-none absolute -right-3 -top-8 font-display text-[8rem] font-medium leading-none text-foreground/[0.38] sm:text-[10rem]"
       >
         {ordinal}
       </span>
