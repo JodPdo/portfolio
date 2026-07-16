@@ -181,7 +181,7 @@
       "id": "PF-V2-07",
       "milestone": "M1.5",
       "owner_agent": "qa-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": ["PF-V2-04", "PF-V2-05", "PF-V2-06"],
       "summary": "Full V2 gate per brief §5: JS budget (<250KB gzip on / excl. lazy pixi), Lighthouse mobile Perf >= 90 + A11y/BP/SEO >= 95 + CLS < 0.1, explicit prefers-reduced-motion pass (E2 final text, E3 paused, E4/E5 off, E7 vertical, E8 instant), keyboard/a11y AA, link-check.",
       "dod": "all pass or bug cards filed",
@@ -256,7 +256,7 @@
       "id": "PF-M2-06",
       "milestone": "M2",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "todo",
       "depends_on": ["PF-M2-01", "PF-M2-02", "PF-M2-03", "PF-M2-04", "PF-M2-05", "PF-V2-07"],
       "summary": "MDX case-study layout: code blocks, callouts, metric highlights; render all 4 studies. Build directly on V2 (Design Brief V2 §6) — gated on PF-V2-07. Also wire generateStaticParams + dynamicParams=false on /projects/[slug] (QA-flagged gap).",
       "dod": "all 4 render, responsive, dark-only V2 theme, no CLS, unknown slug -> 404"
