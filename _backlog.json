@@ -191,7 +191,7 @@
       "id": "PF-V2-08",
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
+      "status": "doing",
       "depends_on": [],
       "summary": "Bug filed by qa-engineer during PF-V2-05 DoD gate (2026-07-16, live axe-core 4.12.1 run against /projects on prod build, commit a95b8cf): axe flags 'serious' color-contrast (1.14:1, needs 3:1) on the oversized decorative ordinal numerals in components/projects/work-row.tsx WorkPoster (span aria-hidden=\"true\" pointer-events-none text-foreground/[0.05], e.g. line ~77), 3 nodes (typing-race, tiger-kick rows shown in the trace; aiklao/jpd share the same markup). The element is aria-hidden + pointer-events-none + 5%-opacity purely-decorative background texture (arguably WCAG 1.4.3 'pure decoration' exception), so this is likely a false positive, but it will also surface in Lighthouse's a11y audit (same axe engine) and must be resolved or explicitly justified before the PF-V2-07 exit-gate Lighthouse/axe run. Fix options: bump opacity enough to clear 3:1 without breaking the duotone-texture look, or add a documented axe exclusion for this decorative pattern (get architect/producer sign-off on the exception rather than silently ignoring).",
       "dod": "axe-core run against /projects shows 0 violations on the WorkPoster ordinal, OR a documented + producer-approved exception is recorded in docs/DESIGN_SYSTEM.md for decorative aria-hidden text; re-verified by qa-engineer before/at the PF-V2-07 exit gate",
