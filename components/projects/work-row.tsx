@@ -90,7 +90,17 @@ function WorkPoster({
       <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-foreground-secondary">
         Fig. {ordinal} — Preview
       </span>
-      <div className="relative">
+      {/* Caption block sits ABOVE the ordinal (z-10) with its own opaque
+          bg-surface-mat bled to the panel's left/right/bottom edges (-mx-5
+          -mb-5 + px-5/pb-5). This masks the numeral wherever the caption
+          physically reaches it, so a long title that wraps to 3 lines (JPD —
+          the longest) can no longer collide with the numeral's glyphs. Short
+          titles (AiKlao/Typing Race/Tiger Kick) never reach up into the
+          numeral, so the mask is inert and those posters are unchanged — the
+          numeral stays fully visible for the duotone-depth look. The masked
+          numeral still composites over the same opaque mat wherever it shows,
+          so the WCAG 3:1 fix (PF-V2-08) is unaffected. See PF-V2-08 qa_gate. */}
+      <div className="relative z-10 -mx-5 -mb-5 bg-surface-mat px-5 pb-5 pt-3">
         <p className="font-display text-2xl font-medium uppercase leading-none tracking-tight text-primary sm:text-3xl">
           {title}
         </p>
