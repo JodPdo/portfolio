@@ -16,10 +16,21 @@ M1.5 (Design V2 "Editorial Dark") closed 2026-07-17. Cards PF-V2-01 … PF-V2-08
 
 Known non-blocking carry-overs from the gate: `/projects/[slug]` still returns 200 (not 404) for an unknown slug — explicitly owned by PF-M2-06 (`generateStaticParams` + `dynamicParams=false` wiring), not a new gap. One axe `incomplete` (color-contrast, paint-order-blind false-positive on the already-investigated PF-V2-08 JPD numeral/title pair) — doesn't affect Lighthouse's scored Accessibility category, no action needed.
 
+## M2 progress
+
+- **PF-M2-06 (MDX case-study layout + `/projects/[slug]` 404 fix) — DONE 2026-07-18.** code-reviewer PASS (renderer-correctness, a11y, token-compliance, factual-accuracy) + qa-engineer PASS the full DoD gate (build/lint green, all 4 case-study routes render real content, unknown slug -> 404 confirmed for both a nonsense slug and the non-canonical `jpd` shorthand, responsive 375/768/1280 clean, dark-only V2 theme, axe 0 violations on all 4 routes, no broken links). This was the last *code* card for M2.
+- PF-M2-01 … PF-M2-05 (projects grid + 4 case-study MDX files) — all Done/QA-passed prior.
+
+### M2 exit gate — NOT yet closed
+
+There is no dedicated M2 exit-gate card in `_backlog.json` (M2 has no PF-M2 "gate" card the way M1.5 had PF-V2-07; the formal Lighthouse/a11y sweep for the post-M2 base lives in M3 as PF-M3-02). PF-M2-06 landing does not close M2 because two non-blocking follow-ups filed during its DoD gate remain open:
+
+- **PF-M2-07** (owner: frontend-engineer, `todo`) — `/projects/tiger-kick` measures CLS 0.088 under Lighthouse mobile throttling (JetBrains Mono font-swap reflow on the Role/Stack `<dl>`, amplified by Tiger Kick's 154-char `role` string). Still under the ADR-0003 `<0.1` project gate (non-blocking) but a regression from M1.5's CLS-0 baseline; does not reproduce unthrottled.
+- **PF-M2-08** (owner: content-writer, `todo`) — `content/projects/typing-race.mdx` (~line 81) has an internal author note ("this line must not render publicly until resolved") rendering as visible plain text on the live `/projects/typing-race` page; convert to an MDX `{/* comment */}` or resolve the pending URL. Content-authoring bug, not a renderer defect.
+
 ## Carry-overs still open
 
 - PF-M1-06 (Resume page) — blocked on product owner PDFs (`/public/resume/`); will be built on the V2 base.
-- M2 content is DONE (4 case-study MDX files QA-passed); PF-M2-06 now wires the MDX layout + `/projects/[slug]` 404 fix on the V2 base.
 
 ## Milestone map
 
