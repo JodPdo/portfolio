@@ -275,7 +275,7 @@
       "id": "PF-M2-08",
       "milestone": "M2",
       "owner_agent": "content-writer",
-      "status": "todo",
+      "status": "review",
       "depends_on": [],
       "summary": "Bug filed by qa-engineer during the PF-M2-06 DoD gate (2026-07-18), corroborating a code-reviewer flag: `content/projects/typing-race.mdx` (card PF-M2-03) around line 81 contains an internal author/tracking note — 'Doc link: [NEEDS-VERIFICATION: QA Test Strategy doc URL — confirm with product owner before ship; this line must not render publicly until resolved]' — that is currently rendering as visible plain text inside a real `<li>` on the live `/projects/typing-race` page (confirmed in the shipped HTML, not just the CMS/source). This is a content-authoring bug: the note should have been written as an MDX comment (`{/* ... */}`) so it never reaches the rendered body, consistent with how the other 3 studies' tracking notes are written inline as short bracketed markers without an explicit 'must not render publicly' aside. Not a renderer defect — `app/projects/[slug]/page.tsx` / `components/mdx/mdx-components.tsx` (PF-M2-06) are rendering the MDX body exactly as authored; the architecture's accepted convention for `[NEEDS-VERIFICATION: ...]` markers (render as inert plain text, never a live link) is working correctly here.",
       "dod": "The internal note text is removed from the rendered body (converted to an MDX comment or rewritten as a normal bracketed NEEDS-VERIFICATION marker consistent with the other 3 studies) — re-verified live by qa-engineer that `/projects/typing-race` no longer shows the phrase 'must not render publicly' or any other internal-only aside in its rendered HTML."
