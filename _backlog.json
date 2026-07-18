@@ -342,7 +342,7 @@
       "id": "PF-M3-02",
       "milestone": "M3",
       "owner_agent": "qa-engineer",
-      "status": "doing",
+      "status": "review",
       "depends_on": [
         "PF-M2-06"
       ],
@@ -389,6 +389,15 @@
       ],
       "summary": "OPTIONAL: TH/EN toggle with next-intl; EN is default.",
       "dod": "toggle works on every page, no layout break, no SEO regression"
+    },
+    {
+      "id": "PF-M3-06",
+      "milestone": "M3",
+      "owner_agent": "content-writer",
+      "status": "todo",
+      "depends_on": [],
+      "summary": "Bug (filed by qa-engineer, PF-M3-02 QA pass, 2026-07-18): all 4 case-study \"Links\" sections render literal author-note placeholder text \"[NEEDS-VERIFICATION: ...]\" on the live public pages (/projects/aiklao, /projects/typing-race, /projects/tiger-kick, /projects/jpd-api) instead of the plain-label-no-href fallback the in-MDX comment itself specifies (see content/projects/aiklao.mdx lines 139-140: \"render these as plain labels with no href ... never a placeholder link\"). Confirmed via curl against a fresh production build (npm run build && npm run start): grep for NEEDS-VERIFICATION returns 6 hits on aiklao, 6 on typing-race, 2 on tiger-kick, 2 on jpd-api, all inside rendered <li> markup, not MDX comments. This is exactly the leak class the QA_CHECKLIST content item (\"Grep rendered pages for author-note markers... before any content card passes\") exists to catch -- same family of defect as PF-M2-08, not yet fixed for these four instances. Until real repo/APK/doc URLs are supplied by the product owner, rewrite the affected list items as plain text with no bracketed internal marker (e.g. \"Android APK -- pending public release\") or omit the bullet entirely per the MDX comment's own instruction, or wrap the marker text itself in an MDX comment so only a clean fallback renders. Note: this is a repeat finding, not a regression -- PF-M2-08 (commit ebbe2d2) trimmed the internal rationale clause around each marker (e.g. removed \"confirm with product owner before ship; this line must not render publicly until resolved\") but left the [NEEDS-VERIFICATION: ...] bracket text itself in the rendered list item, so the visible leak was narrowed, never actually closed. This card asks for the marker text itself to stop rendering, not just the aside around it.",
+      "dod": "qa-engineer re-greps the production build HTML for all 4 /projects/[slug] routes and confirms zero occurrences of NEEDS-VERIFICATION (or any other bracketed internal marker) in rendered output; real links substituted if the product owner has supplied them by then, otherwise a professional placeholder-free fallback ships"
     }
   ]
 }
