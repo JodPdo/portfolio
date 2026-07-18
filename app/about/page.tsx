@@ -12,9 +12,10 @@ import jodWorking from "@/public/images/jod-working-duotone.webp";
 // jod-working duotone in a <PhotoMat>, and §2 rebuilt as the E7 pinned
 // horizontal section (<HowIWork>).
 export const metadata: Metadata = {
-  title: "About — Aekkarat Fontong",
+  title: "About",
   description:
     "From 4.5 years in the Royal Thai Police to shipping production software. The full story: the pivot, how I work, and the proof.",
+  alternates: { canonical: "/about" },
 };
 
 // Section 4 — "Certifications". Interim rendering rule (copy doc §4): every

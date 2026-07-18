@@ -1,6 +1,13 @@
 {
   "$schema_note": "Cards for the portfolio build. status: backlog|todo|doing|review|done. Agents pick cards where owner_agent = you, status = todo, and all depends_on are done. Every card also passes code-reviewer -> qa-engineer -> producer before done.",
-  "milestones": ["M0", "M1", "M1.5", "M2", "M3", "M4"],
+  "milestones": [
+    "M0",
+    "M1",
+    "M1.5",
+    "M2",
+    "M3",
+    "M4"
+  ],
   "cards": [
     {
       "id": "PF-M0-01",
@@ -16,7 +23,9 @@
       "milestone": "M0",
       "owner_agent": "architect",
       "status": "done",
-      "depends_on": ["PF-M0-01"],
+      "depends_on": [
+        "PF-M0-01"
+      ],
       "summary": "Define routes, folder structure, and content model (MDX in content/projects/ for 4 case studies). Record decisions in docs/.",
       "dod": "documented in docs/, approved, no code contradiction"
     },
@@ -25,7 +34,9 @@
       "milestone": "M0",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M0-02"],
+      "depends_on": [
+        "PF-M0-02"
+      ],
       "summary": "Implement design tokens from docs/DESIGN_SYSTEM.md (teal palette, type, spacing) in Tailwind config + dark-mode setup with toggle.",
       "dod": "tokens usable in components, dark mode toggles and persists, no FOUC"
     },
@@ -34,18 +45,22 @@
       "milestone": "M0",
       "owner_agent": "producer",
       "status": "done",
-      "depends_on": ["PF-M0-01"],
+      "depends_on": [
+        "PF-M0-01"
+      ],
       "summary": "Connect GitHub repo to Vercel with the human product owner; deploy skeleton.",
       "dod": "live Vercel URL loads the skeleton",
       "evidence": "https://portfolio-zeta-gilt-mm7bxjobci.vercel.app — all 6 routes HTTP 200, theme-init present (verified 2026-07-05)"
     },
-
     {
       "id": "PF-M1-01",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M0-03", "PF-M0-04"],
+      "depends_on": [
+        "PF-M0-03",
+        "PF-M0-04"
+      ],
       "summary": "Global layout: sticky header (name, nav, GitHub link, theme toggle) + footer.",
       "dod": "sticky, responsive, keyboard-navigable, visible focus rings",
       "evidence": "components/sections/header.tsx, components/sections/footer.tsx, components/sections/nav-link.tsx, components/ui/icons.tsx; wired into app/layout.tsx (header/main/footer landmarks + skip link); build+lint green; verified single <main id=main-content>, aria-current=page on active nav link (checked /about), all 6 routes + 404 return correct HTTP status on prod server. QA PASS 2026-07-06 (code review passed prior): build+lint green; prod server curl on all 6 routes + /nope (200x6, 404x1); exactly one <main>/<header>/<footer> per route (raw HTML, all 6 routes), nav aria-label=Main present, skip link first focusable element on every route; aria-current=page verified present exactly once and on the correct link on / (0 matches — no Home nav item, correct), /projects, /projects/aiklao (Projects active on child route), /about, /resume, /contact; headless-Edge CDP (Emulation.setDeviceMetricsOverride, not --window-size which mis-sized the viewport and produced a false-positive overflow artifact — noted as a tooling gotcha) confirmed scrollWidth===clientWidth (no horizontal overflow) at 375/768/1280 on all 6 routes; zero console/exception entries on load; dark-mode toggle verified end-to-end (click -> html.classList has dark -> computed body bg #111827 -> screenshot shows full dark theme incl. moon icon); sticky header confirmed via computed getComputedStyle position:sticky, top:0 rect stable (page content is still a stub at this stage — PF-M1-05/06/07 not yet built — so a real scroll-past-the-fold check on populated content is deferred, see manual checks); simulated Tab key sequence via CDP Input.dispatchKeyEvent confirmed order skip-link -> logo -> Projects -> About -> Resume -> Contact -> GitHub -> theme toggle, and focus-visible ring box-shadow (2px offset + 4px teal-300 ring) rendered and visible on a nav link in dark mode (screenshot); GitHub https://github.com/JodPdo HTTP 200, LinkedIn HTTP 999 (known anti-bot response, not a failure); no console.* in any component; working tree clean except this board file. Manual checks still needed from a real interactive browser (cannot be done headlessly): mouse/touch scroll confirming header stays visually pinned on a fully-populated page (defer to when PF-M1-05/06/07 land), real hardware keyboard Tab/Shift+Tab feel and ring visibility across both themes end-to-end by a human; light-mode ring contrast is tracked separately as PF-M3-04 (not blocking here)."
@@ -65,7 +80,10 @@
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M1-01", "PF-M1-02"],
+      "depends_on": [
+        "PF-M1-01",
+        "PF-M1-02"
+      ],
       "summary": "Build Home page from approved copy.",
       "dod": "matches design system, responsive, dark mode OK",
       "evidence": "QA PASS 2026-07-06: build+lint green; prod server (localhost:3000) curl of / — 1 h1, h2s for Featured projects/Skills, all 4 trust-strip items present, /projects/aiklao|typing-race|tiger-kick all 200, github.com/JodPdo + race.aiklaotrip.com present with rel=noopener noreferrer and both HTTP 200; headless-Edge CDP on / — no horizontal overflow at 375/768/1280 (scrollWidth===clientWidth), zero console errors/exceptions, dark-mode toggle confirmed (body bg rgb(17,24,39)=#111827, hero/trust-strip/cards/skills/CTA all render dark tokens, screenshots taken both themes); sticky header stays top:0 after scrolling to scrollY=965; no mailto: link, no phone number, no email string found on page"
@@ -85,7 +103,10 @@
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M1-01", "PF-M1-04"],
+      "depends_on": [
+        "PF-M1-01",
+        "PF-M1-04"
+      ],
       "summary": "Build About page + vertical timeline component.",
       "dod": "responsive, a11y (semantic list, contrast AA)",
       "evidence": "app/about/page.tsx (all 5 sections + closing CTA, copy verbatim from docs/copy/about.md), components/sections/timeline.tsx (server component, <ol>/<li>, CSS-only aria-hidden connector/markers, no client JS); B.Sc. 2026 entry uses the copy doc's own unconfirmed-completion fallback phrasing ('Finishing a B.Sc. in Computer Science…') per its interim rendering rule; certifications render name · issuer with zero <a> tags (all 6 verify URLs still NEEDS-VERIFICATION); build+lint green; prod server curl of /about — exactly one <h1> ('About'), one <ol> with exactly 4 <li> (years 2022/2024/2025/2026 in order), 0 anchors inside the Certifications section, no mailto:/tel: anywhere on the page; design tokens only (primary/foreground/border/background-subtle/ring), focus-visible rings + motion-reduce on CTA links, dark mode via semantic tokens (no ad-hoc colors); no phone number, no email address on this page. QA PASS 2026-07-06 (round 2, after fix commit 848528b): initial QA pass (round 1) FAILED on timeline dot alignment — measured markers ~25px (375px) / ~33px (1280px) right of the border-l-2 connector, screenshots confirmed dots floating off the line. frontend-engineer fixed via -left-6/sm:-left-8 on the marker span (components/sections/timeline.tsx:45-54) to match the ol's own padding, keeping marker + connector in the same coordinate space. Re-verified independently: rebuilt (build+lint green again), fresh headless-Edge CDP session (Emulation.setDeviceMetricsOverride), re-measured geometry at 375/1280 — dot-center-to-connector-edge offset now exactly 2px at both (the connector's own border-stroke width), full-page + cropped screenshots visually confirm all 4 dots centered on the line in both themes; no regressions — build+lint green, no horizontal overflow at 375/768/1280, zero console errors/exceptions, dark-mode toggle still flips body bg to #111827, cert section still 0 <a> tags, ol still 4 <li> in order 2022/2024/2025/2026, no mailto:/tel:; contrast re-checked and still AA-compliant in both themes (timeline year/title/body text all >=5:1, most >=11:1)."
@@ -95,7 +116,9 @@
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
       "status": "backlog",
-      "depends_on": ["PF-M1-01"],
+      "depends_on": [
+        "PF-M1-01"
+      ],
       "summary": "Resume page: 3 tabs (SE / Backend / QA), DOWNLOAD-FIRST (buttons + thumbnails); inline embed only as desktop enhancement. PDFs from /public/resume/.",
       "dod": "PDFs download on mobile + desktop, tabs keyboard-accessible"
     },
@@ -104,12 +127,13 @@
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M1-01"],
+      "depends_on": [
+        "PF-M1-01"
+      ],
       "summary": "Contact page: email (verify with product owner first), LinkedIn, GitHub. NO phone number (product-owner decision).",
       "dod": "links correct and clickable, mailto works",
       "evidence": "commit f554a96; code review passed prior (email char-by-char vs SPEC incl. intentional 'aekkarut' spelling, mailto no target=_blank, no phone digits, tokens clean). QA 2026-07-06: build+lint green; prod server curl /contact 200, exactly one <h1>, mailto:fontong.jod.aekkarut@gmail.com present as href AND visible text, GitHub href=https://github.com/JodPdo and LinkedIn href=https://www.linkedin.com/in/aekkarut-fontong both target=_blank rel=noopener noreferrer, mailto anchor isolated and confirmed no target attribute, grep for +66/94-861/8164/086/089 = zero matches; headless-Edge CDP (Emulation.setDeviceMetricsOverride) on /contact: no horizontal overflow at 375/768/1280 (scrollWidth===innerWidth all three), zero console/exception entries across all navigations + after interaction; dark-mode toggle clicked -> html gains .dark, body bg rgb(17,24,39)=#111827, contact rows adopt distinct dark tokens (bg rgb(11,27,26), border color(srgb .90 .95 .94 /0.18), text rgb(230,242,240)) vs header/footer nav links (transparent bg, solid teal border) confirming page-level dark styling applied; tap targets for the three contact rows (mailto/GitHub/LinkedIn) measured via getBoundingClientRect = 343x74px each, well over the 44px minimum; curl -L https://github.com/JodPdo = 200, curl -L https://www.linkedin.com/in/aekkarut-fontong = 999 (known LinkedIn anti-bot response, recorded not failed, consistent with PF-M1-01 precedent). Observation (non-blocking, out of scope for this card): header nav links (Projects/About/Resume/Contact) measured 22px tall at 375px viewport, below the 44px tap-target guideline -- pre-existing from PF-M1-01 (already Done/QA-passed), flagged for exit-gate re-check, not a regression introduced by this card. Verdict: PASS."
     },
-
     {
       "id": "PF-V2-01",
       "milestone": "M1.5",
@@ -125,7 +149,9 @@
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-V2-01"],
+      "depends_on": [
+        "PF-V2-01"
+      ],
       "summary": "Tokens v2 (brief §2 palette/typography) + remove light mode, theme toggle, no-FOUC script + next/font for JetBrains Mono + display face per ADR-0003. Resume/Contact restyle by inheritance.",
       "dod": "build green, all routes render V2 base",
       "evidence": "Implemented in commit da73f8e (pushed). CODE REVIEW: PASS (token fidelity hex-by-hex vs ADR-0003; layout.tsx rewrite preserved skip link/single-main/landmarks/metadata; fonts Archivo w500 + JetBrains Mono self-hosted low-CLS; zero stale refs repo-wide; NOTE for V2-04/05/06: --foreground-muted #666666 on #0A0A0A is ~3.5:1 — labels/large-text only, never body copy). QA PASS 2026-07-07 (qa-engineer, resumed after prior session hit its limit — lint clean + zero dark:/ThemeToggle/theme-init grep were verified in the earlier session and not repeated): (1) npm run build green — clean Turbopack build, all 7 routes compiled, zero TS errors. (2) Prod-server sweep (next start :3456, curl'd each route): /=200 /about=200 /projects=200 /resume=200 /contact=200 /projects/aiklao=200 /this-route-does-not-exist=404; no theme-init/no-FOUC script in any route HTML (one grep hit on /about was Next's built-in next-error-h1 boilerplate, unrelated); exactly one <main> per route (grep -o count=1 each); skip link is first focusable element on all 6 primary routes (only a hidden non-focusable hydration marker div precedes <a href=#main-content>Skip to content</a> immediately after <body>). (3) Headless-Edge CDP (Emulation.setDeviceMetricsOverride, not --window-size) on / /about /projects at 375x812/768x1024/1280x800 (9 combos): body bg rgb(10,10,10)=#0A0A0A on all 9; JetBrains Mono resolves as real font family (getComputedStyle + document.fonts show loaded); zero consoleAPICalled + zero exceptionThrown across all 9 loads; no h-overflow (scrollWidth===clientWidth for html+body at all breakpoints, 768/1280 minus scrollbar expected); legibility screenshots captured+reviewed (clean dark editorial layout, teal #5EEAD4 readable on #0A0A0A; Home/Projects still render M1 layout with V2 tokens applied — expected, full redesign is PF-V2-04/05, DoD only requires 'all routes render V2 base'). (4) prefers-color-scheme:light emulated via Emulation.setEmulatedMedia on / /about /projects @1280 — matchMedia('(prefers-color-scheme: light)').matches===true (proves emulation took effect) yet computed body stayed rgb(10,10,10)/rgb(245,245,240); :root{color-scheme:dark} hardcoded; zero prefers-color-scheme media queries in app/+components/ (dark-only is structural). (5) Contrast (WCAG rel-luminance vs #0A0A0A): --foreground #F5F5F0 = 18.10:1 (confirmed as actual rendered body text); --foreground-secondary #999999 = 6.95:1 (AA pass); accent teal #5EEAD4 = 13.38:1, --primary-foreground #04342C on teal = 9.26:1; --foreground-muted #666666 = 3.45:1 — confirms code review's flag but token is NOT consumed anywhere yet (defined in globals.css, zero uses in app/+components/), no current violation, flagged forward for V2-04/05/06 (labels/large-text only, never body copy). Token fidelity re-confirmed hex-by-hex vs brief §2 (page #0A0A0A, surface #111111, hairline #1C1C1C, strong border #2A2A2A, text #F5F5F0/#999999/#666666, accent #5EEAD4/#04342C, mats #0F1F1C/#16211F — all exact). Working tree left clean; scratch/prod-server/headless-Edge all terminated. Verdict: PASS, no bug cards required."
@@ -135,7 +161,9 @@
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-V2-02"],
+      "depends_on": [
+        "PF-V2-02"
+      ],
       "summary": "Motion primitives in components/motion/: <Scramble> (E2), <Marquee> (E3, CSS keyframes), <Reveal> (E8), <PinnedHorizontal> (E7, GSAP ScrollTrigger) + reduced-motion plumbing per brief §5.",
       "dod": "each demoed on a scratch route, reduced-motion verified",
       "parked": "2026-07-07, session pause. Latest code commit: 453289c (pushed). CODE REVIEW: PASS x2 — original review (CHANGES REQUESTED, one blocker: dead+duplicated reduced-motion hook) then re-review PASS after fix (option a: components/motion/use-prefers-reduced-motion.ts owns the reduce-query exclusively, exports imperative prefersReducedMotion() consumed by scramble.tsx + reactive usePrefersReducedMotion() demoed live via app/scratch/motion/reduced-motion-indicator.tsx; Reveal/PinnedHorizontal stay on gsap.matchMedia; motion-stack/SSR/tokens/CLS/build+lint all confirmed clean). QA GATE: INCOMPLETE — qa-engineer was running the DoD verification when the session was paused; agent stopped cleanly, produced no recorded verdict, working tree left clean. TO RESUME: dispatch a fresh qa-engineer for the full DoD gate on commit 453289c. Demo route is /scratch/motion (noindex, reachable in prod build, deleted when V2-04/05/06 consume the primitives). Checks: npm run build+lint green; next start + headless-Edge CDP (Emulation.setDeviceMetricsOverride, NOT --window-size) on /scratch/motion; NORMAL motion @375/768/1280 — no h-overflow, zero console errors, body bg #0A0A0A, E2 scrambles->exact final text, E3 marquee translating, E8 reveals on scroll, E7 pins+travels @1280 / vertical stack @375; REDUCED motion (Emulation.setEmulatedMedia reduce) — indicator badge reads 'reduce', E2 final text INSTANT (no scrambled frames), E3 paused, E8 instant show, E7 vertical stack no pin, zero console errors; LIVE flip (toggle emulation no reload) updates badge + flips E3 paused/running and E2 hover on/off; dark-only (emulate prefers-color-scheme:light -> stays dark); no CLS. On PASS: record evidence, status -> done, board commit+push. NEXT after V2-03 done: PF-V2-04, PF-V2-05, PF-V2-06 all unblock together (all owner frontend-engineer, WIP cap 1-2) — token rule from e05398d (foreground-muted large/decorative only, #999999 for small labels) binds all three; PF-V2-06 already carries the E7 no-JS fallback forward-condition (see its 'note' field).",
@@ -147,7 +175,9 @@
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-V2-03"],
+      "depends_on": [
+        "PF-V2-03"
+      ],
       "summary": "Home rework per brief §2-3: preloader (E1), hero (scramble name E2, jod-hero photo mat, pixi displacement E4 lazy desktop-only + parallax E5), teal stats marquee (E3), numbered header nav. Photos in docs/assets/ (PNG — optimize/duotone before ship).",
       "dod": "matches brief §2-3, budget §5 (JS < 250KB gzip excl. lazy pixi)",
       "progress": "commit 723266f (frontend). CODE REVIEW: PASS (shared-header restyle keeps accessible names / aria-current / focus rings, no overflow on other routes; pixi genuinely lazy — 106.9KB across 9 chunks, none referenced by initial HTML; photo-mat next/image no-CLS, raw 1.8MB source not shipped; tokens/AA clean; content verbatim from docs/copy/home.md; no email/phone on Home). QA 2026-07-12: FAIL on ONE a11y defect; ALL ELSE PASS — build+lint green; initial JS 236.16KB gz (<250 excl pixi); responsive 375/768/1280 no h-overflow, body #0A0A0A, numbered nav wraps 2x2 @375; pixi 0-canvas @375/768 and under reduced-motion, 1 @motion-safe fine-pointer 1280, static duotone on no-JS; reduced-motion E2 final-instant/E3 paused/E4-E5 off/E8 instant; CLS 0.00000 (PerfObserver + Lighthouse agree); Lighthouse mobile 100/100/100/100, LCP 1.4s; all 8 Home links 200, hero img has alt, zero phone/email in render+source, dark-only holds; pixi at-rest visually identical to static duotone (no noise-map bleed). DEFECT (blocks DoD): components/home/stats-marquee.tsx pre-multiplies the 4 stats 3x BEFORE <Marquee> and those reps are NOT aria-hidden -> SR announces each stat 3x (12 non-aria-hidden spans vs expected 4; Marquee's own loop-dup IS correctly aria-hidden). FIX: aria-hidden the 2 extra manual reps (keep exactly 1 announced), leave visual 3x fill + Marquee loop-dup intact. Routed back to frontend-engineer (opus). RE-GATE: re-code-review the fix diff + re-QA a11y (announced facts == 4) + no-regression spot-check. Non-blocking follow-ups: (i) marquee strings are new Home copy not yet in docs/copy/home.md -> content-writer ratify in the brief §6 tone pass; (ii) trust-strip items 2&4 still point at the interim /projects [NEEDS-VERIFICATION] target.",
@@ -158,7 +188,9 @@
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-V2-03"],
+      "depends_on": [
+        "PF-V2-03"
+      ],
       "summary": "Work rows (typographic, replaces card grid on /projects) + hover video previews (E6): muted looping webm <=300KB, preload=none, load on first hover, poster fallback, tap=navigate on touch. Producer sources 4 webm clips with product owner; poster-only acceptable to pass.",
       "dod": "hover/touch/keyboard all correct",
       "po_decision": "PRODUCT-OWNER DECISION 2026-07-13: SHIP POSTER-ONLY with a designed token-based placeholder. Repo has NO project screenshots and NO webm clips (only the two Jod photos), so E6 has no source media. Build the typographic work rows (replace the /projects card grid, order AiKlao->Typing Race->Tiger Kick->JPD) + the FULL E6 hover/touch/keyboard mechanism, but the hover 'poster' is a clean V2 duotone/typographic panel per project (no screenshot required) rather than a video frame. Wire the <video> path so real muted-looping webm <=300KB (preload=none, load-on-first-hover, poster fallback, tap=navigate on touch) 'just drops in' when the product owner later delivers clips. DoD 'hover/touch/keyboard all correct' still fully applies to the mechanism. The 4 webm clips + real posters remain an OUTSTANDING product-owner asset delivery, tracked but non-blocking for this card.",
@@ -170,7 +202,9 @@
       "milestone": "M1.5",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-V2-03"],
+      "depends_on": [
+        "PF-V2-03"
+      ],
       "summary": "About/How-I-work rework: pinned horizontal 5-step (E7), jod-working photo mat, timeline restyle to V2. Mobile/reduced-motion degrade to vertical stack.",
       "dod": "mobile degrade correct",
       "note": "FORWARD-CONDITION from PF-V2-03 code review (2026-07-07): <PinnedHorizontal> (E7) as built clips panels 2+ in the narrow edge case of a motion-safe desktop with JS fully failed (content stays in DOM for SEO/reader-mode). Acceptable for the primitive, but this card ships REAL E7 content — it must NOT depend on those panels being reachable only with JS. Provide a CSS/<noscript>-reachable fallback (or equivalent) so the global 'content not lost if JS fails' DoD holds on a real page. ADDED FORWARD-CONDITIONS from PF-V2-03 fix code review (2026-07-12, commit 6032ea6 switched E7 to pinType:'transform'): (a) transform-pinning makes the pinned section a STACKING CONTEXT / CONTAINING BLOCK — if this card places any position:sticky or position:fixed element inside a panel, its containing block changes; design around that. (b) transform-held elements can show sub-pixel TEXT BLUR on some engines during pin travel — QA must eyeball the large display type mid-pin on a real render, not just headless numbers.",
@@ -182,12 +216,15 @@
       "milestone": "M1.5",
       "owner_agent": "qa-engineer",
       "status": "done",
-      "depends_on": ["PF-V2-04", "PF-V2-05", "PF-V2-06"],
+      "depends_on": [
+        "PF-V2-04",
+        "PF-V2-05",
+        "PF-V2-06"
+      ],
       "summary": "Full V2 gate per brief §5: JS budget (<250KB gzip on / excl. lazy pixi), Lighthouse mobile Perf >= 90 + A11y/BP/SEO >= 95 + CLS < 0.1, explicit prefers-reduced-motion pass (E2 final text, E3 paused, E4/E5 off, E7 vertical, E8 instant), keyboard/a11y AA, link-check.",
       "dod": "all pass or bug cards filed",
       "qa_verdict": "PASS 2026-07-17 (qa-engineer, full M1.5 exit gate, production build (`npm run build && npm run start`), commit 5c71a8b, live Playwright/CDP/axe-core 4.12.1/Lighthouse 13.4.0 verification across all 9 routes: /, /about, /projects, /projects/{aiklao,typing-race,tiger-kick,jpd-api}, /resume, /contact). ALL SIX gate areas PASS, ZERO new bug cards needed. (1) JS BUDGET: CDP Network.loadingFinished encodedDataLength on fresh / load, pixi chunks identified by content-signature scan (not filename, since Turbopack hashes names) -- 15 non-pixi JS files = 238.11KB gzip/transferred (<250KB budget), 8 pixi chunks = 111.92KB genuinely absent from initial load (0 bytes) and only appear after an 8s idle wait in a desktop+fine-pointer context; reconfirms PF-V2-04's 236.16KB record, no regression from V2-05/06/08 (they touched /projects and /about, not Home). Lighthouse's own network-requests audit (partial trace window) independently shows 209KB JS, consistent (subset, same order of magnitude). (2) LIGHTHOUSE MOBILE (production build, mobile emulation, simulated throttling): Home 96/100/100/100 CLS 0; About 97/100/100/100 CLS 0; Projects 98/100/100/100 CLS 0 (first full Lighthouse run for Projects); also ran Resume 98/100/100/100 CLS 0, Contact 98/100/100/100 CLS 0, and a project detail (aiklao) 98/100/100/100 CLS 0 for full route coverage -- every route clears both the strict >=95-all bar AND the amended Perf>=90+trio>=95+CLS<0.1 bar. (3) PREFERS-REDUCED-MOTION (live emulated, not code-inspection): E2 -- hero scramble span reads final 'Aekkarat Fontong' immediately on load, stable across 5 samples over 600ms and after a hover retrigger (zero scramble frames); cross-checked against motion-safe mode on the same build where scramble DOES visibly cycle through random-char frames before settling, proving the reduced-motion branch is real, not coincidental. E3 -- stats marquee '.motion-marquee-track' computed animationPlayState:'paused', track position static across a 1s sample. E4/E5 -- 0 pixi network requests and 0 canvas elements even after a 9s wait (long enough to exceed the 3000ms idle-callback timeout) in a desktop/fine-pointer/reduced-motion context; motion-safe spot-check on the same context shows the canvas DOES mount after idle, confirming the gate is reduced-motion-driven. E7 -- About's howiwork-pin track computed flexDirection:'column' under reduced-motion at 1280px (desktop width where it would otherwise pin), all 5 panels present in DOM, 0 pin-spacer elements before/after scrolling through the section, overflow-x:visible; motion-safe spot-check at the same width confirms the pin DOES engage (track transform changes from matrix(1,0,0,1,0,0) to matrix(1,0,0,1,-732,0) on scroll, flexDirection:'row'). E8 -- all h2/h3 on About and all 4 h2 on Projects read opacity:1 immediately with no scroll interaction (instant-show, no animated entrance). Zero console errors on Home/About under reduced-motion. (4) KEYBOARD/A11Y AA: axe-core (wcag2a/2aa/21a/21aa tags) run on all 9 routes -- 0 violations everywhere; 1 pre-existing 'incomplete' (color-contrast, needs-manual-review, 2 nodes) on /projects only, matching exactly the PF-V2-08 JPD-numeral/title pair already investigated, fixed, and re-verified clean by manual/geometric review in that card's second QA pass -- this is a known permanent axe paint-order-blindness artifact, not a new defect, and does not affect Lighthouse's Accessibility score (manual-review items aren't scored). Keyboard-only Tab pass on all 9 routes: skip-link is always the first stop, activating it (Enter) functionally moves the next Tab stop into main content (confirmed by checking the following Tab lands on the page's first in-main link, not the header nav -- satisfies bypass-blocks even though document.activeElement itself reports body, which is standard Chromium behavior for a non-tabindex anchor target); 0 traps on any route (each route's tab sequence terminates naturally, cycles fully); every focus stop has a visible indicator (box-shadow ring) at 100% coverage; all interactive elements reachable including nav, hero CTAs, all 4 /projects work-row links (per PF-V2-05), all 4 case-study external/internal links, Contact's mailto/GitHub/LinkedIn rows. No résumé tabs exist yet to test -- PF-M1-06 (résumé content) remains backlog, blocked on product-owner PDFs per CURRENT_PHASE carry-over; current /resume is an inherited-token placeholder (h1 only), out of this gate's scope, Lighthouse/axe clean regardless. (5) LINK-CHECK: all 9 internal routes return 200; GitHub and race.aiklaotrip.com return 200; LinkedIn returns 999 (accepted non-failure, anti-bot, per prior QA history). /projects/does-not-exist-xyz still returns 200 not 404 -- this is the PF-M2-01-flagged gap, explicitly owned by PF-M2-06 ('wire generateStaticParams + dynamicParams=false', already backlog, depends_on includes PF-V2-07) -- confirmed out of scope for this card, not filed as a duplicate. (6) CROSS-CUTTING: zero console errors/pageerrors on all 9 routes in BOTH normal and reduced-motion contexts; body background rgb(10,10,10)/#0A0A0A on every route at 375/768/1280 (27/27 checks); zero horizontal overflow on every route at 375/768/1280 (scrollWidth===clientWidth, 27/27 checks); email leakage scan (rendered text + full HTML) finds the approved contact email ONLY on /contact, zero unexpected emails anywhere; phone-shaped-string scan clean on every route (only false-positive matches were SVG icon path-data coordinates, verified as noise not real numbers). ADR-0003 confirmed ratified and referenced consistently across docs/DESIGN_SYSTEM.md, docs/SPEC.md, docs/ARCHITECTURE.md, docs/DESIGN_BRIEF_V2.md; framer-motion confirmed absent from package.json and only appears in docs as explicit 'not used' markers. Non-blocking observations (informational, not filed as cards): (a) app/scratch/motion/page.tsx is still present -- it is correctly noindexed and explicitly commented as a to-delete-before-M3 QA scratch route, so this is expected, not a defect; (b) /resume and /contact remain visually plain (token-inherited only, no numbered-label editorial treatment) -- this matches PF-V2-02's documented scope ('Resume/Contact restyle by inheritance'), not a V2-07 gap. VERDICT: PASS -- gate closes, M1.5 can close. Zero new bug cards filed (none needed; the one pre-existing axe 'incomplete' was already investigated and resolved under PF-V2-08). Handoff to producer to mark Done and update CURRENT_PHASE.md exit-gate checkboxes."
     },
-
     {
       "id": "PF-V2-08",
       "milestone": "M1.5",
@@ -207,7 +244,9 @@
       "milestone": "M2",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M1-03"],
+      "depends_on": [
+        "PF-M1-03"
+      ],
       "summary": "Projects grid page + project card component (4 cards linking to case-study routes).",
       "dod": "4 cards route correctly, responsive grid",
       "qa": "PASS 2026-07-06 (qa-engineer, commits 5d974f2 + fix e7a3c1a): code review passed prior (heading order h1->h2 fixed, ruling-compliant link rendering, only gray-matter added as a dependency). npm run build + npm run lint green. Prod server (localhost:3000) /projects: exactly one <h1> ('Projects'), exactly 4 <h2> card titles in DOM order AiKlao -> Typing Race -> Tiger Kick -> JPD School-Student Registration API (matches CLAUDE.md #4 / ARCHITECTURE.md order field); 4 title links to /projects/aiklao, /projects/typing-race, /projects/tiger-kick, /projects/jpd-api each HTTP 200 on the prod server; JPD card contains zero external-link markup (no <a target=_blank> inside its <article>, consistent with its link-less frontmatter per the 2026-07-06 ruling); Typing Race card has exactly one external link, text 'Live', href=https://race.aiklaotrip.com, target=_blank rel=\"noopener noreferrer\" (verified per-article via DOM parse, not page-wide grep, so header/footer social links were excluded from the count). Headless-Edge CDP (Emulation.setDeviceMetricsOverride, port 9333) on /projects: no horizontal overflow at 375/768/1280 (document.documentElement.scrollWidth === clientWidth all three sizes); grid column check via getBoundingClientRect of first two <article> cards — 375px: different top values (271 vs 778) = stacked/1-column; 768px and 1280px: identical top values with cards side-by-side (left offsets 24/388.5 and 106.5/644.5) = 2-column, consistent with the page's grid-cols-1 md:grid-cols-2 markup; zero console errors/warnings/exceptions captured across all three navigations; dark-mode toggle clicked (button labelled 'Switch to dark theme') -> html gains .dark class -> body background computed to rgb(17, 24, 39) = #111827 exactly as required. Home regression: curl / = HTTP 200, exactly 3 featured card titles present (AiKlao, Typing Race, Tiger Kick; no JPD), matching PF-M1-03's already-QA'd featured set — unchanged. No phone number or email string found in /projects HTML. Note (non-blocking, out of scope for this card): /projects/[slug] is still the PF-M2-06 placeholder — generateStaticParams/dynamicParams=false is not wired yet, so a nonexistent slug currently returns 200 instead of 404; this is explicitly PF-M2-06 scope per ARCHITECTURE.md §1, not a PF-M2-01 regression, and PF-M2-06 is already backlog with PF-M2-01 as a dependency."
@@ -257,7 +296,14 @@
       "milestone": "M2",
       "owner_agent": "frontend-engineer",
       "status": "done",
-      "depends_on": ["PF-M2-01", "PF-M2-02", "PF-M2-03", "PF-M2-04", "PF-M2-05", "PF-V2-07"],
+      "depends_on": [
+        "PF-M2-01",
+        "PF-M2-02",
+        "PF-M2-03",
+        "PF-M2-04",
+        "PF-M2-05",
+        "PF-V2-07"
+      ],
       "summary": "MDX case-study layout: code blocks, callouts, metric highlights; render all 4 studies. Build directly on V2 (Design Brief V2 §6) — gated on PF-V2-07. Also wire generateStaticParams + dynamicParams=false on /projects/[slug] (QA-flagged gap).",
       "dod": "all 4 render, responsive, dark-only V2 theme, no CLS, unknown slug -> 404",
       "qa_verdict": "PASS 2026-07-18 (qa-engineer, fresh `npm run build && npm run start` production server, commit 5667844 tree, live Playwright 1.61.1 + axe-core 4.12.1 + Lighthouse 13.4.0 verification). BUILD/LINT: `npm run build` green — route table confirms all 4 `/projects/[slug]` pages prerender as SSG (● marker: aiklao, typing-race, tiger-kick, jpd-api) plus static `/_not-found`; `npm run lint` clean (0 output). RENDER: all 4 routes return 200 with distinct real titles/h1 content (not the old stub) — verified via curl+grep of <title>/<h1>. 404: `/projects/does-not-exist` -> 404 (real app/not-found.tsx page, verified <title>404 — Page not found</title>, not a 200); `/projects/jpd` (non-canonical shorthand; real slug is `jpd-api`) -> 404, confirmed via both curl -w and -I on a freshly-restarted prod server (killed a stale pre-existing `next start` process first — PID 2052 — to rule out testing against an old build); `/projects/aiklao/` (trailing slash) -> 308 to canonical, expected Next.js behavior not a bug. RESPONSIVE: Playwright at 375/768/1280 on all 4 routes — zero horizontal overflow (scrollWidth===innerWidth, 12/12 checks); screenshots of /projects/aiklao (widest content: ASCII architecture diagram in a code fence + 4-col metrics strip) confirm clean layout at all 3 widths, code fence scrolls horizontally inside its own box rather than pushing page width. DARK MODE: dark-only V2 tokens throughout, no light-mode remnants visible in any screenshot; consistent with site-wide dark-only (no toggle, per ADR-0003). CLS/LIGHTHOUSE (mobile emulation): /projects/aiklao full-category run Perf 98 / A11y 100 / BP 100 / SEO 100, CLS 0, 0 console errors. Per-route CLS spot check (perf-only preset) on all 4: aiklao 0, typing-race 0.028, jpd-api 0.012 — all effectively negligible. tiger-kick measured 0.088 (reproducible across 2 runs after clearing stray Chrome processes, same score both times) — still under the ADR-0003 gate (<0.1) but notably non-zero; traced via Lighthouse's layout-shifts audit to the Role/Stack `<dl>` in the case-study header reflowing on JetBrains Mono web-font swap, amplified by Tiger Kick's unusually long `role` frontmatter string (154 chars vs 41-100 on the other 3) causing a different line-wrap pre/post font-load under mobile throttling; does NOT reproduce on an unthrottled browser (Playwright PerformanceObserver measured CLS=0, 0 entries on all 4 routes with real font loading, no throttling) — filed as follow-up bug PF-M2-07 (non-blocking for this card since 0.088 < 0.1 project gate; flagged because it deviates from the card's literal 'no CLS' wording and from M1.5's established CLS-0 baseline). A11Y: axe-core (wcag2a+wcag2aa) on all 4 routes — 0 violations, 0 incomplete; heading order sane on all 4 (single H1 -> sequential H2 section headings, matches template: Overview/My role/Stack/Architecture/Hard problem/Testing/Results/Links/What I learned); skip-to-content link is the first Tab stop everywhere (href=#main-content) with a visible focus ring (box-shadow, teal + dark outline, confirmed via computed style); rehype-slug + rehype-autolink-headings (behavior:'wrap') deep-link anchors are keyboard-reachable in natural document order, accessible name = heading text, not confusing (0 axe violations corroborates); focus-visible rings present on all interactive elements via mdx-components.tsx and page.tsx's shared CTA/anchor classes. LINKS: grep of every rendered href across all 4 routes — zero `#` or placeholder hrefs; only real internal anchors (nav, in-page section links), frontmatter-driven external links (only typing-race has a verified `links.live` -> race.aiklaotrip.com; the other 3 have no `links` key so the header nav correctly renders nothing, per the ARCHITECTURE.md renderer contract), and the constant header/footer GitHub+LinkedIn links. Confirmed every `[NEEDS-VERIFICATION: ...]` marker in MDX body text (aiklao x3, jpd-api x1, tiger-kick x1, typing-race x3) renders as inert plain text in the shipped HTML (verified in both the SSR HTML and the RSC flight payload — no `<a href>` wraps any of them), per the accepted architecture convention. CONTENT FOLLOW-UP (independently confirmed, filed as PF-M2-08, non-blocking for this card): the `typing-race.mdx` internal author note ('this line must not render publicly until resolved', ~line 81) is confirmed rendering as visible plain text inside a real `<li>` in the live page's HTML — this is a content-authoring bug (should have been an MDX comment), not a renderer defect; the renderer is behaving exactly per the accepted convention for these markers. Note: task framing attributed this to PF-M2-02, but PF-M2-02 is the AiKlao case study — the actual typing-race content card is PF-M2-03; filed PF-M2-08 against PF-M2-03/content-writer accordingly. VERDICT: PASS. Card DoD met in full; two non-blocking follow-ups filed (PF-M2-07 frontend-engineer, PF-M2-08 content-writer) per fail-handling protocol, neither blocks this card or the M2 exit gate on its own."
@@ -281,13 +327,14 @@
       "dod": "The internal note text is removed from the rendered body (converted to an MDX comment or rewritten as a normal bracketed NEEDS-VERIFICATION marker consistent with the other 3 studies) — re-verified live by qa-engineer that `/projects/typing-race` no longer shows the phrase 'must not render publicly' or any other internal-only aside in its rendered HTML.",
       "evidence": "QA PASS 2026-07-18 (post code-review, scoped re-verification of commit ebbe2d2 only, full PF-M2-06 gate not re-run): npm run build green (Turbopack, all 13 routes incl. /projects/typing-race, /projects/tiger-kick, /projects/jpd-api) + npm run lint clean. next start prod server, curl'd all 3 rendered pages, grep for 'must not render publicly' / 'confirm with product owner' / 'Internal note' / 'sign-off' — zero matches across all 3 (previously-visible phrase confirmed gone from shipped HTML). typing-race.mdx: internal note now sits in a `{/* ... */}` block placed after the Testing-and-quality list closes (not mid-list); rendered HTML confirmed exactly one <ul> with 4 top-level <li> items and the 'Doc link: [NEEDS-VERIFICATION: QA Test Strategy doc URL]' nested as a sub-<ul> under item 3 — single unified list, not split (matches code-reviewer's finding). tiger-kick.mdx and jpd-api.mdx Links sections also confirmed clean (comment renders as inert HTML comment, no visible text, single-item list each). Playwright screenshots of /projects/typing-race at 375/768/1280 — dark theme intact, no visual breakage, no layout regression (content-only change, no CSS/component touched). Verdict: PASS."
     },
-
     {
       "id": "PF-M3-01",
       "milestone": "M3",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
-      "depends_on": ["PF-M2-06"],
+      "status": "review",
+      "depends_on": [
+        "PF-M2-06"
+      ],
       "summary": "SEO: per-page titles/meta, JSON-LD Person on /, next/og OG image, sitemap.xml + robots.txt.",
       "dod": "OG/structured-data validators pass"
     },
@@ -295,8 +342,10 @@
       "id": "PF-M3-02",
       "milestone": "M3",
       "owner_agent": "qa-engineer",
-      "status": "todo",
-      "depends_on": ["PF-M2-06"],
+      "status": "doing",
+      "depends_on": [
+        "PF-M2-06"
+      ],
       "summary": "Full QA pass per docs/QA_CHECKLIST.md, gate amended by Design Brief V2 §5: Lighthouse mobile Perf >= 90 (target 95) + A11y/BP/SEO >= 95 + CLS < 0.1, a11y AA (keyboard, contrast, landmarks), link-check, responsive 375/768/1280, dark-only.",
       "dod": "checklist all pass or bugs filed as new cards"
     },
@@ -305,11 +354,13 @@
       "milestone": "M3",
       "owner_agent": "producer",
       "status": "backlog",
-      "depends_on": ["PF-M3-01", "PF-M3-02"],
+      "depends_on": [
+        "PF-M3-01",
+        "PF-M3-02"
+      ],
       "summary": "Custom domain jod.aiklaotrip.com (CNAME with human) + enable Vercel Analytics.",
       "dod": "domain live over HTTPS, analytics receiving"
     },
-
     {
       "id": "PF-M3-04",
       "milestone": "M3",
@@ -319,7 +370,6 @@
       "summary": "OBSOLETE (closed by producer 2026-07-06): light-mode --ring contrast fix superseded by Design Brief V2 dark-only decision (ADR-0003) — light mode is being removed entirely in PF-V2-02. Dark-mode ring contrast (teal-300 on #0A0A0A ~12:1) passes. Original finding: PF-M1-01 code review.",
       "dod": "n/a — superseded; PF-V2-07 verifies focus-ring contrast on the V2 dark theme"
     },
-
     {
       "id": "PF-M3-05",
       "milestone": "M3",
@@ -329,13 +379,14 @@
       "summary": "Header nav links measure ~22px tall at 375px viewport — below WCAG 2.2 SC 2.5.8 minimum target size (24px) and the 44px best-practice guideline. Increase vertical padding/hit area on nav links (and audit other small targets) before the M3 a11y gate. Filed from PF-M1-07 QA observation.",
       "dod": "all interactive targets >= 24px (prefer >= 44px on touch), no layout regression at 375/768/1280"
     },
-
     {
       "id": "PF-M4-01",
       "milestone": "M4",
       "owner_agent": "frontend-engineer",
       "status": "backlog",
-      "depends_on": ["PF-M3-03"],
+      "depends_on": [
+        "PF-M3-03"
+      ],
       "summary": "OPTIONAL: TH/EN toggle with next-intl; EN is default.",
       "dod": "toggle works on every page, no layout break, no SEO regression"
     }

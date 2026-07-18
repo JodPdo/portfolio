@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
 
 export const metadata: Metadata = {
-  title: "Contact — Aekkarat Fontong",
+  title: "Contact",
   description:
     "Get in touch with Aekkarat Fontong — email, GitHub, and LinkedIn.",
+  alternates: { canonical: "/contact" },
 };
 
 // Handles verified in docs/SPEC.md §4.4 / Appendix A#3 (RESOLVED 2026-07-05 —

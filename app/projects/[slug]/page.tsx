@@ -30,9 +30,19 @@ export async function generateMetadata({
   const project = getProjectBySlug(slug);
   if (!project) return {};
 
+  const canonical = `/projects/${project.slug}`;
+
+  // Bare page segment — the root `title.template` appends "— Aekkarat Fontong".
   return {
-    title: `${project.title} — Aekkarat Fontong`,
+    title: project.title,
     description: project.summary,
+    alternates: { canonical },
+    openGraph: {
+      type: "article",
+      title: project.title,
+      description: project.summary,
+      url: canonical,
+    },
   };
 }
 

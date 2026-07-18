@@ -3,6 +3,12 @@ import { Archivo, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+} from "@/lib/site";
 
 // Display face (V2 — Editorial Dark, ADR-0003): huge uppercase headlines,
 // weight 500, tight leading.
@@ -49,10 +55,54 @@ const jetbrainsMono = JetBrains_Mono({
   ],
 });
 
+// SEO baseline (PF-M3-01). `metadataBase` resolves every relative canonical
+// / OG URL against the production origin; the `title.template` lets each
+// route set just its page segment (e.g. "About") and inherit the site suffix.
+// The root `opengraph-image.tsx` file convention supplies the default OG +
+// Twitter image for every route automatically — no per-page image needed.
 export const metadata: Metadata = {
-  title: "Aekkarat Fontong — Software / QA Automation Engineer",
-  description:
-    "Portfolio of Aekkarat Fontong (Jod), Software / QA Automation Engineer.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: SITE_TITLE,
+    template: `%s — ${SITE_NAME}`,
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME }],
+  creator: SITE_NAME,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: SITE_NAME,
+    url: "/",
+    title: {
+      default: SITE_TITLE,
+      template: `%s — ${SITE_NAME}`,
+    },
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: {
+      default: SITE_TITLE,
+      template: `%s — ${SITE_NAME}`,
+    },
+    description: SITE_DESCRIPTION,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
 };
 
 export default function RootLayout({
