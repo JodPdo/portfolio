@@ -286,7 +286,7 @@
       "id": "PF-M3-01",
       "milestone": "M3",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "todo",
       "depends_on": ["PF-M2-06"],
       "summary": "SEO: per-page titles/meta, JSON-LD Person on /, next/og OG image, sitemap.xml + robots.txt.",
       "dod": "OG/structured-data validators pass"
@@ -295,7 +295,7 @@
       "id": "PF-M3-02",
       "milestone": "M3",
       "owner_agent": "qa-engineer",
-      "status": "backlog",
+      "status": "todo",
       "depends_on": ["PF-M2-06"],
       "summary": "Full QA pass per docs/QA_CHECKLIST.md, gate amended by Design Brief V2 §5: Lighthouse mobile Perf >= 90 (target 95) + A11y/BP/SEO >= 95 + CLS < 0.1, a11y AA (keyboard, contrast, landmarks), link-check, responsive 375/768/1280, dark-only.",
       "dod": "checklist all pass or bugs filed as new cards"
