@@ -353,3 +353,38 @@ is gone, fonts, where client motion lives, and the performance gate.
   `CURRENT_PHASE.md` was already amended by the producer. `_backlog.json` is producer-owned and untouched.
 - **ADR-0001/0002 are unaffected** — Next 16 + Tailwind v4 CSS-first `@theme` and the MDX pipeline stand;
   V2 changes token *values* and adds motion deps, not the framework or content pipeline.
+
+### ADR-0003a — JetBrains Mono `display: "optional"` (font-loading policy for the mono body face) — 2026-07-18
+**Status:** Accepted (architect). **Card:** PF-M2-07. **Amends:** ADR-0003 decision 6 (fonts) — refines *how*
+the body/mono face loads; the Archivo + JetBrains Mono pairing itself is unchanged.
+
+**Context.** ADR-0003 dec. 6 chose `next/font` self-hosting as the "zero layout shift from fonts" guarantee.
+In practice the `next/font` *default* (`display: "swap"` + Arial-based `adjustFontFallback`) did **not**
+deliver that for the mono *body* face: JetBrains Mono is monospace, so its glyph advance decides where every
+body line wraps. `adjustFontFallback` matches vertical metrics, not glyph-advance width, so on a throttled
+first paint the fallback-vs-webfont wrap count differs and body copy re-wraps when the webfont swaps in —
+measured by qa-engineer as CLS 0.088 on `/projects/tiger-kick` (its 154-char `role` string is the worst
+case), a regression from the M1.5 CLS-0 baseline though still under the ADR-0003 dec. 7 `< 0.1` gate.
+
+**Decision.** Set the JetBrains Mono `next/font` config to `display: "optional"` + `adjustFontFallback: false`
++ an explicit real monospace `fallback` stack (`ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation
+Mono, monospace`). With `optional`, the browser never swaps the webfont in mid-view, so no re-wrap can occur
+(measured CLS 0 on all four case-study routes). Archivo (display) **stays on default `swap`**: it is
+proportional, where `adjustFontFallback` metric-matching actually works, and losing a display face to fallback
+is more visually jarring than a metric-matched swap.
+
+**Trade-off (accepted).** With `optional`, a genuinely slow *first* visit (webfont not ready inside the browser
+block window) renders that page view — the whole site's body text, every route — in the fallback monospace and
+does **not** swap the real JetBrains Mono in until the next navigation (once cached). This is acceptable here:
+(a) the font is self-hosted + preloaded, so normal connections still paint JetBrains Mono from the first frame;
+(b) the fallback is a real monospace stack, so a slow-load visitor sees an on-brand monospace, not a
+proportional substitute — the visual delta is small for a mono-body design; (c) it restores ADR-0003's own
+stated "no shift from fonts" goal and protects the M3 Lighthouse/CLS exit gate (dec. 7) at the root cause.
+
+**Alternatives rejected.** *Accept a small non-zero CLS with a rationale* — leaves a known regression that can
+tip over `0.1` under real conditions or a longer `role` string, and contradicts dec. 6's own promise.
+*Per-block `min-height` on the Role/Stack `<dl>`* — whack-a-mole: the re-wrap vector exists for any long mono
+text on any route, not just that block, and the reservation is brittle across content/breakpoint changes.
+*`size-adjust`/`adjustFontFallback` tuning* — fundamentally can't fix a monospace-vs-proportional glyph-advance
+mismatch (it matches vertical metrics only). `display: "optional"` is the simplest site-wide root-cause fix,
+adds no dependency, and keeps font-loading policy in one place (`app/layout.tsx`).
