@@ -39,6 +39,7 @@
 - [ ] No phone number anywhere (product-owner decision)
 - [ ] Contact email confirmed by product owner
 - [ ] Case-study template complete for all 4 (problem → role → stack → architecture → hard problem → testing → results → links → learned)
+- [ ] Grep rendered pages for author-note markers (TODO / NEEDS-VERIFICATION / must not render / placeholder text) before any content card passes
 
 ## SEO / social (M3)
 
