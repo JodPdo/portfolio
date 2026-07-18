@@ -331,7 +331,7 @@
       "id": "PF-M3-01",
       "milestone": "M3",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": [
         "PF-M2-06"
       ],
@@ -344,7 +344,7 @@
       "id": "PF-M3-02",
       "milestone": "M3",
       "owner_agent": "qa-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": [
         "PF-M2-06"
       ],
@@ -405,7 +405,7 @@
       "id": "PF-M3-07",
       "milestone": "M3",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": [],
       "summary": "Bug filed by qa-engineer during the PF-M3-01 DoD gate (2026-07-18, curl against a fresh `npm run build && npm run start`, commit 55773e2 tree): all 4 case-study routes (`/projects/aiklao`, `/projects/typing-race`, `/projects/tiger-kick`, `/projects/jpd-api`) render with ZERO `og:image`/`og:image:*`/`twitter:image*` meta tags — confirmed by extracting every rendered `<meta property=\"og:*\">`/`<meta name=\"twitter:*\">` tag on all 4 routes, none contain an image key. Root cause: `app/projects/[slug]/page.tsx`'s `generateMetadata` returns its own partial `openGraph: {type, title, description, url}` object (no `images`); Next.js metadata resolution does not deep-merge this against the root `app/layout.tsx` `openGraph` object (which is where the file-convention `app/opengraph-image.tsx` image normally gets attached for the site) — declaring any `openGraph` key at a child segment replaces the whole object, dropping the image. `/`, `/about`, `/contact`, `/resume`, `/projects` (which do NOT declare their own `openGraph`) still get the image fine, confirming the mechanism. Result: sharing any of the 4 case-study links on Twitter/LinkedIn/Facebook/Slack shows no preview image at all. The `app/layout.tsx` comment ('The root opengraph-image.tsx file convention supplies the default OG + Twitter image for every route automatically — no per-page image needed') is incorrect for any route that sets its own `openGraph` object.",
       "dod": "All 4 `/projects/[slug]` routes render non-empty `og:image` (absolute URL), `og:image:width=1200`/`height=630`, and `twitter:image` in production HTML — either by having `generateMetadata` explicitly re-declare the image fields (referencing the same `/opengraph-image` route or a per-project one) or by another mechanism that survives the child `openGraph` override. Re-verified live by qa-engineer via curl+meta-tag extraction on a fresh production build.",
@@ -416,7 +416,7 @@
       "id": "PF-M3-08",
       "milestone": "M3",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": [],
       "summary": "Bug filed by qa-engineer during the PF-M3-01 DoD gate (2026-07-18, curl against a fresh `npm run build && npm run start`, commit 55773e2 tree): `/about`, `/contact`, `/resume`, and `/projects` (index) all render `og:title`, `og:description`, `twitter:title`, `twitter:description`, AND `og:url` equal to the HOMEPAGE's values, not their own — confirmed via curl+meta-tag extraction on all 4 routes: `og:title`/`twitter:title` = 'Aekkarat Fontong — Software / QA Automation Engineer' on every one of them (each page's actual `<title>` tag IS correct, e.g. 'About — Aekkarat Fontong' — only the OG/Twitter namespace is wrong), and `og:url` = 'https://jod.aiklaotrip.com' (the homepage) instead of e.g. 'https://jod.aiklaotrip.com/about' on all 4. Root cause: none of these 4 routes' `metadata` exports declare their own `openGraph`/`twitter` object, so Next.js metadata resolution has nothing to merge and the ENTIRE root `app/layout.tsx` `openGraph`/`twitter` objects (including its literal `url: \"/\"`, which resolves via `metadataBase` to the homepage) apply verbatim, rather than the page's own `title`/`description`/`alternates.canonical` propagating into the OG/Twitter fields (Next.js does not do this automatically — a well-known metadata gotcha). Effect: sharing any of these 4 pages on Facebook/LinkedIn/Twitter/Slack shows the homepage's title, description, and canonical URL in the preview, not the actual page being shared — misleading and a genuine Open Graph protocol violation (`og:url` must be the canonical URL of the page being described).",
       "dod": "`/about`, `/contact`, `/resume`, `/projects` each render page-specific `og:title`/`twitter:title` (matching their real `<title>`), page-specific `og:description`/`twitter:description`, and `og:url` matching each page's own canonical path (not the homepage) in production HTML — e.g. by adding an explicit `openGraph`/`twitter` block (with matching `url`) to each route's `metadata` export, or a shared helper that derives OG fields from each page's own title/description/canonical. Re-verified live by qa-engineer via curl+meta-tag extraction on a fresh production build.",
