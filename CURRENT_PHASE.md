@@ -2,7 +2,7 @@
 
 **Milestone: M3 — SEO/OG, Lighthouse gate, a11y AA, custom domain (launch)**
 
-M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. M3 is now the active milestone; its SEO/OG + full-QA/Lighthouse-gate work is **DONE** (see M3 progress below). Remaining before M3's own exit gate: two known non-blocking follow-ups (PF-M3-05, PF-M3-06) and the human+DNS domain cutover (PF-M3-03).
+M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. M3 is now the active milestone; its SEO/OG + full-QA/Lighthouse-gate work is **DONE**, and both known non-blocking follow-ups (PF-M3-05, PF-M3-06) are now **DONE** as of 2026-07-19 (see M3 progress below). The **only** M3 item still open is the human+DNS domain cutover (PF-M3-03) — the next step, owned by producer + human product owner. Separately, the last M1 carry-over (PF-M1-06, resume page) also closed 2026-07-19.
 
 ## M3 progress
 
@@ -11,14 +11,14 @@ M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. M3 is now th
 - **PF-M3-07 (bugfix: missing OG image on all 4 case-study pages) — DONE 2026-07-18.** Root cause fixed via shared `buildOpenGraph()` helper in `lib/site.ts`; all 4 `/projects/[slug]` routes now carry the absolute OG/twitter image + `og:type=article`. code-reviewer PASS + qa-engineer PASS.
 - **PF-M3-08 (bugfix: wrong og:title/description/url on `/about`, `/contact`, `/resume`, `/projects`) — DONE 2026-07-18.** Same root cause/fix as PF-M3-07; all 4 pages now render page-specific og/twitter title/description + own canonical `og:url` (homepage leak gone). code-reviewer PASS + qa-engineer PASS.
 
-### M3 known non-blocking follow-ups (still OPEN — do not block the gate)
+### M3 non-blocking follow-ups — both now DONE 2026-07-19
 
-- **PF-M3-05 (frontend-engineer, `todo`)** — header/footer/trust-strip tap targets measure 16-21px, below WCAG 2.2 SC 2.5.8's 24px minimum, at all 3 breakpoints. Non-blocking (SC 2.5.8 is AA in 2.2; does not fail the scored Lighthouse a11y category), but should be fixed before the M3 exit gate.
-- **PF-M3-06 (content-writer, `todo`)** — all 4 case studies' Links sections render literal `[NEEDS-VERIFICATION: ...]` bracket text on the live page. Content-polish/professionalism issue, not a broken-link/technical defect (architecture's ruling permits the fallback), but qa flagged it as unprofessional to a real visitor. Fix before the exit gate.
+- **PF-M3-05 (frontend-engineer) — DONE 2026-07-19.** Header nav / brand / trust-strip tap targets were 16-22px, below WCAG 2.2 SC 2.5.8's 24px minimum. Fixed by making the collapsing negative-margin spill breakpoint-conditional (spill applied only where each row is provably single-row; dropped wherever the layout can wrap) so wrapped rows can never overlap. First attempt FAILED code review (unconditional spill left overlapping 44px hit boxes at wrap points); rework (commit `fea3372`) fixed it. qa-engineer independently re-measured real getBoundingClientRect() hit boxes via CDP across 8 widths straddling the md/xl wrap boundaries: zero pairwise overlap, every target >= 24px hard floor (44px tall except the 36px GitHub icon whose invisible ::after expands to ~42px), keyboard order/focus-ring clean, axe 0 violations, build + lint green. code-reviewer PASS (re-review) + qa-engineer PASS.
+- **PF-M3-06 (content-writer) — DONE 2026-07-18.** All 4 case studies' Links sections no longer render literal `[NEEDS-VERIFICATION: ...]` bracket text; real live links promoted (AiKlao APK + CI/CD, typing-race demo) and remaining entries use placeholder-free plain-text fallbacks. qa grep of all 4 rendered routes: zero internal-marker occurrences. code-reviewer PASS + qa-engineer PASS.
 
 ### M3 next step — domain cutover (needs the human)
 
-- **PF-M3-03 (custom domain `jod.aiklaotrip.com`)** — now **unblocked**: its `depends_on` (PF-M3-01 + PF-M3-02) are both `done`. It is the next M3 card, but it requires a **human-in-the-loop DNS + Vercel step** (producer + human product owner only) and is **not** started by any agent autonomously. Left at `backlog` pending that conversation.
+- **PF-M3-03 (custom domain `jod.aiklaotrip.com`)** — now the **only** open M3 card. Unblocked (`depends_on` PF-M3-01 + PF-M3-02 both `done`), and with PF-M3-05/06 also closed it is the sole item standing between here and the M3 exit gate. It requires a **human-in-the-loop DNS + Vercel step** (producer + human product owner only) and is **not** started by any agent autonomously. Left at `backlog` pending that conversation — the human is handling it separately next.
 
 M1.5 (Design V2 "Editorial Dark") closed 2026-07-17. Cards PF-V2-01 … PF-V2-08 all Done; the brief §5 exit gate (PF-V2-07) passed on a production build across all 9 routes.
 
@@ -51,17 +51,17 @@ PF-M2-01 … PF-M2-05 (projects grid + 4 case-study MDX files) were all Done/QA-
 
 ## Carry-overs still open
 
-- PF-M1-06 (Resume page) — blocked on product owner PDFs (`/public/resume/`); will be built on the V2 base.
+- **None.** PF-M1-06 (Resume page) — the last M1 carry-over, previously blocked on product-owner PDFs — is **DONE 2026-07-19.** Built on the V2 base as a **download-first single all-roles PDF** (the earlier 3-tab role-tailored-PDF design was **dropped** per architect's ADR / docs/SPEC.md Appendix A#5 amendment, commit `286b770`, before the page was built). qa-engineer PASS: real PDF download at 375px and 1280px, no `<iframe>` and zero `.pdf` fetch on mobile (iframe mounts only at >= 1024px via matchMedia), keyboard-reachable download + open-in-new-tab CTAs with visible focus, descriptive thumbnail accessible name, axe 0 violations at 375/768/1280, build + lint green. code-reviewer PASS + qa-engineer PASS. This closes out M1.
 
 ## Milestone map
 
 | M | Goal | Gate |
 |---|---|---|
 | M0 ✅ | Skeleton live on Vercel | closed 2026-07-05 |
-| M1 ✅* | Home, About, Contact, Resume | closed 2026-07-06 except PF-M1-06 (resume PDFs pending) |
+| M1 ✅ | Home, About, Contact, Resume | closed 2026-07-06; last carry-over PF-M1-06 (resume page, single all-roles PDF, download-first) Done 2026-07-19 |
 | M1.5 ✅ | Design V2 — Editorial Dark | brief §5 gate closed 2026-07-17 (PF-V2-07) |
 | M2 ✅ | Projects work-rows + 4 MDX case studies on V2 | closed 2026-07-18 (PF-M2-06/07/08); no separate gate card — quality sweep lives in M3/PF-M3-02 |
-| **M3 (now)** | SEO/OG, Lighthouse (amended: mobile Perf ≥ 90 + trio ≥ 95 + CLS < 0.1), a11y AA, domain `jod.aiklaotrip.com` | launch — PF-M3-01 (SEO/OG) + PF-M3-02 (QA/Lighthouse gate: 96-98 Perf / 100 trio / CLS 0) + PF-M3-07/08 (OG bugfixes) all **Done** 2026-07-18; PF-M3-05 (nav target-size) + PF-M3-06 (NEEDS-VERIFICATION link text) open non-blocking; PF-M3-03 (domain) now unblocked, next, needs human+DNS |
+| **M3 (now)** | SEO/OG, Lighthouse (amended: mobile Perf ≥ 90 + trio ≥ 95 + CLS < 0.1), a11y AA, domain `jod.aiklaotrip.com` | launch — PF-M3-01 (SEO/OG) + PF-M3-02 (QA/Lighthouse gate: 96-98 Perf / 100 trio / CLS 0) + PF-M3-07/08 (OG bugfixes) all **Done** 2026-07-18; PF-M3-05 (nav target-size) + PF-M3-06 (NEEDS-VERIFICATION link text) both **Done** 2026-07-19; **only PF-M3-03 (domain) open** — unblocked, next, needs human+DNS |
 | M4 (opt) | TH/EN toggle (`next-intl`) | toggle works, no layout break |
 
 Only `producer` edits this file (when a gate passes).
