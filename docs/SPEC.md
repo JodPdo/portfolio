@@ -42,7 +42,7 @@ A build-ready blueprint: tech stack, page structure, real content, and 4 case st
 /projects/tiger-kick      Case Study 3
 /projects/jpd-api         Case Study 4
 /about            Full career-change story, timeline, certs, values
-/resume           Embedded PDF viewer + download buttons (SE / Backend / QA)
+/resume           Download-first: single resume PDF, all roles (Appendix A#5)
 /contact          Email, LinkedIn, GitHub (form optional)
 ```
 Global: sticky header (logo/name · Projects · About · Resume · Contact · TH/EN · GitHub) + footer (email, LinkedIn, GitHub, "Built with Next.js, deployed on Vercel").
@@ -87,7 +87,7 @@ Short, honest, human. Sections:
 - **Beyond code:** discipline, calm under pressure, teamwork (police + peer code review at 42).
 
 ### 4.3 Resume `/resume`
-Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<iframe>` / react-pdf) + "Download PDF". Note: "Tailored per role — pick the one that fits your opening."
+~~Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<iframe>` / react-pdf) + "Download PDF". Note: "Tailored per role — pick the one that fits your opening."~~ **SUPERSEDED by Appendix A#5 (2026-07-19).** The 3-tab / role-tailored-PDF design is dropped. `/resume` is a **single** download-first page — one PDF for all roles (`public/resume/Aekkarat_Fontong_Software_Engineer.pdf`): download button(s) + thumbnail, no tabs, no role-switching UI. Inline PDF embed stays a desktop-only enhancement (Appendix A#2).
 
 ### 4.4 Contact `/contact`
 - Email: fontong.jod.aekkarut@gmail.com · Phone: +66 94-861-8164
@@ -187,6 +187,7 @@ Tabs: **Software Engineer · Backend · QA Automation**. Each = embedded PDF (`<
 3. Verify the contact email with the product owner before shipping any page containing it.
    **RESOLVED 2026-07-05:** product owner confirmed `fontong.jod.aekkarut@gmail.com` (matches §4.4). Cleared to ship on /contact and footer where specified.
 4. Site targets **all roles** (SE / Backend / QA) — case-study order stays AiKlao → Typing Race → Tiger Kick → JPD.
+5. **Single resume PDF — the 3-tab / role-tailored design is DROPPED (2026-07-19).** The earlier plan of three role-tailored PDFs (Software Engineer / Backend / QA Automation) behind tabs on `/resume` is cancelled. The product owner delivered **one** resume PDF for all roles: `public/resume/Aekkarat_Fontong_Software_Engineer.pdf`. `/resume` ships as a **single** download-first page (download button(s) + thumbnail; inline PDF embed remains a desktop-only enhancement per item 2 above) — **no tabs, no role-switching UI, one PDF for every opening.** This amends §4.3 (see the superseded note there).
 
 ---
 

@@ -119,8 +119,8 @@
       "depends_on": [
         "PF-M1-01"
       ],
-      "summary": "Resume page: 3 tabs (SE / Backend / QA), DOWNLOAD-FIRST (buttons + thumbnails); inline embed only as desktop enhancement. PDFs from /public/resume/.",
-      "dod": "PDFs download on mobile + desktop, tabs keyboard-accessible"
+      "summary": "Resume page: SINGLE resume PDF for all roles (no tabs, no role-switching UI), DOWNLOAD-FIRST (download button(s) + thumbnail); inline embed only as desktop enhancement. PDF from /public/resume/Aekkarat_Fontong_Software_Engineer.pdf (SPEC Appendix A#5).",
+      "dod": "PDF downloads on mobile + desktop, download button(s) keyboard-accessible, thumbnail has alt text"
     },
     {
       "id": "PF-M1-07",

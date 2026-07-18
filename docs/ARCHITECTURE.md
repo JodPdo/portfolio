@@ -68,7 +68,7 @@ content/
   projects/
     aiklao.mdx  typing-race.mdx  tiger-kick.mdx  jpd-api.mdx
 public/
-  resume/                 # role-tailored PDFs (SE / Backend / QA) — download-first
+  resume/                 # single resume PDF, all roles — download-first (SPEC Appendix A#5)
   projects/               # case-study covers / architecture diagrams (alt text required)
   og/                     # Open Graph assets (M3)
 ```
