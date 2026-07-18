@@ -78,12 +78,12 @@ This is the project I point QA hiring managers at.
 - **60 Jest + Supertest tests on the transport-free game core — ~99% statements / 100% functions coverage.** The game logic is deliberately separated from Socket.IO transport, so the rules of the race (progress, clamping, timing, winning) are testable as plain code without sockets in the way.
 - **Cross-browser Playwright E2E on Chromium, Firefox, and WebKit.** The suite runs the full solo-vs-bot journey plus the UI-level anti-cheat check described above, captures trace and video on failure, and has a **live-site run mode** (`E2E_BASE_URL`) so the same suite can be pointed at production.
 - **A formal QA Test Strategy document** sits behind the suites: a risk register (P1–P3), a requirements traceability matrix, and explicit entry/exit criteria. Tests exist because a risk was identified, not because a file needed coverage.
-  - Doc link: [NEEDS-VERIFICATION: QA Test Strategy doc URL]
 - **CI gates the deploy.** A single red test blocks the GitHub Actions deploy to the VPS. No exceptions, including for me.
 
-{/* Internal note: the QA Test Strategy doc URL still needs product-owner sign-off
-    before ship. Until verified, render the marker above as a plain label with no
-    href — never a guessed or placeholder link. */}
+{/* Internal note (PF-M3-06): the Typing Race repo URL and the QA Test Strategy doc URL
+    still need product-owner sign-off. They render as plain, link-less text ("Source on
+    GitHub" / "documented internally") until real URLs are supplied — never a guessed or
+    placeholder link, and no bracketed marker in visible copy. */}
 
 The hardest testing problem was determinism: real-time code and wall clocks make flaky tests. I solved it with an injected clock and fake timers in the game-core suite, and range assertions where exact timing genuinely can't be pinned down.
 
@@ -96,8 +96,8 @@ The hardest testing problem was determinism: real-time code and wall clocks make
 ## Links
 
 - **Live:** [race.aiklaotrip.com](https://race.aiklaotrip.com)
-- **Code:** [NEEDS-VERIFICATION: Typing Race repo URL (github.com/JodPdo/...)]
-- **QA Test Strategy doc:** [NEEDS-VERIFICATION: doc URL — see Testing section]
+- **Code:** Source on GitHub
+- **QA Test Strategy:** documented internally
 
 ## What I learned
 

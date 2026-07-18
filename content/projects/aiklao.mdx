@@ -23,15 +23,19 @@ metrics:
   - { label: "Node service tests (Jest)", value: "138" }
   - { label: "Spring Boot tests (JUnit)", value: "84" }
   - { label: "App function coverage", value: "~80%" }
+links:
+  apk: "https://github.com/JodPdo/aiklao-mobile/releases/latest"
+  repos:
+    - { label: "Mobile CI/CD", url: "https://github.com/JodPdo/aiklao-mobile/actions" }
+    - { label: "Backend CI/CD", url: "https://github.com/torpeerapolthi/demo_app_ai_klao_be/actions" }
 ---
 
 {/* content-writer (PF-M2-02): every fact below traces to docs/SPEC.md §5 CS1.
-    Per architect ruling 2026-07-06 (ARCHITECTURE.md §3): frontmatter `links` is
-    omitted — unverified URLs never enter frontmatter, and none of the three URLs
-    (APK releases/latest, app repo, backend repo) are in SPEC or verified yet. The
-    pending URLs live only in the body Links section as [NEEDS-VERIFICATION] plain
-    text. When the product owner supplies real URLs, add them to frontmatter `links`
-    and have qa-engineer re-click. */}
+    Per architect ruling 2026-07-06 (ARCHITECTURE.md §3), frontmatter `links` holds
+    verified URLs only. The APK (releases/latest) and both CI/CD (GitHub Actions) URLs
+    were supplied and verified by the product owner 2026-07-18 (PF-M3-06) and promoted
+    into `links` above + the body Links section below. The backend CI/CD lives under the
+    `torpeerapolthi` account intentionally — do not "correct" it to JodPdo. */}
 
 ## Overview
 
@@ -132,12 +136,13 @@ pinned down in tests on each side.
 
 ## Links
 
-- **Android APK (latest release)** — [NEEDS-VERIFICATION: exact `releases/latest` URL from the AiKlao app repo]
-- **App repository** — [NEEDS-VERIFICATION: AiKlao app repo URL]
-- **Backend repository** — [NEEDS-VERIFICATION: AiKlao backend repo URL]
+- **Android APK (latest release):** [github.com/JodPdo/aiklao-mobile/releases/latest](https://github.com/JodPdo/aiklao-mobile/releases/latest)
+- **Mobile CI/CD (GitHub Actions):** [github.com/JodPdo/aiklao-mobile/actions](https://github.com/JodPdo/aiklao-mobile/actions)
+- **Backend CI/CD (GitHub Actions):** [github.com/torpeerapolthi/demo_app_ai_klao_be/actions](https://github.com/torpeerapolthi/demo_app_ai_klao_be/actions)
 
-{/* Do not guess GitHub URLs. Until verified, render these three as plain labels with
-    no href (or omit the section) — never a placeholder link. */}
+{/* Links promoted to real URLs 2026-07-18 (PF-M3-06): APK + both CI/CD (GitHub Actions)
+    pages verified with the product owner and mirrored into frontmatter `links`. Backend
+    CI/CD is under the torpeerapolthi account by design — do not "correct" it to JodPdo. */}
 
 ## What I learned
 
