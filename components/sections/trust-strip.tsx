@@ -30,11 +30,14 @@ const TRUST_ITEMS: { label: string; href: string; external: boolean }[] = [
   },
 ];
 
-// WCAG 2.2 SC 2.5.8 (PF-M3-05): >= 44px clickable box via inline-flex + min-h;
-// the negative vertical margin collapses the added height out of the flow so
-// the strip keeps its tight V2 row rhythm (invisible hit-area expansion).
+// WCAG 2.2 SC 2.5.8 (PF-M3-05): >= 44px clickable box via inline-flex + min-h.
+// The strip is single-row only at xl (1280px+); below that it wraps (2 rows at
+// 768px, ~4 rows at 375px, row-gap-y-3 = 12px). So the collapsing negative
+// margin is applied ONLY at xl, where the tight desktop rhythm matters and the
+// row can't wrap. Below xl the margin is dropped: with no spill, each 44px box
+// equals its flow slot and wrapped rows (separated by the gap) never overlap.
 const ITEM_CLASSES =
-  "-my-2.5 inline-flex min-h-[44px] items-center rounded-sm px-1 font-mono text-xs uppercase tracking-[0.14em] text-foreground underline-offset-4 transition-colors duration-200 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
+  "inline-flex min-h-[44px] items-center rounded-sm px-1 font-mono text-xs uppercase tracking-[0.14em] text-foreground underline-offset-4 transition-colors duration-200 xl:-my-2.5 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
 
 export function TrustStrip() {
   return (

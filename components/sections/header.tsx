@@ -20,9 +20,12 @@ export function Header() {
       <div className="flex w-full flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-8">
         <Link
           href="/"
-          // WCAG 2.2 SC 2.5.8 (PF-M3-05): >= 44px clickable box; the negative
-          // vertical margin keeps the visible header rhythm unchanged.
-          className="-my-2.5 inline-flex min-h-[44px] items-center rounded-sm font-mono text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+          // WCAG 2.2 SC 2.5.8 (PF-M3-05): >= 44px clickable box. At md+ (single
+          // row) a negative vertical margin keeps the desktop header rhythm
+          // unchanged; below md the brand sits on its own row above the wrapped
+          // nav (container gap-y-2 = 8px), so the margin is dropped — no spill
+          // means the brand box cannot bleed into the nav row.
+          className="inline-flex min-h-[44px] items-center rounded-sm font-mono text-xs font-semibold uppercase tracking-[0.18em] text-foreground transition-colors duration-200 md:-my-2.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
         >
           Aekkarat Fontong
         </Link>
