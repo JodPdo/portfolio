@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import { getAllProjects } from "@/lib/projects";
 import { WorkRow, type WorkRowProject } from "@/components/projects/work-row";
+import { buildOpenGraph, formatTitle } from "@/lib/site";
+
+const DESCRIPTION =
+  "Four projects, each with a full case study — AiKlao, Typing Race, Tiger Kick, and the JPD API.";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description:
-    "Four projects, each with a full case study — AiKlao, Typing Race, Tiger Kick, and the JPD API.",
+  description: DESCRIPTION,
   alternates: { canonical: "/projects" },
+  ...buildOpenGraph({
+    title: formatTitle("Projects"),
+    description: DESCRIPTION,
+    path: "/projects",
+  }),
 };
 
 /**

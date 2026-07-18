@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
+import { buildOpenGraph, formatTitle } from "@/lib/site";
+
+const DESCRIPTION =
+  "Download Aekkarat Fontong's resume — tailored for Software Engineer, Backend, and QA Automation roles.";
 
 export const metadata: Metadata = {
   title: "Resume",
-  description:
-    "Download Aekkarat Fontong's resume — tailored for Software Engineer, Backend, and QA Automation roles.",
+  description: DESCRIPTION,
   alternates: { canonical: "/resume" },
+  ...buildOpenGraph({
+    title: formatTitle("Resume"),
+    description: DESCRIPTION,
+    path: "/resume",
+  }),
 };
 
 export default function ResumePage() {

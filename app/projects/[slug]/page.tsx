@@ -10,6 +10,7 @@ import {
   getProjectSlugs,
   type Project,
 } from "@/lib/projects";
+import { buildOpenGraph, formatTitle } from "@/lib/site";
 import { mdxComponents } from "@/components/mdx/mdx-components";
 
 // The 4 slugs are fixed and come from content/projects/*.mdx filenames
@@ -32,17 +33,22 @@ export async function generateMetadata({
 
   const canonical = `/projects/${project.slug}`;
 
-  // Bare page segment — the root `title.template` appends "— Aekkarat Fontong".
+  // Bare page segment for <title> — the root `title.template` appends
+  // "— Aekkarat Fontong". OG/Twitter, however, do NOT inherit the template or
+  // the root's image, so build a complete block via the shared helper (with
+  // the full templated title and the shared OG image). `type: "article"` marks
+  // these as case studies. (PF-M3-07: without an explicit image here the
+  // override dropped og:image entirely.)
   return {
     title: project.title,
     description: project.summary,
     alternates: { canonical },
-    openGraph: {
-      type: "article",
-      title: project.title,
+    ...buildOpenGraph({
+      title: formatTitle(project.title),
       description: project.summary,
-      url: canonical,
-    },
+      path: canonical,
+      type: "article",
+    }),
   };
 }
 

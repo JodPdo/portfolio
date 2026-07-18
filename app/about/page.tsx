@@ -5,17 +5,25 @@ import { PhotoMat } from "@/components/ui/photo-mat";
 import { HowIWork } from "@/components/sections/how-i-work";
 import { Timeline } from "@/components/sections/timeline";
 import jodWorking from "@/public/images/jod-working-duotone.webp";
+import { buildOpenGraph, formatTitle } from "@/lib/site";
 
 // Copy verbatim from docs/copy/about.md (approved, PF-M1-04). V2 "Editorial
 // Dark" layout per Design Brief V2 §2–3 (card PF-V2-06): numbered mono
 // section labels, display headings, full-bleed rows with hairline borders,
 // jod-working duotone in a <PhotoMat>, and §2 rebuilt as the E7 pinned
 // horizontal section (<HowIWork>).
+const DESCRIPTION =
+  "From 4.5 years in the Royal Thai Police to shipping production software. The full story: the pivot, how I work, and the proof.";
+
 export const metadata: Metadata = {
   title: "About",
-  description:
-    "From 4.5 years in the Royal Thai Police to shipping production software. The full story: the pivot, how I work, and the proof.",
+  description: DESCRIPTION,
   alternates: { canonical: "/about" },
+  ...buildOpenGraph({
+    title: formatTitle("About"),
+    description: DESCRIPTION,
+    path: "/about",
+  }),
 };
 
 // Section 4 — "Certifications". Interim rendering rule (copy doc §4): every

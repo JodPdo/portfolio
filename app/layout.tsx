@@ -8,6 +8,7 @@ import {
   SITE_NAME,
   SITE_TITLE,
   SITE_DESCRIPTION,
+  buildOpenGraph,
 } from "@/lib/site";
 
 // Display face (V2 — Editorial Dark, ADR-0003): huge uppercase headlines,
@@ -58,8 +59,13 @@ const jetbrainsMono = JetBrains_Mono({
 // SEO baseline (PF-M3-01). `metadataBase` resolves every relative canonical
 // / OG URL against the production origin; the `title.template` lets each
 // route set just its page segment (e.g. "About") and inherit the site suffix.
-// The root `opengraph-image.tsx` file convention supplies the default OG +
-// Twitter image for every route automatically — no per-page image needed.
+//
+// OG/Twitter: Next.js does NOT deep-merge `openGraph`/`twitter` down the
+// route tree — a child override replaces the whole object (PF-M3-07/08). So
+// this root block, the 4 secondary pages, and the case-study route all build
+// their OG/Twitter tags from the shared `buildOpenGraph` helper, which always
+// emits a complete block (correct per-page url/title/description + the shared
+// `opengraph-image.tsx` image, referenced explicitly so it survives overrides).
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
@@ -73,25 +79,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
-  openGraph: {
+  ...buildOpenGraph({
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    path: "/",
     type: "website",
-    locale: "en_US",
-    siteName: SITE_NAME,
-    url: "/",
-    title: {
-      default: SITE_TITLE,
-      template: `%s — ${SITE_NAME}`,
-    },
-    description: SITE_DESCRIPTION,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: {
-      default: SITE_TITLE,
-      template: `%s — ${SITE_NAME}`,
-    },
-    description: SITE_DESCRIPTION,
-  },
+  }),
   robots: {
     index: true,
     follow: true,

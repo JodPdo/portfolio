@@ -34,3 +34,88 @@ export const SITE_DESCRIPTION =
  */
 export const GITHUB_URL = "https://github.com/JodPdo";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong";
+
+/**
+ * Shared Open Graph / Twitter builder (PF-M3-07 + PF-M3-08).
+ *
+ * WHY THIS EXISTS: Next.js `Metadata` objects do NOT deep-merge across the
+ * layout→page hierarchy. Any child route that declares its own `openGraph`
+ * (or `twitter`) key REPLACES the parent's whole object rather than merging
+ * into it — so a partial child override silently drops the root's OG image
+ * (PF-M3-07: all 4 case studies lost `og:image`) and a page that declares NO
+ * override at all inherits the root's `url: "/"`/home title verbatim
+ * (PF-M3-08: /about, /contact, /resume, /projects showed the homepage's
+ * og:title/description/url). The file-convention image in
+ * `app/opengraph-image.tsx` is likewise only auto-attached to routes that do
+ * not override `openGraph`, so any overriding route must re-declare it.
+ *
+ * FIX: every route (root layout, the 4 secondary pages, and the dynamic
+ * case-study route) calls this one helper, which always returns a COMPLETE
+ * `openGraph` + `twitter` pair — correct per-page title/description/url/type,
+ * plus the shared OG image — so no route can ship a partial object that
+ * clobbers the image or leaks the homepage's identity.
+ */
+
+/**
+ * The root `app/opengraph-image.tsx` file-convention route. Referencing it
+ * explicitly (rather than relying on auto-attachment) is what survives a child
+ * `openGraph` override. `metadataBase` (root layout) resolves this to an
+ * absolute URL in the rendered tags. Dimensions match the file's exported
+ * `size` (1200×630, PNG).
+ */
+export const OG_IMAGE = {
+  url: "/opengraph-image",
+  width: 1200,
+  height: 630,
+  alt: SITE_TITLE,
+} as const;
+
+/**
+ * Compose a full <title>/og:title string from a page segment, mirroring the
+ * root `title.template` (`%s — Aekkarat Fontong`). Pass no segment for the
+ * homepage, which uses the untemplated site title.
+ */
+export function formatTitle(segment?: string): string {
+  return segment ? `${segment} — ${SITE_NAME}` : SITE_TITLE;
+}
+
+export type OpenGraphType = "website" | "article";
+
+export interface BuildOpenGraphOptions {
+  /** Full, already-composed OG/Twitter title (use `formatTitle`). */
+  title: string;
+  description: string;
+  /** Root-relative path of THIS page, e.g. "/about" (resolved to absolute). */
+  path: string;
+  type?: OpenGraphType;
+}
+
+/**
+ * Returns a complete `openGraph` + `twitter` block for one route. Spread the
+ * result into a page's `metadata` export / `generateMetadata` return so every
+ * route ships correct, self-describing social tags with the shared image.
+ */
+export function buildOpenGraph({
+  title,
+  description,
+  path,
+  type = "website",
+}: BuildOpenGraphOptions) {
+  return {
+    openGraph: {
+      type,
+      locale: "en_US",
+      siteName: SITE_NAME,
+      url: path,
+      title,
+      description,
+      images: [OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title,
+      description,
+      images: [OG_IMAGE.url],
+    },
+  };
+}

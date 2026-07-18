@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
+import { buildOpenGraph, formatTitle } from "@/lib/site";
+
+const DESCRIPTION =
+  "Get in touch with Aekkarat Fontong — email, GitHub, and LinkedIn.";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description:
-    "Get in touch with Aekkarat Fontong — email, GitHub, and LinkedIn.",
+  description: DESCRIPTION,
   alternates: { canonical: "/contact" },
+  ...buildOpenGraph({
+    title: formatTitle("Contact"),
+    description: DESCRIPTION,
+    path: "/contact",
+  }),
 };
 
 // Handles verified in docs/SPEC.md §4.4 / Appendix A#3 (RESOLVED 2026-07-05 —
