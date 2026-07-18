@@ -34,7 +34,11 @@ export function NavLink({
     <Link
       href={href}
       aria-current={isActive ? "page" : undefined}
-      className={`rounded-sm px-1 py-0.5 font-mono text-[11px] uppercase tracking-[0.16em] underline-offset-4 transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none ${
+      // WCAG 2.2 SC 2.5.8 (PF-M3-05): the *clickable* box is >= 44px tall via
+      // inline-flex + min-h; the negative vertical margin collapses the extra
+      // height back out of the flow so the visible row keeps its tight V2
+      // rhythm (invisible hit-area expansion, not bigger text/spacing).
+      className={`-my-2.5 inline-flex min-h-[44px] items-center rounded-sm px-1 font-mono text-[11px] uppercase tracking-[0.16em] underline-offset-4 transition-colors duration-200 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none ${
         isActive
           ? "font-semibold text-primary underline"
           : "text-foreground-secondary"
