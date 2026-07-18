@@ -115,12 +115,13 @@
       "id": "PF-M1-06",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "review",
+      "status": "done",
       "depends_on": [
         "PF-M1-01"
       ],
       "summary": "Resume page: SINGLE resume PDF for all roles (no tabs, no role-switching UI), DOWNLOAD-FIRST (download button(s) + thumbnail); inline embed only as desktop enhancement. PDF from /public/resume/Aekkarat_Fontong_Software_Engineer.pdf (SPEC Appendix A#5).",
-      "dod": "PDF downloads on mobile + desktop, download button(s) keyboard-accessible, thumbnail has alt text"
+      "dod": "PDF downloads on mobile + desktop, download button(s) keyboard-accessible, thumbnail has alt text",
+      "evidence": "qa-engineer PASS 2026-07-19 on fresh production build (npm run build + npm run start, killed/restarted server to guarantee current code): Playwright-driven verification — real file download confirmed at 375px and 1280px (both saved 1,788,175-byte PDF matching served Content-Length; served as application/pdf), no <iframe> in DOM and zero .pdf network requests at 375px (mobile never fetches the PDF), iframe mounts only at >=1024px via matchMedia island with correct src/title and a genuine 200 application/pdf fetch (visual PDF pixels don't paint under headless-Chromium's screenshot pipeline — confirmed as a headless-only limitation, not a site defect, by reproducing the same behavior on a direct top-level PDF navigation), keyboard Tab reaches both 'Download résumé' and 'Open in new tab (opens the PDF in a new tab)' with a visible double-ring focus indicator and non-generic accessible names, role=img thumbnail exposes a full descriptive accessible name (aria-label, DoD-equivalent to alt text per code-reviewer), axe-core 0 violations at 375/768/1280 (one benign 'frame-tested' incomplete = axe can't audit inside the PDF iframe, expected), no horizontal scroll at any breakpoint, author-note-marker grep clean, homepage 'Download résumé' CTA still -> /resume, all /resume page links 200 except the sitewide LinkedIn footer link (LinkedIn returns HTTP 999 to all automated/headless clients regardless of UA — pre-existing sitewide footer link, not introduced by or in scope of this card, not a real break). npm run build and npm run lint both green, zero console errors on any viewport."
     },
     {
       "id": "PF-M1-07",
