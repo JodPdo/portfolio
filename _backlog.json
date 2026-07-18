@@ -115,7 +115,7 @@
       "id": "PF-M1-06",
       "milestone": "M1",
       "owner_agent": "frontend-engineer",
-      "status": "backlog",
+      "status": "review",
       "depends_on": [
         "PF-M1-01"
       ],
