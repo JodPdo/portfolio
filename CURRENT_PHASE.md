@@ -1,8 +1,10 @@
 # Current Phase
 
-**Milestone: M3 — SEO/OG, Lighthouse gate, a11y AA, custom domain (launch)**
+**Milestone: M3 — SEO/OG, Lighthouse gate, a11y AA, custom domain (launch) — CLOSED 2026-07-19. Core project scope COMPLETE; site LAUNCHED at https://jod.aiklaotrip.com.**
 
-M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. M3 is now the active milestone; its SEO/OG + full-QA/Lighthouse-gate work is **DONE**, and both known non-blocking follow-ups (PF-M3-05, PF-M3-06) are now **DONE** as of 2026-07-19 (see M3 progress below). The **only** M3 item still open is the human+DNS domain cutover (PF-M3-03) — the next step, owned by producer + human product owner. Separately, the last M1 carry-over (PF-M1-06, resume page) also closed 2026-07-19.
+M3 closed 2026-07-19 with the domain cutover (PF-M3-03) and the deferred post-cutover SEO verification. Every M3 card is now Done (01, 02, 03, 05, 06, 07, 08; 04 was obsolete/closed). The site is live over HTTPS at **jod.aiklaotrip.com** and all launch-gate work (SEO/OG, Lighthouse, a11y AA, domain) has passed. **The core project scope (M0 → M3) is complete.** Only **M4 (TH/EN toggle) remains, and it is OPTIONAL/DEFERRED** per CLAUDE.md product-owner decision #5 — not started. See the M3-closed section below.
+
+M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. The last M1 carry-over (PF-M1-06, resume page) closed 2026-07-19.
 
 ## M3 progress
 
@@ -16,9 +18,19 @@ M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. M3 is now th
 - **PF-M3-05 (frontend-engineer) — DONE 2026-07-19.** Header nav / brand / trust-strip tap targets were 16-22px, below WCAG 2.2 SC 2.5.8's 24px minimum. Fixed by making the collapsing negative-margin spill breakpoint-conditional (spill applied only where each row is provably single-row; dropped wherever the layout can wrap) so wrapped rows can never overlap. First attempt FAILED code review (unconditional spill left overlapping 44px hit boxes at wrap points); rework (commit `fea3372`) fixed it. qa-engineer independently re-measured real getBoundingClientRect() hit boxes via CDP across 8 widths straddling the md/xl wrap boundaries: zero pairwise overlap, every target >= 24px hard floor (44px tall except the 36px GitHub icon whose invisible ::after expands to ~42px), keyboard order/focus-ring clean, axe 0 violations, build + lint green. code-reviewer PASS (re-review) + qa-engineer PASS.
 - **PF-M3-06 (content-writer) — DONE 2026-07-18.** All 4 case studies' Links sections no longer render literal `[NEEDS-VERIFICATION: ...]` bracket text; real live links promoted (AiKlao APK + CI/CD, typing-race demo) and remaining entries use placeholder-free plain-text fallbacks. qa grep of all 4 rendered routes: zero internal-marker occurrences. code-reviewer PASS + qa-engineer PASS.
 
-### M3 next step — domain cutover (needs the human)
+### M3 exit gate — CLOSED 2026-07-19
 
-- **PF-M3-03 (custom domain `jod.aiklaotrip.com`)** — now the **only** open M3 card. Unblocked (`depends_on` PF-M3-01 + PF-M3-02 both `done`), and with PF-M3-05/06 also closed it is the sole item standing between here and the M3 exit gate. It requires a **human-in-the-loop DNS + Vercel step** (producer + human product owner only) and is **not** started by any agent autonomously. Left at `backlog` pending that conversation — the human is handling it separately next.
+- **PF-M3-03 (custom domain `jod.aiklaotrip.com` + Vercel Analytics) — DONE 2026-07-19.** The human product owner completed the DNS CNAME + Vercel domain add + HTTPS outside this session. Producer then ran the **deferred post-cutover SEO verification** (deferred from PF-M3-01 because no live URL existed at the time) directly against the live domain. Method: direct HTTP fetch + rigorous structural validation via curl (no WebFetch/Google-Rich-Results-UI/hosted-OG-preview tool driven — stated plainly). All 3 checks PASS:
+  - [x] **JSON-LD Person** — `GET https://jod.aiklaotrip.com/` → HTTP 200, title correct; single `<script type="application/ld+json">` block re-parsed as valid JSON: `@context=https://schema.org`, `@type=Person`, `name`, `url=https://jod.aiklaotrip.com`, `sameAs`=[GitHub, LinkedIn] array. All required fields present.
+  - [x] **OG image / social meta** — homepage renders a complete `og:*`+`twitter:*` set (title/description/url/site_name/locale/image/type + twitter card/title/description/image); the `og:image` URL itself returns HTTP 200, `content-type: image/png`, PNG IHDR = exactly **1200×630**.
+  - [x] **Sitemap + robots absolute-URL** — `/sitemap.xml` HTTP 200, all **9 `<loc>` entries on `https://jod.aiklaotrip.com`**, **zero `vercel.app` occurrences**; `/robots.txt` HTTP 200 with `Disallow: /scratch/` and `Sitemap: https://jod.aiklaotrip.com/sitemap.xml` on the correct domain.
+  - Note: Vercel Analytics enablement is the human's dashboard action (not verifiable from this repo/curl session); the domain-live-over-HTTPS half of the DoD is verified above.
+
+**All M3 launch-gate work is complete: SEO/OG (PF-M3-01), full QA + Lighthouse gate 96-98 Perf / 100 trio / CLS 0 (PF-M3-02), OG bugfixes (PF-M3-07/08), nav target-size (PF-M3-05), NEEDS-VERIFICATION link text (PF-M3-06), and domain cutover + post-cutover SEO verification (PF-M3-03). Broken-build/Lighthouse-<90 gate condition not triggered. M3 CLOSED, site launched.**
+
+### After M3 — M4 is optional/deferred
+
+Per CLAUDE.md product-owner decision #5, **M4 (TH/EN toggle, `next-intl`) is OPTIONAL and deferred — do not pull it forward.** With M3 closed, the portfolio's core scope (M0 → M3: skeleton, core pages, Design V2, projects/case studies, and launch) is **complete and live**. No milestone is currently active; M4 (PF-M4-01) stays in `backlog` unless/until the product owner elects to start it.
 
 M1.5 (Design V2 "Editorial Dark") closed 2026-07-17. Cards PF-V2-01 … PF-V2-08 all Done; the brief §5 exit gate (PF-V2-07) passed on a production build across all 9 routes.
 
@@ -61,7 +73,7 @@ PF-M2-01 … PF-M2-05 (projects grid + 4 case-study MDX files) were all Done/QA-
 | M1 ✅ | Home, About, Contact, Resume | closed 2026-07-06; last carry-over PF-M1-06 (resume page, single all-roles PDF, download-first) Done 2026-07-19 |
 | M1.5 ✅ | Design V2 — Editorial Dark | brief §5 gate closed 2026-07-17 (PF-V2-07) |
 | M2 ✅ | Projects work-rows + 4 MDX case studies on V2 | closed 2026-07-18 (PF-M2-06/07/08); no separate gate card — quality sweep lives in M3/PF-M3-02 |
-| **M3 (now)** | SEO/OG, Lighthouse (amended: mobile Perf ≥ 90 + trio ≥ 95 + CLS < 0.1), a11y AA, domain `jod.aiklaotrip.com` | launch — PF-M3-01 (SEO/OG) + PF-M3-02 (QA/Lighthouse gate: 96-98 Perf / 100 trio / CLS 0) + PF-M3-07/08 (OG bugfixes) all **Done** 2026-07-18; PF-M3-05 (nav target-size) + PF-M3-06 (NEEDS-VERIFICATION link text) both **Done** 2026-07-19; **only PF-M3-03 (domain) open** — unblocked, next, needs human+DNS |
-| M4 (opt) | TH/EN toggle (`next-intl`) | toggle works, no layout break |
+| M3 ✅ | SEO/OG, Lighthouse (amended: mobile Perf ≥ 90 + trio ≥ 95 + CLS < 0.1), a11y AA, domain `jod.aiklaotrip.com` | **launch gate closed 2026-07-19** — PF-M3-01 (SEO/OG) + PF-M3-02 (QA/Lighthouse: 96-98 Perf / 100 trio / CLS 0) + PF-M3-07/08 (OG bugfixes) Done 2026-07-18; PF-M3-05 (nav target-size) + PF-M3-06 (NEEDS-VERIFICATION link text) Done 2026-07-19; PF-M3-03 (domain cutover + post-cutover SEO verification: JSON-LD Person / OG image 1200×630 / sitemap+robots absolute-URL all PASS live) Done 2026-07-19. **Site LIVE at https://jod.aiklaotrip.com** |
+| M4 (opt) | TH/EN toggle (`next-intl`) — **OPTIONAL, deferred, not started** (PO decision #5) | toggle works, no layout break |
 
 Only `producer` edits this file (when a gate passes).
