@@ -389,3 +389,70 @@ text on any route, not just that block, and the reservation is brittle across co
 *`size-adjust`/`adjustFontFallback` tuning* — fundamentally can't fix a monospace-vs-proportional glyph-advance
 mismatch (it matches vertical metrics only). `display: "optional"` is the simplest site-wide root-cause fix,
 adds no dependency, and keeps font-loading policy in one place (`app/layout.tsx`).
+
+### ADR-0003b — Remove E7 pinned-horizontal from About; vertical stack is the universal "How I work" layout — 2026-07-20
+**Status:** Accepted (architect), ratifying a product-owner decision. **Card:** follow-up frontend card (About/How-I-work).
+**Amends:** ADR-0003's E7 entry — retires one *signature effect* and the pin+scrub layout of the "How I work"
+section. The GSAP + ScrollTrigger motion stack itself is **unchanged**; this is a content-layout change, not a
+motion-stack change.
+
+**Context.** ADR-0003 ratified `docs/DESIGN_BRIEF_V2.md` §3, whose effect **E7** was a ScrollTrigger pin+scrub
+that turned the About page's "How I work" (5 steps) into a pinned horizontal scroll-scrub, degrading to a plain
+vertical stack only on mobile / `prefers-reduced-motion`. Post-ship, the product owner reports HR/recruiter
+feedback that scroll-hijacking (pinning the viewport and re-mapping vertical scroll to horizontal progress) is
+disliked by the primary audience for this site and works against it reading as an engineer's portfolio. The
+product owner has decided to remove the effect entirely.
+
+**Decision.**
+
+1. **Remove E7 (pinned-horizontal) from the About "How I work" section, for all users and all breakpoints.**
+   There is no pinning and no horizontal scroll-scrub anywhere on the site anymore.
+
+2. **Promote the existing vertical-stack fallback to the sole layout.** The plain vertical stack that was
+   previously the mobile / reduced-motion degrade becomes the **universal** layout for that section — the same
+   markup renders for every visitor regardless of motion preference or viewport. No motion-preference branch
+   remains in this section (any E8 `<Reveal>` entrance on its items, if kept, follows its own reduced-motion
+   rule as elsewhere; that is not E7).
+
+3. **GSAP + ScrollTrigger stays in the stack.** It is still actively used by E8 `<Reveal>`
+   (`components/motion/reveal.tsx`) in `components/sections/cta.tsx`, `components/sections/skills.tsx`, and
+   `components/sections/featured-projects.tsx`. Removing E7 removes **no** dependency; `gsap` remains approved
+   and in use per ADR-0003 decision 2.
+
+4. **Retire the `<PinnedHorizontal>` primitive and its only demo consumer (clean removal, no dead code).** With
+   E7 gone, `components/motion/pinned-horizontal.tsx` has **zero production consumers** — its sole remaining
+   importer is `app/scratch/motion/page.tsx`, a noindexed internal QA/demo route already flagged for deletion
+   in PF-V2-03's resolution ("producer deletes the scratch route after V2 primitives are consumed"). The
+   frontend follow-up card **deletes both** `components/motion/pinned-horizontal.tsx` and `app/scratch/motion/`
+   (executing that long-pending PF-V2-03 cleanup). Rationale: an unused-in-production primitive kept only to
+   feed a stale demo route is dead code, and the architecture principle here is "simplest structure, resist
+   over-engineering" — speculative-reuse code earns its keep only when there is a real consumer. Git history
+   preserves the implementation verbatim if a future section ever genuinely needs pin+scrub, at which point it
+   returns via its own card and review.
+
+**Rationale / Trade-off (accepted).**
+- **Audience over spectacle.** The site's job is to convert HR/recruiter/hiring-engineer readers; a signature
+  effect the primary audience actively dislikes is a net negative, not a differentiator. The engineering
+  discipline the site advertises is better shown by a section that just reads cleanly.
+- **Net removal of complexity.** This deletes an animation island, its pin-spacer/scrub wiring, and a
+  motion-preference branch, and finally clears a demo route + primitive that were dead weight — strictly
+  simpler, lower-risk, and less JS on the About route. It removes no dependency because GSAP is load-bearing
+  elsewhere.
+- **The fallback was already built and shipped**, so promoting it is low-risk: the universal layout is code
+  that already passed the M1.5 exit gate as the reduced-motion path.
+- **Trade-off:** the V2 direction loses one of brief §3's signature effects. Accepted — the product owner
+  owns that call, the remaining effects (preloader, scramble, marquees, hero displacement, parallax, work-row
+  hover video, scroll reveals) still carry the editorial character, and correctness for the audience outranks
+  effect count.
+
+**Alternatives rejected.** *Keep E7 but soften it (shorter pin, opt-out)* — still scroll-hijacking, still the
+disliked interaction, and adds tuning surface for an effect the owner has decided against. *Keep
+`<PinnedHorizontal>` as a documented unused primitive "for future reuse"* — dead code with no consumer, exactly
+the speculative structure the architecture mandate resists; git history is the correct home for
+not-currently-used code.
+
+**Docs updated by this ADR:** this entry; `docs/DESIGN_BRIEF_V2.md` §3 (E7 row marked superseded, pointing
+here). Implementation (deleting/rewiring `components/sections/how-i-work.tsx`, deleting
+`components/motion/pinned-horizontal.tsx` and `app/scratch/motion/`) is a **frontend-engineer** follow-up under
+its own card + review — not done by this ADR. `_backlog.json` and `CURRENT_PHASE.md` are producer-owned and
+untouched here.

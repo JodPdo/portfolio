@@ -35,7 +35,7 @@ Dark-only editorial site. Big type does the talking; effects are few but signatu
 | E4 | Hero photo displacement on mousemove | PIXI DisplacementFilter (canvas in `.pixi-box`) | pixi.js via `next/dynamic`, loaded only on `/` after idle, desktop + fine pointer only; static duotone `<img>` fallback | ~60KB gzip, lazy |
 | E5 | Mouse parallax on hero layers | small translate offsets on mousemove | rAF-throttled transform, disabled on touch/reduced-motion | ~0 |
 | E6 | Work rows + hover video preview | 21 eager Vimeo iframes (their mistake — do NOT copy) | muted looping `<video>` webm ≤300KB each, `preload="none"`, load on first hover, poster image fallback; tap = navigate on touch | tiny, on-demand |
-| E7 | Pinned horizontal "How I work" (5 steps) | ScrollTrigger pin + scrub (`.pin-spacer`, `process-slider`) | GSAP ScrollTrigger pin+scrub; on mobile/reduced-motion degrade to vertical stack | ~30KB gzip (shared with E8) |
+| ~~E7~~ | ~~Pinned horizontal "How I work" (5 steps)~~ | ~~ScrollTrigger pin + scrub (`.pin-spacer`, `process-slider`)~~ | ~~GSAP ScrollTrigger pin+scrub; on mobile/reduced-motion degrade to vertical stack~~ **REMOVED — SUPERSEDED by ADR-0003b (2026-07-20):** pinned-horizontal is cut entirely (HR/recruiter feedback against scroll-hijacking). The former vertical-stack fallback is now the **universal** "How I work" layout for all users/breakpoints. GSAP/ScrollTrigger stays in the stack (still used by E8). | — |
 | E8 | Scroll reveals + stagger | ScrollTrigger, scrub x11, stagger x12 | ScrollTrigger batch reveals; IntersectionObserver fallback | shared |
 
 **Explicitly out of scope (cut):** Three.js/3D object, custom cursor, smooth-scroll library (reference uses native scroll too), sound, page-transition library.
@@ -51,7 +51,7 @@ Dark-only editorial site. Big type does the talking; effects are few but signatu
 
 - Initial JS on `/` < 250KB gzip excluding lazy pixi chunk; pixi chunk loads only after interaction/idle on desktop.
 - Lighthouse mobile: Performance ≥ 90 (target 95), A11y/BP/SEO ≥ 95. The Lighthouse ≥ 95-all M3 gate is amended: Perf ≥ 90 is acceptable IF the a11y/BP/SEO trio stays ≥ 95 and CLS < 0.1.
-- `prefers-reduced-motion`: E2 renders final text, E3 pauses, E4/E5 disabled (static image), E7 becomes vertical stack, E8 instant-show. QA must test this mode explicitly.
+- `prefers-reduced-motion`: E2 renders final text, E3 pauses, E4/E5 disabled (static image), ~~E7 becomes vertical stack~~ (E7 removed — the "How I work" section is now a universal vertical stack for everyone; see §3 / ADR-0003b), E8 instant-show. QA must test this mode explicitly.
 - Keyboard: work rows fully focusable, preview never keyboard-trapping; skip link, landmarks, AA contrast all preserved (existing checklist applies).
 - No layout shift from fonts/marquees (fixed heights on strips).
 
