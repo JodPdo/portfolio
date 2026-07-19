@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { PhotoMat } from "@/components/ui/photo-mat";
-import { HowIWork } from "@/components/sections/how-i-work";
 import { Timeline } from "@/components/sections/timeline";
 import jodWorking from "@/public/images/jod-working-duotone.webp";
 import { buildOpenGraph, formatTitle } from "@/lib/site";
@@ -10,8 +9,9 @@ import { buildOpenGraph, formatTitle } from "@/lib/site";
 // Copy verbatim from docs/copy/about.md (approved, PF-M1-04). V2 "Editorial
 // Dark" layout per Design Brief V2 §2–3 (card PF-V2-06): numbered mono
 // section labels, display headings, full-bleed rows with hairline borders,
-// jod-working duotone in a <PhotoMat>, and §2 rebuilt as the E7 pinned
-// horizontal section (<HowIWork>).
+// and the jod-working duotone in a <PhotoMat>. §2 "How I work" is a plain
+// vertical section — the E7 pinned-horizontal effect was removed for all
+// users/breakpoints per ADR-0003b (2026-07-20, product-owner decision).
 const DESCRIPTION =
   "From 4.5 years in the Royal Thai Police to shipping production software. The full story: the pivot, how I work, and the proof.";
 
@@ -36,6 +36,34 @@ const CERTIFICATIONS: { name: string; issuer: string }[] = [
   { name: "Claude 101", issuer: "Anthropic Academy" },
   { name: "Claude Code", issuer: "Anthropic Academy" },
   { name: "MCP", issuer: "Anthropic Academy" },
+];
+
+// Section 2 — "How I work". Copy verbatim from about.md §2: a proof line
+// (intro) followed by 4 numbered principles.
+const PROOF_LINE =
+  "Career-changers don’t get the benefit of the doubt, so I built my habits around proof.";
+
+const PRINCIPLES: { n: string; title: string; body: string }[] = [
+  {
+    n: "01",
+    title: "I own the full lifecycle.",
+    body: "Design, code, tests, CI/CD, deploy, and production on a self-managed VPS. On AiKlao and Typing Race I was the mobile developer, the backend developer, and the ops person — there was no one else to hand off to.",
+  },
+  {
+    n: "02",
+    title: "Tests gate my releases.",
+    body: "500+ automated tests across six repositories (Jest, JUnit, Supertest, Playwright, GUT). On my projects, a CI gate blocks the release build on any red test — not as policy theater, but because I’ve seen what slips through without it.",
+  },
+  {
+    n: "03",
+    title: "I think in edge cases.",
+    body: "What happens when two SOS requests arrive at the same instant? When a player pastes the whole passage instead of typing it? Finding the failure mode before the user does is the job.",
+  },
+  {
+    n: "04",
+    title: "I use AI as a tool — and own every decision.",
+    body: "For Tiger Kick I designed a review-gated development process: role-scoped agents, mandatory code review, QA exit gates. The AI executed; the architecture, the quality bar, and every accepted line were mine.",
+  },
 ];
 
 const LABEL_CLASSES =
@@ -106,8 +134,37 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Section 2 — How I work (E7 pinned horizontal, 5 panels) */}
-      <HowIWork />
+      {/* Section 2 — How I work (plain vertical section; E7 removed per ADR-0003b) */}
+      <section
+        aria-labelledby="how-i-work-heading"
+        className="border-t border-border px-4 py-16 sm:px-6 lg:px-8"
+      >
+        <p className={LABEL_CLASSES}>02 — How I work</p>
+        <h2 id="how-i-work-heading" className={H2_CLASSES}>
+          How I work
+        </h2>
+        <p className="mt-6 max-w-prose text-base leading-relaxed text-foreground">
+          {PROOF_LINE}
+        </p>
+        <ol className="mt-12 border-t border-border">
+          {PRINCIPLES.map((p) => (
+            <li
+              key={p.n}
+              className="grid gap-3 border-b border-border py-8 sm:grid-cols-[4rem_minmax(0,1fr)] sm:gap-8"
+            >
+              <p className={`${LABEL_CLASSES} sm:pt-1.5`}>{p.n} / 04</p>
+              <div className="max-w-prose">
+                <h3 className="font-display text-xl font-medium uppercase leading-tight tracking-tight text-foreground sm:text-2xl">
+                  {p.title}
+                </h3>
+                <p className="mt-3 text-base leading-relaxed text-foreground-secondary">
+                  {p.body}
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
 
       {/* Section 3 — The path (timeline) */}
       <section
