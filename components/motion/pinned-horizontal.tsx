@@ -41,6 +41,25 @@ import { gsap } from "./gsap";
 
 const E7_QUERY = "(min-width: 768px) and (prefers-reduced-motion: no-preference)";
 
+/**
+ * How much vertical scroll the pin consumes, as a fraction of the horizontal
+ * travel distance. `1` = the classic 1:1 scroll-to-travel ratio (the pin holds
+ * for the full horizontal distance in px); `0.3` releases the pin after ~30% of
+ * that scroll while the `x` tween still travels the FULL `-distance()`, i.e. the
+ * same panels/total horizontal travel compressed into a much shorter scroll span
+ * (~70% less vertical scroll held). Tuning knob — adjust here, not inline.
+ */
+const PIN_SCROLL_RATIO = 0.3;
+
+/**
+ * ScrollTrigger `scrub` catch-up, in seconds. A small numeric lag (vs `true`,
+ * which maps 1:1 to scroll position with zero smoothing) adds a touch of inertia
+ * so the compressed travel — more transform per scroll input under
+ * PIN_SCROLL_RATIO — reads as continuous on a fast wheel/trackpad flick instead
+ * of teleporting between panels. Kept small to avoid a floaty/laggy feel.
+ */
+const PIN_SCRUB_SECONDS = 0.3;
+
 type PinnedHorizontalProps = {
   /** Each direct child = one panel/step. */
   children: ReactNode;
@@ -72,10 +91,10 @@ export function PinnedHorizontal({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${distance()}`,
+          end: () => `+=${distance() * PIN_SCROLL_RATIO}`,
           pin: true,
           pinType: "transform",
-          scrub: true,
+          scrub: PIN_SCRUB_SECONDS,
           invalidateOnRefresh: true,
         },
       });
