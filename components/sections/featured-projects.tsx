@@ -1,15 +1,21 @@
 import Link from "next/link";
 import { Reveal } from "@/components/motion/reveal";
+import { ProjectMediaRow } from "@/components/projects/project-media-row";
+import { getProjectPreview } from "@/lib/project-previews";
 
 // Copy verbatim from docs/copy/home.md §3 (approved, PF-M1-02). Order is
 // locked (CLAUDE.md #4): AiKlao -> Typing Race -> Tiger Kick.
 //
 // V2 (card PF-V2-04, brief §2): typographic rows separated by hairlines —
-// not cards. At M2 these render from MDX frontmatter (`featured: true`)
-// per docs/ARCHITECTURE.md §3; the copy below matches the frontmatter
-// summaries so the swap is invisible. E8 reveals per row.
+// not cards. E8 reveals per row.
+//
+// Option A (architect ruling 2026-07-21): each entry carries an explicit
+// `slug` — the lookup key into lib/project-previews.ts, shared with /projects
+// (cheapest glue; no fragile href parsing). Rows now render the shared
+// <ProjectMediaRow> with full-bleed, in-view-autoplay media.
 const FEATURED_PROJECTS = [
   {
+    slug: "aiklao",
     title: "AiKlao",
     summary:
       "Real-time group trip tracking — LINE bot, LIFF web, and a React Native app on one shared backend, with a concurrency-safe SOS path.",
@@ -17,6 +23,7 @@ const FEATURED_PROJECTS = [
     href: "/projects/aiklao",
   },
   {
+    slug: "typing-race",
     title: "Typing Race",
     summary:
       "Server-authoritative multiplayer typing game — the client can't cheat, and 60 core tests plus cross-browser Playwright E2E prove it. Live now.",
@@ -24,6 +31,7 @@ const FEATURED_PROJECTS = [
     href: "/projects/typing-race",
   },
   {
+    slug: "tiger-kick",
     title: "Tiger Kick",
     summary:
       "A multiplayer party game in Godot — built under a review-gated, agent-driven SDLC I designed: Kanban, mandatory code review, and 116 unit tests plus a headless multiplayer smoke test in CI.",
@@ -43,24 +51,20 @@ export function FeaturedProjects() {
       </h2>
 
       <ul>
-        {FEATURED_PROJECTS.map((project, i) => (
-          <li key={project.href} className="border-t border-border">
-            <Reveal>
-              <Link
-                href={project.href}
-                className="group grid gap-x-8 gap-y-4 px-4 py-10 transition-colors duration-200 hover:bg-background-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring motion-reduce:transition-none sm:grid-cols-[3rem_minmax(0,1fr)_auto] sm:px-8"
-              >
-                <span
-                  aria-hidden="true"
-                  className="pt-1.5 font-mono text-xs tracking-[0.18em] text-foreground-secondary"
+        {FEATURED_PROJECTS.map((project, i) => {
+          const preview = getProjectPreview(project.slug);
+          return (
+            <li key={project.slug} className="border-t border-border">
+              <Reveal>
+                <ProjectMediaRow
+                  href={project.href}
+                  title={project.title}
+                  ordinal={`0${i + 1}`}
+                  previewSrc={preview?.src}
+                  previewPoster={preview?.poster}
+                  headingLevel="h3"
                 >
-                  0{i + 1}
-                </span>
-                <div>
-                  <h3 className="font-display text-3xl font-medium uppercase leading-none tracking-tight text-foreground transition-colors duration-200 group-hover:text-primary motion-reduce:transition-none sm:text-5xl">
-                    {project.title}
-                  </h3>
-                  <p className="mt-4 max-w-prose text-sm leading-relaxed text-foreground-secondary">
+                  <p className="text-sm leading-relaxed text-foreground-secondary">
                     {project.summary}
                   </p>
                   <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-1">
@@ -73,19 +77,11 @@ export function FeaturedProjects() {
                       </li>
                     ))}
                   </ul>
-                </div>
-                {/* Decorative glyph (>=24px, non-textual) — muted OK per
-                    DESIGN_SYSTEM V2 contrast rule. */}
-                <span
-                  aria-hidden="true"
-                  className="hidden self-center text-2xl text-foreground-muted transition-colors duration-200 group-hover:text-primary motion-reduce:transition-none sm:block"
-                >
-                  →
-                </span>
-              </Link>
-            </Reveal>
-          </li>
-        ))}
+                </ProjectMediaRow>
+              </Reveal>
+            </li>
+          );
+        })}
       </ul>
 
       <div className="border-t border-border px-4 py-6 sm:px-8">

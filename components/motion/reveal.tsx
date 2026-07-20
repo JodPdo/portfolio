@@ -13,6 +13,10 @@ import { gsap } from "./gsap";
  *   `opacity: 0` in HTML). The hidden-from state is applied client-side by
  *   the tween itself, so content can never be lost if JS fails — and there
  *   is no hydration mismatch and no CLS (only transform/opacity animate).
+ * - From-state is plain `opacity` (never `autoAlpha`): faded elements stay
+ *   `visibility: visible` so they remain keyboard-focusable and in the AT
+ *   tree (PF-M3-10). Content already in view on mount animates immediately
+ *   (no ScrollTrigger); only below-the-fold content defers to scroll.
  * - Reduced motion (brief §5): E8 shows instantly — the whole tween is
  *   gated behind gsap.matchMedia("(prefers-reduced-motion: no-preference)"),
  *   which also auto-reverts if the OS setting flips mid-session.
@@ -52,21 +56,27 @@ export function Reveal({
         stagger !== undefined && el.children.length > 0
           ? Array.from(el.children)
           : el;
+
+      // Deterministic: content already on-screen at mount animates immediately;
+      // only below-the-fold content defers to a ScrollTrigger. (Post-swap to
+      // plain `opacity`, a trigger that never fires would leave in-view content
+      // visibly stuck at opacity:0 — so we never gate in-view content on scroll.)
+      const rect = el.getBoundingClientRect();
+      const inViewOnMount = rect.top < window.innerHeight && rect.bottom > 0;
+
       gsap.fromTo(
         targets,
-        { autoAlpha: 0, y },
-        {
-          autoAlpha: 1,
+        { opacity: 0, y }, // opacity, NOT autoAlpha — keeps elements in the
+        {                  // tab order + AT tree while faded (a11y; PF-M3-10).
+          opacity: 1,
           y: 0,
           duration: durationMs / 1000,
           delay: delayMs / 1000,
           ease: "power2.out",
           stagger: stagger ?? 0,
-          scrollTrigger: {
-            trigger: el,
-            start: "top 88%",
-            once: true,
-          },
+          scrollTrigger: inViewOnMount
+            ? undefined
+            : { trigger: el, start: "top 88%", once: true },
         },
       );
       // Tweens/ScrollTriggers created inside mm.add are auto-reverted.

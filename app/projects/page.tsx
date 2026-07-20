@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getAllProjects } from "@/lib/projects";
 import { WorkRow, type WorkRowProject } from "@/components/projects/work-row";
+import { getProjectPreview } from "@/lib/project-previews";
 import { buildOpenGraph, formatTitle } from "@/lib/site";
 
 const DESCRIPTION =
@@ -17,42 +18,15 @@ export const metadata: Metadata = {
   }),
 };
 
-/**
- * Per-project hover-preview assets (E6, card PF-V2-05). Keyed by slug.
- *
- * MEDIA DROPPED 2026-07-20 (architect ruling that day; see DESIGN_SYSTEM.md
- * decision log). Real assets now live in public/media/, so 3 of 4 rows have a
- * live preview. Each entry maps to one of WorkRow's three states:
- *
- *   { src, poster } => video preview (poster is the <video>'s poster attr).
- *   { poster }      => image-only preview: a plain <img> fades in on
- *                      hover/focus (no <video>, no JS). Used when a clip
- *                      doesn't exist yet.
- *   (no entry)      => typographic poster only (the designed panel).
- *
- * State per project:
- *   - aiklao / typing-race: video + poster (real webm clips exist).
- *   - tiger-kick: poster only — the game is unfinished, so a still stands in.
- *   - jpd-api: intentionally absent — stays typographic-poster-only.
- * All referenced files exist on disk, so nothing 404s.
- */
-const PROJECT_PREVIEWS: Record<
-  string,
-  { src?: string; poster?: string } | undefined
-> = {
-  aiklao: { src: "/media/aiklao-preview.webm", poster: "/media/aiklao-preview.webp" },
-  "typing-race": { src: "/media/typing-race-preview.webm", poster: "/media/typing-race-preview.webp" },
-  "tiger-kick": { poster: "/media/tiger-kick-preview.webp" }, // NO src — image-only, game unfinished
-  // jpd-api: intentionally absent — stays typographic-poster-only.
-};
-
 export default function ProjectsPage() {
   // Ordered by frontmatter `order` (lib/projects.ts) — AiKlao, Typing Race,
   // Tiger Kick, JPD API (docs/ARCHITECTURE.md §3; CLAUDE.md #4).
   const projects = getAllProjects();
 
   const rows: WorkRowProject[] = projects.map((project) => {
-    const preview = PROJECT_PREVIEWS[project.slug];
+    // Preview assets now come from lib/project-previews.ts (shared with the
+    // home Featured section) — architect ruling 2026-07-21, Option A.
+    const preview = getProjectPreview(project.slug);
     return {
       slug: project.slug,
       title: project.title,
@@ -74,8 +48,8 @@ export default function ProjectsPage() {
           Projects
         </h1>
         <p className="mt-6 max-w-prose text-sm leading-relaxed text-foreground-secondary">
-          Four projects, each with a full case study. Hover or focus a row for
-          a preview; select it to read the write-up.
+          Four projects, each with a full case study. Previews play as you scroll;
+          select a row to read the write-up.
         </p>
       </header>
 
