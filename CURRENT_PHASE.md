@@ -6,6 +6,10 @@ M3 closed 2026-07-19 with the domain cutover (PF-M3-03) and the deferred post-cu
 
 M2 (Projects work-rows + MDX case studies on V2) closed 2026-07-18. The last M1 carry-over (PF-M1-06, resume page) closed 2026-07-19.
 
+## Post-launch updates
+
+- **Post-launch (no card — direct PO instruction): E6 hover-preview media completed + AiKlao live web-app link added — 2026-07-21, reviewed + deployed.** WorkRow now serves real preview media (AiKlao / Typing Race video `.webm`, Tiger Kick image-only `.webp` since the game is unfinished; JPD stays typographic-poster-only), replacing the poster-only ship; all assets under the 300KB cap. AiKlao case study gains a live web-app link (`dev.aiklaotrip.com`). Full mandatory chain: architect (component-API ruling) -> frontend-engineer + content-writer -> code-reviewer PASS -> qa-engineer PASS (build/lint green, hover/touch/keyboard/reduced-motion via Playwright, Lighthouse 96-98 Perf / 100 A11y/BP/SEO / CLS 0 on `/projects` + `/projects/aiklao`). Commit `1dfc51e`; producer confirmed live over HTTPS at jod.aiklaotrip.com (3 new `/media/*` assets 200 at exact repo byte sizes, "Live web app" link present in served HTML).
+
 ## M3 progress
 
 - **PF-M3-01 (SEO/OG) — DONE 2026-07-18.** Per-page titles/meta, JSON-LD Person on `/`, `next/og` OG image (1200x630 PNG at `/opengraph-image`), `sitemap.xml` (9 real routes, absolute URLs), `robots.txt` (`Disallow: /scratch/` + Sitemap line; `/scratch/motion` noindexed). Every route now renders exactly one correct per-page openGraph + twitter set. code-reviewer PASS + qa-engineer PASS (re-verified after the PF-M3-07/08 fix cycle). Note: structural/local validation only — Google Rich Results / hosted OG-preview tools can only run post domain cutover (PF-M3-03), non-blocking for this card.
