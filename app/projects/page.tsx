@@ -20,25 +20,30 @@ export const metadata: Metadata = {
 /**
  * Per-project hover-preview assets (E6, card PF-V2-05). Keyed by slug.
  *
- * OUTSTANDING product-owner delivery (tracked, non-blocking per the
- * 2026-07-13 SHIP POSTER-ONLY decision): drop a muted-looping webm clip
- * (<=300KB) — and optionally a real poster image — under /public and add
- * its entry here, e.g.
+ * MEDIA DROPPED 2026-07-20 (architect ruling that day; see DESIGN_SYSTEM.md
+ * decision log). Real assets now live in public/media/, so 3 of 4 rows have a
+ * live preview. Each entry maps to one of WorkRow's three states:
  *
- *   aiklao: { src: "/media/aiklao-preview.webm", poster: "/media/aiklao.webp" },
+ *   { src, poster } => video preview (poster is the <video>'s poster attr).
+ *   { poster }      => image-only preview: a plain <img> fades in on
+ *                      hover/focus (no <video>, no JS). Used when a clip
+ *                      doesn't exist yet.
+ *   (no entry)      => typographic poster only (the designed panel).
  *
- * WorkRow then renders the <video> and loads it on first hover/focus. With
- * no entry (current state, all 4) the row shows the designed typographic
- * poster only — nothing 404s.
+ * State per project:
+ *   - aiklao / typing-race: video + poster (real webm clips exist).
+ *   - tiger-kick: poster only — the game is unfinished, so a still stands in.
+ *   - jpd-api: intentionally absent — stays typographic-poster-only.
+ * All referenced files exist on disk, so nothing 404s.
  */
 const PROJECT_PREVIEWS: Record<
   string,
   { src?: string; poster?: string } | undefined
 > = {
-  // aiklao: { ... },
-  // "typing-race": { ... },
-  // "tiger-kick": { ... },
-  // "jpd-api": { ... },
+  aiklao: { src: "/media/aiklao-preview.webm", poster: "/media/aiklao-preview.webp" },
+  "typing-race": { src: "/media/typing-race-preview.webm", poster: "/media/typing-race-preview.webp" },
+  "tiger-kick": { poster: "/media/tiger-kick-preview.webp" }, // NO src — image-only, game unfinished
+  // jpd-api: intentionally absent — stays typographic-poster-only.
 };
 
 export default function ProjectsPage() {

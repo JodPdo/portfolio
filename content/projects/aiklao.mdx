@@ -25,6 +25,7 @@ metrics:
   - { label: "App function coverage", value: "~80%" }
 links:
   apk: "https://github.com/JodPdo/aiklao-mobile/releases/latest"
+  web: "https://dev.aiklaotrip.com/"
   repos:
     - { label: "CI/CD", url: "https://github.com/JodPdo/aiklao-mobile/actions" }
 ---
@@ -137,6 +138,7 @@ pinned down in tests on each side.
 
 ## Links
 
+- **Live web app:** [dev.aiklaotrip.com](https://dev.aiklaotrip.com/)
 - **Android APK (latest release):** [github.com/JodPdo/aiklao-mobile/releases/latest](https://github.com/JodPdo/aiklao-mobile/releases/latest)
 - **CI/CD (GitHub Actions):** [github.com/JodPdo/aiklao-mobile/actions](https://github.com/JodPdo/aiklao-mobile/actions)
 
@@ -144,6 +146,13 @@ pinned down in tests on each side.
     page verified with the product owner and mirrored into frontmatter `links`. A backend
     CI/CD link (torpeerapolthi/demo_app_ai_klao_be/actions) was dropped 2026-07-19: repo
     unreachable (404, private or gone), product-owner decision — do not re-add it. */}
+
+{/* Live web app link added 2026-07-20: dev.aiklaotrip.com — the AiKlao web frontend (LIFF
+    web app) described in this case study — supplied and confirmed live/public by the product
+    owner. Mirrored into frontmatter `links.web`. Per architect ruling (ARCHITECTURE.md §3),
+    `links` holds product-owner-supplied URLs; a code-reviewer confirms the URL resolves
+    before this passes review. No new claims about the web app's behavior are made here
+    beyond what is already established above (a LIFF web app that reads server-derived state). */}
 
 ## What I learned
 

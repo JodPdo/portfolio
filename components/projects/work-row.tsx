@@ -10,33 +10,51 @@ import { prefersReducedMotion } from "@/components/motion/use-prefers-reduced-mo
  * rows separated by hairlines (brief §2: "Work list = typographic rows,
  * not cards").
  *
- * PRODUCT-OWNER DECISION 2026-07-13 (SHIP POSTER-ONLY): the repo has no
- * project screenshots and no webm clips yet, so the resting-state "poster"
- * is a designed, token-based duotone/typographic panel (<WorkPoster/>) —
- * NOT a screenshot. The full E6 hover/touch/keyboard mechanism is wired so
- * a real muted-looping webm just drops in later: pass `previewSrc` (and an
- * optional `previewPoster` image) and the <video> renders + loads on first
- * hover automatically. With no `previewSrc` (current state, all 4 projects)
- * the <video> is never rendered — nothing 404s — and hover/focus simply
- * shows the typographic poster (the intended degrade).
+ * THREE PREVIEW STATES (architect ruling 2026-07-20; media dropped into
+ * public/media/ same day). The two optional fields on WorkRowProject encode
+ * all three with no discriminated union:
+ *
+ *   (a) Typographic poster only — neither `previewSrc` nor `previewPoster`.
+ *       The resting-state panel is a designed, token-based duotone/
+ *       typographic <WorkPoster/> (NOT a screenshot). Nothing else renders;
+ *       nothing 404s. This is the intended degrade (e.g. JPD API).
+ *   (b) Image-only preview — `previewPoster` set, `previewSrc` NOT set.
+ *       A plain <img> (a webp still) fades IN OVER the typographic poster on
+ *       hover/keyboard-focus via PURE CSS (group-hover / group-focus-within
+ *       opacity, no JS). A static image carries none of the autoplay / motion
+ *       / coarse-pointer concerns the videoActive machinery exists to solve,
+ *       so it deliberately skips that JS path entirely (e.g. Tiger Kick — the
+ *       game is unfinished, so a still stands in for a clip).
+ *   (c) Video preview — `previewSrc` set (+ optional `previewPoster`). The
+ *       <video> renders and, on first hover/focus, is loaded and played by
+ *       the JS below (reduced-motion + coarse-pointer bail); the poster image
+ *       is shown via the video's own `poster` attribute (e.g. AiKlao, Typing
+ *       Race).
  *
  * Mechanism (DoD "hover/touch/keyboard all correct"):
  * - Resting: typographic poster panel is always shown (no layout shift on
- *   reveal — the video, when present, fades IN OVER the poster).
+ *   reveal — the image or video, when present, fades IN OVER the poster).
  * - Hover / keyboard focus: identical active treatment (teal title + mat
- *   border) via CSS group-hover + group-focus-within (works with JS off);
- *   if a `previewSrc` exists AND pointer is fine AND motion is allowed, the
- *   <video> is loaded on first activation and played. onFocus/onBlur mirror
- *   onMouseEnter/onMouseLeave so keyboard focus triggers the SAME reveal —
- *   never a mouse-only :hover gate.
+ *   border) via CSS group-hover + group-focus-within (works with JS off).
+ *   State (b): the <img> opacity is driven by the SAME CSS group-hover /
+ *   group-focus-within — no JS. State (c): if a `previewSrc` exists AND
+ *   pointer is fine AND motion is allowed, the <video> is loaded on first
+ *   activation and played; onFocus/onBlur mirror onMouseEnter/onMouseLeave so
+ *   keyboard focus triggers the SAME reveal — never a mouse-only :hover gate.
  * - Touch: the row is a plain <Link>; a tap navigates straight to the case
- *   study. `activate()` bails on `(hover: none)` pointers, so there is no
- *   video load and no intermediate "preview" tap-state to block navigation.
- * - Reduced motion: `activate()` bails on `prefers-reduced-motion` (no
- *   video autoplay); the poster reveal itself carries no motion, and the
- *   color transitions are collapsed by globals.css + motion-reduce classes.
- * - No keyboard trap: the <video> has no controls and no tabindex, so Tab
- *   moves through the row link normally.
+ *   study. For (c) `activate()` bails on `(hover: none)` pointers, so there
+ *   is no video load and no intermediate "preview" tap-state. For (b) the CSS
+ *   reveal behaves exactly like the existing title-color / border hover
+ *   treatments on touch (no hover state fires; a brief :focus on tap is fine)
+ *   — consistent, not special-cased.
+ * - Reduced motion: (c) `activate()` bails on `prefers-reduced-motion` (no
+ *   video autoplay). (b) the <img> reveal is opacity only, not "motion" in
+ *   the prefers-reduced-motion sense (no autoplay / parallax); the fade is
+ *   still guarded with motion-reduce:transition-none so it swaps instantly
+ *   rather than animating. Title/border color transitions are collapsed by
+ *   globals.css + motion-reduce classes.
+ * - No keyboard trap: the <video> and <img> have no controls and no tabindex
+ *   (aria-hidden), so Tab moves through the row link normally.
  */
 
 export interface WorkRowProject {
@@ -47,15 +65,19 @@ export interface WorkRowProject {
   summary: string;
   stack: string[];
   /**
-   * Optional muted-looping webm preview (<=300KB per brief §3). Undefined =>
-   * poster-only (current state for all 4 projects). When a future card
-   * supplies this, the <video> renders and loads on first hover/focus.
+   * Optional muted-looping webm preview (<=300KB per brief §3). When set, the
+   * <video> renders and loads on first hover/focus (state (c)). When unset,
+   * no <video> renders and `previewPoster` (if present) drives the image-only
+   * preview instead (state (b)), or the typographic poster stands alone (a).
    */
   previewSrc?: string;
   /**
-   * Optional real poster image for the <video> (shown before the clip is
-   * ready / for the paused state). When absent the typographic panel is the
-   * only poster — the <video> still fades in over it once playing.
+   * Optional real still image (webp). Its meaning depends on `previewSrc`:
+   * with a `previewSrc` it is the <video>'s `poster` (shown before the clip
+   * is ready / paused); WITHOUT a `previewSrc` it is the image-only preview
+   * (state (b)) — a plain <img> that fades in over the typographic poster on
+   * hover/focus. When both are absent the typographic panel is the only
+   * poster (state (a)).
    */
   previewPoster?: string;
 }
@@ -192,8 +214,9 @@ export function WorkRow({
         </div>
 
         {/* Preview panel: fixed aspect box, always occupies its space (no
-            reveal-time layout shift). Poster is always shown; the video —
-            when a src is later supplied — fades in over it on hover/focus. */}
+            reveal-time layout shift). The typographic poster is always shown;
+            the image (state b) or video (state c) — when supplied — fades in
+            over it on hover/focus. */}
         <div className="relative aspect-[16/10] overflow-hidden border border-border-strong transition-colors duration-200 group-hover:border-primary group-focus-within:border-primary motion-reduce:transition-none">
           <WorkPoster
             ordinal={ordinal}
@@ -213,6 +236,20 @@ export function WorkRow({
               className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-200 motion-reduce:transition-none ${
                 videoActive ? "opacity-100" : "opacity-0"
               }`}
+            />
+          ) : project.previewPoster ? (
+            // Image-only preview (state b): pure-CSS reveal on hover/focus —
+            // no JS, no autoplay. Plain <img> (architect ruling 2026-07-20):
+            // no next/image gain for a fixed-size, decorative, already-webp
+            // still; aria-hidden + no tabIndex (never a tab stop).
+            // motion-reduce:transition-none => instant swap
+            // under reduced motion instead of an animated fade.
+            // eslint-disable-next-line @next/next/no-img-element -- plain <img> is the architect-approved choice (2026-07-20): nil benefit from next/image for one fixed-size, aria-hidden, already-webp decorative asset that loads into a CLS-safe aspect box.
+            <img
+              src={project.previewPoster}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 motion-reduce:transition-none"
             />
           ) : null}
         </div>
