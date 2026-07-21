@@ -91,7 +91,7 @@ Short, honest, human. Sections:
 
 ### 4.4 Contact `/contact`
 - Email: fontong.jod.aekkarut@gmail.com · Phone: +66 94-861-8164
-- LinkedIn: linkedin.com/in/aekkarut-fontong · GitHub: github.com/JodPdo
+- LinkedIn: linkedin.com/in/aekkarut-fontong-b781bb319 · GitHub: github.com/JodPdo
 - (Optional form → Formspree/Resend, but mailto is fine)
 
 ---

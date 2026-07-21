@@ -33,7 +33,8 @@ export const SITE_DESCRIPTION =
  * structured data (CLAUDE.md decision #1; email stays on /contact only).
  */
 export const GITHUB_URL = "https://github.com/JodPdo";
-export const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong";
+export const LINKEDIN_URL =
+  "https://www.linkedin.com/in/aekkarut-fontong-b781bb319/";
 
 /**
  * Shared Open Graph / Twitter builder (PF-M3-07 + PF-M3-08).

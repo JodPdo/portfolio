@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 // ever (CLAUDE.md decision #1 / SPEC Appendix A#1).
 const EMAIL = "fontong.jod.aekkarut@gmail.com";
 const GITHUB_URL = "https://github.com/JodPdo";
-const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong";
+const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong-b781bb319/";
 
 const ROW_CLASSES =
   "flex items-center gap-4 rounded-lg border border-border bg-background-subtle px-5 py-4 transition-colors duration-200 hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
@@ -100,7 +100,7 @@ export default function ContactPage() {
                 LinkedIn
               </span>
               <span className="text-sm text-foreground">
-                linkedin.com/in/aekkarut-fontong
+                linkedin.com/in/aekkarut-fontong-b781bb319
                 <span className="sr-only"> (opens in a new tab)</span>
               </span>
             </span>

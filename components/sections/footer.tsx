@@ -5,7 +5,7 @@ import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
 // repeated here — it ships only on /contact once verified with the
 // product owner (PF-M1-07), per CLAUDE.md decision #3.
 const GITHUB_URL = "https://github.com/JodPdo";
-const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong";
+const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong-b781bb319/";
 
 export function Footer() {
   const year = new Date().getFullYear();
