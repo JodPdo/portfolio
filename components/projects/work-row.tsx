@@ -2,10 +2,13 @@ import { ProjectMediaRow } from "./project-media-row";
 
 /**
  * WorkRow — thin adapter over <ProjectMediaRow> for the `/projects` route
- * (architect ruling 2026-07-21, "Option A"). All the shared full-bleed media +
- * in-view autoplay machinery now lives in ProjectMediaRow; this file only keeps
- * the `WorkRowProject` interface and maps a project's fields onto the row,
- * passing tagline + summary + stack as the collapsing secondary `children`.
+ * (architect ruling 2026-07-22, "Option B: side framed thumbnail", which
+ * supersedes the 2026-07-21 "Option A" full-bleed design). All the shared
+ * framed-thumbnail + in-view autoplay machinery lives in ProjectMediaRow; this
+ * file only keeps the `WorkRowProject` interface and maps a project's fields
+ * onto the row, passing tagline + summary + stack as the secondary `children`
+ * (always visible in Option B — text never sits over media, so nothing
+ * collapses).
  *
  * The two-optional-fields preview model is unchanged (see project-previews.ts /
  * project-media-row.tsx): `previewSrc` (+ optional poster) ⇒ video; `previewPoster`

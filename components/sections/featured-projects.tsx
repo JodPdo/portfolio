@@ -9,10 +9,12 @@ import { getProjectPreview } from "@/lib/project-previews";
 // V2 (card PF-V2-04, brief §2): typographic rows separated by hairlines —
 // not cards. E8 reveals per row.
 //
-// Option A (architect ruling 2026-07-21): each entry carries an explicit
-// `slug` — the lookup key into lib/project-previews.ts, shared with /projects
-// (cheapest glue; no fragile href parsing). Rows now render the shared
-// <ProjectMediaRow> with full-bleed, in-view-autoplay media.
+// Preview media (architect rulings 2026-07-21 "Option A" → 2026-07-22
+// "Option B", which supersedes it): each entry carries an explicit `slug` —
+// the lookup key into lib/project-previews.ts, shared with /projects (cheapest
+// glue; no fragile href parsing). Rows render the shared <ProjectMediaRow>,
+// which frames the in-view-autoplay media as a side thumbnail (never behind
+// the text).
 const FEATURED_PROJECTS = [
   {
     slug: "aiklao",
