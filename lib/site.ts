@@ -27,14 +27,26 @@ export const SITE_DESCRIPTION =
   "automated tests that keep it honest.";
 
 /**
- * Public profile links — must match the handles already shipped in
- * components/sections/footer.tsx and app/contact/page.tsx (verified in
- * docs/SPEC.md §4.4). Used for JSON-LD `Person.sameAs`. No phone or email in
- * structured data (CLAUDE.md decision #1; email stays on /contact only).
+ * Public profile links — the ONLY definition of these handles in the codebase
+ * (handles verified in docs/SPEC.md §4.4). Import these; never re-declare them
+ * locally (ARCHITECTURE.md §7, card PF-M4-04 — they previously existed as up to
+ * five independent copies bound only by a comment, so a partial edit could ship
+ * a dead link in the global header/footer while JSON-LD stayed healthy).
+ *
+ * Each `*_DISPLAY` is the human-readable label for the URL directly above it
+ * and lives immediately beneath it so the two can only be read and edited
+ * together. They are explicit literals on purpose — deriving a label from the
+ * URL would risk a wrong-but-plausible string.
+ *
+ * `GITHUB_URL` / `LINKEDIN_URL` also feed JSON-LD `Person.sameAs`. No phone or
+ * email in structured data (CLAUDE.md decision #1; email stays on /contact
+ * only, declared locally there — it has a single consumer).
  */
 export const GITHUB_URL = "https://github.com/JodPdo";
+export const GITHUB_DISPLAY = "github.com/JodPdo";
 export const LINKEDIN_URL =
   "https://www.linkedin.com/in/aekkarut-fontong-b781bb319/";
+export const LINKEDIN_DISPLAY = "linkedin.com/in/aekkarut-fontong-b781bb319";
 
 /**
  * Shared Open Graph / Twitter builder (PF-M3-07 + PF-M3-08).

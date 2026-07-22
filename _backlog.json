@@ -464,7 +464,7 @@
       "id": "PF-M4-03",
       "milestone": "M4",
       "owner_agent": "frontend-engineer",
-      "status": "todo",
+      "status": "review",
       "depends_on": [],
       "summary": "Cosmetic, non-blocking. On `/contact` at 375px only, the LinkedIn row is 94px tall vs 74px for the Email and GitHub rows immediately above it (confirmed via Playwright `getBoundingClientRect`; at 768px and 1280px all three rows are an even 74px — this is a 375px-only issue). Cause: the LinkedIn handle `aekkarut-fontong-b781bb319` (now longer post-correction) wraps to 2 lines inside the fixed-width row at the mobile breakpoint, while Email/GitHub stay on 1 line. Screenshot-reviewed (qa-engineer, 375px, dark mode): reads as a real profile row with a real 2-line wrap, not visually broken, focus ring and tap target unaffected (>=44px throughout) — judged shippable as-is, filed as a follow-up polish item rather than a blocker.",
       "dod": "Visual rhythm restored across all 3 contact rows at 375px (e.g. a shared `min-height` on `ROW_CLASSES`, or comparable layout fix) WITHOUT ever truncating or shortening the displayed LinkedIn handle text — the full handle must stay visible and truthful, since the short form no longer resolves (this was the whole point of the URL correction this handle came from). qa-engineer re-verifies row heights at 375/768/1280 plus no new horizontal overflow."
@@ -473,7 +473,7 @@
       "id": "PF-M4-04",
       "milestone": "M4",
       "owner_agent": "architect",
-      "status": "todo",
+      "status": "review",
       "depends_on": [],
       "summary": "Structural risk flagged by code-reviewer and agreed by qa-engineer during the LinkedIn URL DoD gate: `LINKEDIN_URL` and `GITHUB_URL` each exist as THREE independent copies in the codebase — one exported const in `lib/site.ts` (feeds homepage JSON-LD `Person.sameAs`) and two separate local consts re-declared with the same literal value in `app/contact/page.tsx` and `components/sections/footer.tsx` — bound together only by a prose comment, not by import. This diff's own DoD gate had to hand-verify all three copies individually to catch a possible missed one; a future edit to only 1-2 of the 3 copies would ship silently (e.g. correct JSON-LD but a dead link in the global footer on every page, or vice versa), and nothing in the build/lint/type pipeline would catch the mismatch since all three are independently valid string literals.",
       "dod": "architect decides and documents (ADR or DESIGN_SYSTEM.md note) a consolidation approach so `LINKEDIN_URL`/`GITHUB_URL` have exactly one source of truth (most likely: `app/contact/page.tsx` and `components/sections/footer.tsx` import the already-exported consts from `lib/site.ts` instead of re-declaring local copies), confirms no import-cycle / server-vs-client-component boundary issue with doing so, then hands off implementation to frontend-engineer as a follow-up card. Not a fix-now item — this is a structural change requiring architect approval per CLAUDE.md before any code moves."

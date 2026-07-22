@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { GitHubIcon } from "@/components/ui/icons";
 import { NavLink } from "@/components/sections/nav-link";
+import { GITHUB_URL } from "@/lib/site";
 
-// GitHub handle verified in docs/SPEC.md 4.4 ("GitHub: github.com/JodPdo").
-// V2 (card PF-V2-04): numbered mono nav per Design Brief V2 §2
-// (`01 — Projects` pattern); hairline border, dark editorial chrome.
-const GITHUB_URL = "https://github.com/JodPdo";
+// GitHub URL comes from lib/site.ts — the single source of truth
+// (ARCHITECTURE.md §7). V2 (card PF-V2-04): numbered mono nav per Design
+// Brief V2 §2 (`01 — Projects` pattern); hairline border, dark editorial
+// chrome.
 
 const NAV_LINKS = [
   { href: "/projects", label: "Projects", number: "01" },

@@ -1,11 +1,10 @@
 import { GitHubIcon, LinkedInIcon } from "@/components/ui/icons";
+import { GITHUB_URL, LINKEDIN_URL } from "@/lib/site";
 
-// Handles verified in docs/SPEC.md 4.4. No phone number, ever
-// (product-owner decision, CLAUDE.md). Email is intentionally not
-// repeated here — it ships only on /contact once verified with the
-// product owner (PF-M1-07), per CLAUDE.md decision #3.
-const GITHUB_URL = "https://github.com/JodPdo";
-const LINKEDIN_URL = "https://www.linkedin.com/in/aekkarut-fontong-b781bb319/";
+// Profile URLs come from lib/site.ts — the single source of truth
+// (ARCHITECTURE.md §7). No phone number, ever (product-owner decision,
+// CLAUDE.md). Email is intentionally not repeated here — it ships only on
+// /contact once verified with the product owner (PF-M1-07), per decision #3.
 
 export function Footer() {
   const year = new Date().getFullYear();

@@ -226,3 +226,105 @@ Why this over the alternatives:
 - **Contact email must be verified with the product owner** before it ships on any page (A#3).
 - **Case-study order is AiKlao -> Typing Race -> Tiger Kick -> JPD** (`order` 1->4), all-roles positioning (A#4).
 - **TH/EN toggle is M4** (`next-intl`) — do not pull forward. Build EN-only; add no i18n structure now.
+
+---
+
+## 7. Ruling 2026-07-22 — one source of truth for public profile links (card PF-M4-04)
+
+**Status: Accepted. Binding on frontend-engineer. Documented here (not in `docs/DESIGN_SYSTEM.md`)
+because this is a module-ownership / import-graph decision, not a visual-token one — `DESIGN_SYSTEM.md`
+governs palette, type, motion and a11y rules; `ARCHITECTURE.md` §2 already owns "what lives in `lib/`".**
+
+### Problem
+
+`GITHUB_URL` and `LINKEDIN_URL` were re-declared as independent local `const`s in every file that needed
+them, bound to the exported pair in `lib/site.ts` only by a prose comment. A comment cannot fail a build.
+The 2026-07-22 LinkedIn URL correction had to be applied by hand in three places; a missed copy would have
+shipped a dead link in the **global footer on every page** while the homepage JSON-LD looked healthy.
+
+**The actual count is worse than the card states.** `LINKEDIN_URL` has 3 copies; **`GITHUB_URL` has 5**:
+`lib/site.ts`, `app/contact/page.tsx`, `components/sections/footer.tsx`, **`components/sections/header.tsx`**
+and **`components/sections/hero.tsx`**. The last two were not in the card and are in scope for this fix —
+they are the same defect, and the GitHub handle in the sticky header appears on every page just like the footer.
+
+### Origin (checked, not assumed)
+
+`git log --follow` shows `components/sections/footer.tsx` (`e95d347`, PF-M1-01), `app/contact/page.tsx`
+(`f554a96`, PF-M1-07), `header.tsx` and `hero.tsx` all predate `lib/site.ts`, which was created later in
+`55773e2` for PF-M3-01's SEO/OG work. The local consts were never a deliberate independence decision —
+they are pre-`lib/site.ts` code that was not retrofitted when the shared module appeared. **This is
+accidental debt. Consolidation carries no hidden intent to preserve.**
+
+### Ruling
+
+1. **Shape — the obvious default is correct.** All consumers `import { GITHUB_URL, LINKEDIN_URL } from
+   "@/lib/site"` and delete their local declarations. This *removes* code and adds no layer, so the
+   over-engineering bar does not apply. **No new abstraction, no wrapper object, no config file.**
+2. **Canonical home stays `lib/site.ts`.** It is not a metadata-helpers module — it opens with "single
+   source of truth for site-wide identity + SEO constants" and already holds `SITE_URL`, `PERSON_NAME`,
+   `PERSON_NICKNAME`, `JOB_TITLE`, `SITE_NAME`. Profile URLs are *identity*, exactly the same category.
+   Creating `lib/profile.ts` / `lib/links.ts` would split identity across two modules — a second place to
+   look for the same class of string, i.e. a smaller version of the very problem being fixed — and would
+   churn `app/page.tsx`'s imports for zero benefit on a 5-route site. **If `lib/site.ts` ever needs
+   splitting, extract the *helpers* (`buildOpenGraph`/`OG_IMAGE`/`formatTitle` → `lib/og.ts`) and leave
+   the constants where they are. Do not split the constants.**
+3. **Regression guard — the import IS the enforcement. Add nothing else.** With one definition, drift is
+   structurally impossible; a `satisfies` clause or a `PROFILE_LINKS` object would add indirection without
+   adding a check (nothing stops a future file from declaring a local const *next to* an object export any
+   more than next to a loose one). An ESLint `no-restricted-syntax` rule banning re-declaration is real
+   enforcement but is overkill at this size — **rejected**. The one required edit: replace the now-false
+   "must match the handles already shipped in …" comment in `lib/site.ts` with "import these; never
+   re-declare them locally."
+4. **Display text is consolidated too.** `app/contact/page.tsx` renders the handles as *separate hardcoded
+   literals* (`github.com/JodPdo`, `linkedin.com/in/aekkarut-fontong-b781bb319`) ~80 lines below the URL
+   consts — a second drift vector, and the same class of bug already confirmed live in the résumé PDF
+   (card PF-M4-02, where the link annotation is right and the printed text is stale). Export
+   `GITHUB_DISPLAY` and `LINKEDIN_DISPLAY` from `lib/site.ts`, **defined immediately beneath their URLs**
+   so the two can only be read and edited together. **Explicit string constants — do NOT derive the label
+   from the URL with a regex/`replace` chain.** Cleverness that silently produces a wrong-but-plausible
+   label is worse than a colocated literal.
+5. **`EMAIL` stays local to `app/contact/page.tsx` — deliberately NOT centralized.** It has exactly one
+   consumer, so it has zero duplication risk today; centralizing it would solve nothing and would place the
+   address one autocomplete away from the JSON-LD `Person` block in `app/page.tsx`, which CLAUDE.md
+   decision #1 keeps it out of. **Rule: consolidate what is duplicated; do not centralize what is not.**
+   If a second consumer ever appears, revisit — and the JSON-LD exclusion must be re-stated at that time.
+
+### Boundary check (done, no issue)
+
+`lib/site.ts` imports nothing at all — no `node:` builtins (unlike `lib/projects.ts`, which uses `node:fs`
+and is server-only), no components. It is therefore safe to import from server *or* client components, and
+**no import cycle is possible**. All four consuming files (`app/contact/page.tsx`, `footer.tsx`,
+`header.tsx`, `hero.tsx`) are Server Components — the only `"use client"` file under `components/sections/`
+is `nav-link.tsx`, which does not touch these constants.
+
+### Blast radius — exactly 5 files, zero behaviour change
+
+| File | Change |
+|---|---|
+| `lib/site.ts` | Fix the stale comment; add `GITHUB_DISPLAY` / `LINKEDIN_DISPLAY` under the URLs |
+| `app/contact/page.tsx` | Import URLs + displays; delete 2 local consts + 2 inline label literals |
+| `components/sections/footer.tsx` | Import both URLs; delete 2 local consts |
+| `components/sections/header.tsx` | Import `GITHUB_URL`; delete 1 local const |
+| `components/sections/hero.tsx` | Import `GITHUB_URL`; delete 1 local const |
+
+**No routing change. No dependency added or removed. No config, no `next.config.ts`, no CSS, no content.**
+
+**The acceptance bar for code-reviewer and qa-engineer: rendered HTML must be byte-identical before and
+after on `/`, `/contact`, `/about`, `/projects` — same `href`s, same visible text, same JSON-LD `sameAs`.
+This is a pure refactor. ANY rendered diff is a bug, not an improvement.** Recommended check: capture the
+served HTML of those routes before and after and diff them. One subtlety to verify rather than assume —
+swapping an inline JSX text line for `{GITHUB_DISPLAY}` is whitespace-neutral (JSX strips the surrounding
+newline+indent in both forms, so no space is added or lost before the adjacent `sr-only` span), but confirm
+it in the diff.
+
+### Interaction with PF-M4-03 (same engineer, same pass)
+
+Both cards edit `app/contact/page.tsx`. They do not collide — PF-M4-03 changes only `ROW_CLASSES`
+(layout/`min-height`), PF-M4-04 changes only constants and the two label expressions.
+**Order: land PF-M4-04 (the refactor) first, verify byte-identical HTML, then apply PF-M4-03's styling
+change on top.** Doing the refactor first keeps the "zero rendered diff" bar verifiable; interleaving them
+makes the intentional PF-M4-03 height change indistinguishable from an accidental refactor regression.
+Restating the PF-M4-03 constraint because it now lives in a shared module: **the LinkedIn display handle
+must never be shortened or truncated to fix the wrap** — the short form no longer resolves, and
+`LINKEDIN_DISPLAY` is now consumed from `lib/site.ts`, so shortening it there would be a sitewide
+truthfulness regression, not a local style tweak. Fix the row height, not the string.

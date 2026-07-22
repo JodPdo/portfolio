@@ -3,12 +3,13 @@ import { Scramble } from "@/components/motion/scramble";
 import { PhotoMat } from "@/components/ui/photo-mat";
 import { HeroPortrait } from "@/components/home/hero-portrait";
 import { MouseParallax } from "@/components/home/mouse-parallax";
+import { GITHUB_URL } from "@/lib/site";
 
 // Copy verbatim from docs/copy/home.md §1 (approved, PF-M1-02); V2 layout
 // per Design Brief V2 §2 (card PF-V2-04): display name with E2 scramble,
 // photo in a thin-bordered mat (E4 displacement + E5 parallax live in the
 // client islands), full-bleed row with hairline bottom border.
-const GITHUB_URL = "https://github.com/JodPdo";
+// GITHUB_URL comes from lib/site.ts — never re-declare it (ARCHITECTURE.md §7).
 
 const BUTTON_BASE =
   "inline-flex items-center justify-center gap-1.5 px-6 py-3 font-mono text-xs uppercase tracking-[0.16em] transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none";
