@@ -29,6 +29,8 @@ metrics:
   - { label: "E2E browsers", value: "3" }
 links:
   live: "https://race.aiklaotrip.com"
+  repos:
+    - { label: "Code", url: "https://github.com/JodPdo/typing-race" }
 ---
 
 ## Overview
@@ -80,10 +82,10 @@ This is the project I point QA hiring managers at.
 - **A formal QA Test Strategy document** sits behind the suites: a risk register (P1–P3), a requirements traceability matrix, and explicit entry/exit criteria. Tests exist because a risk was identified, not because a file needed coverage.
 - **CI gates the deploy.** A single red test blocks the GitHub Actions deploy to the VPS. No exceptions, including for me.
 
-{/* Internal note (PF-M3-06): the Typing Race repo URL and the QA Test Strategy doc URL
-    still need product-owner sign-off. They render as plain, link-less text ("Source on
-    GitHub" / "documented internally") until real URLs are supplied — never a guessed or
-    placeholder link, and no bracketed marker in visible copy. */}
+{/* Internal note (PF-M3-06): the QA Test Strategy doc URL still needs product-owner
+    sign-off. It renders as plain, link-less text ("documented internally") until a real
+    URL is supplied — never a guessed or placeholder link, and no bracketed marker in
+    visible copy. (The repo URL was resolved and promoted to frontmatter `links.repos`.) */}
 
 The hardest testing problem was determinism: real-time code and wall clocks make flaky tests. I solved it with an injected clock and fake timers in the game-core suite, and range assertions where exact timing genuinely can't be pinned down.
 
@@ -96,7 +98,7 @@ The hardest testing problem was determinism: real-time code and wall clocks make
 ## Links
 
 - **Live:** [race.aiklaotrip.com](https://race.aiklaotrip.com)
-- **Code:** Source on GitHub
+- **Code:** [github.com/JodPdo/typing-race](https://github.com/JodPdo/typing-race)
 - **QA Test Strategy:** documented internally
 
 ## What I learned
