@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# raw PO-delivered image sources (multi-MB working files, never shipped).
+# Processed outputs live in /public/media/. Explicit filenames on purpose —
+# public/images/ also holds tracked, small, processed assets that MUST ship
+# (displacement-map.png, jod-hero-duotone.webp, jod-working-duotone.webp).
+/public/images/player_style_ref.png
+/public/images/jpd_api.png

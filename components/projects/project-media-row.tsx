@@ -26,8 +26,11 @@ import { useInViewAutoplay } from "@/components/motion/use-in-view-autoplay";
  * PREVIEW STATES (content model unchanged — two optional fields encode three):
  *   - `previewSrc` (+ optional `previewPoster`) => <video> (autoplays in view).
  *   - `previewPoster` only                      => <img> (no autoplay).
- *   - neither                                   => typographic base panel only
- *                                                  (e.g. JPD API).
+ *   - neither                                   => typographic base panel only.
+ *     No project occupies this state as of 2026-07-25 (JPD API, its former sole
+ *     occupant, moved to `previewPoster` only once the PO supplied a real
+ *     diagram — architect ruling 2026-07-25). The state stays supported as the
+ *     designed fallback for any future project shipped without media.
  *
  * "SLIDING/FADING IN" (ruling §3): the WHOLE thumbnail BOX animates, NOT a
  * video-over-poster crossfade. The media/poster inside is ALWAYS painted at
@@ -53,9 +56,12 @@ import { useInViewAutoplay } from "@/components/motion/use-in-view-autoplay";
 
 /**
  * Typographic base panel — ALWAYS rendered as the base layer inside the
- * thumbnail box (prevents any fill-in shift when a video/img paints over it)
- * and is JPD API's sole thumbnail content (its "typographic-only" state, so
- * nothing 404s). Decorative only (mat + faint oversized ordinal numeral + teal
+ * thumbnail box (prevents any fill-in shift when a video/img paints over it),
+ * and the entire thumbnail content for any project in the "typographic-only"
+ * state (no preview entry at all, so nothing 404s). As of 2026-07-25 no project
+ * is in that state — JPD API, its former sole occupant, now has a real image
+ * preview — but the fallback stays, and this panel is still the base layer under
+ * every video/img. Decorative only (mat + faint oversized ordinal numeral + teal
  * corner accent); the row's title/text live in the LEFT column now, so no title
  * lives here — a title in the box would double the left-column one (this is why
  * Option A dropped the old WorkPoster title and why the PF-V2-08 numeral/caption
@@ -155,7 +161,7 @@ export function ProjectMediaRow({
               className="absolute inset-0 h-full w-full object-cover"
             />
           ) : previewPoster ? (
-            // Image-only preview (e.g. Tiger Kick): static <img>, no autoplay.
+            // Image-only preview (Tiger Kick, JPD API): static <img>, no autoplay.
             // Plain <img> per architect ruling 2026-07-20 (nil next/image gain
             // for one fixed-size, aria-hidden, already-webp decorative asset in
             // a CLS-safe box). aria-hidden + no tabIndex ⇒ never a tab stop.

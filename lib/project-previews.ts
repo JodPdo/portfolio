@@ -18,7 +18,17 @@
  * State per project:
  *   - aiklao / typing-race: video + poster (real webm clips exist).
  *   - tiger-kick: poster only — the game is unfinished, so a still stands in.
- *   - jpd-api: intentionally ABSENT — stays typographic-base-panel-only.
+ *   - jpd-api: poster only — the PO supplied a real "JPD API FLOW (Backend)"
+ *     architecture diagram, so it LEFT the typographic-panel-only state it held
+ *     from 2026-07-20 (architect ruling 2026-07-25, DESIGN_SYSTEM.md decision
+ *     log). Same move Tiger Kick made: a real static image stands in for a clip
+ *     that will never exist (an API has nothing to film). Data + comments only —
+ *     no type, component, or rendering-path change.
+ *
+ * No project currently occupies the "no entry" state. It stays supported as the
+ * designed fallback for any future project shipped without media, and BasePanel
+ * is still always rendered as the base layer under every video/img.
+ *
  * All referenced files exist on disk, so nothing 404s.
  */
 export const PROJECT_PREVIEWS: Record<
@@ -34,7 +44,7 @@ export const PROJECT_PREVIEWS: Record<
     poster: "/media/typing-race-preview.webp",
   },
   "tiger-kick": { poster: "/media/tiger-kick-preview.webp" }, // NO src — image-only, game unfinished
-  // jpd-api: intentionally absent — stays typographic-base-panel-only.
+  "jpd-api": { poster: "/media/jpd-api-preview.webp" }, // NO src — image-only preview (architect-approved 2026-07-25)
 };
 
 export function getProjectPreview(

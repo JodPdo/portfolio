@@ -12,7 +12,10 @@ import { ProjectMediaRow } from "./project-media-row";
  *
  * The two-optional-fields preview model is unchanged (see project-previews.ts /
  * project-media-row.tsx): `previewSrc` (+ optional poster) ⇒ video; `previewPoster`
- * only ⇒ image; neither ⇒ typographic base panel (e.g. JPD API).
+ * only ⇒ image; neither ⇒ typographic base panel. No project sits in that last
+ * state as of 2026-07-25 (JPD API moved to image-only when the PO supplied a
+ * diagram — architect ruling 2026-07-25); it remains the designed fallback for
+ * any future project shipped without media.
  */
 
 export interface WorkRowProject {
