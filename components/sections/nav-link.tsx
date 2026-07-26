@@ -35,13 +35,21 @@ export function NavLink({
       href={href}
       aria-current={isActive ? "page" : undefined}
       // WCAG 2.2 SC 2.5.8 (PF-M3-05): the *clickable* box is >= 44px tall via
-      // inline-flex + min-h. On single-row layouts (md+, where header never
+      // inline-flex + min-h. On single-row layouts (where the header never
       // wraps) a negative vertical margin collapses the extra height out of
-      // the flow so the visible desktop row keeps its tight V2 rhythm. Below
-      // md the nav wraps (2 rows at 375px, gap-y-1 = 4px), so the negative
-      // margin is DROPPED there — with no spill, each 44px box equals its flow
-      // slot and wrapped rows (separated by gap) can never overlap.
-      className={`inline-flex min-h-[44px] items-center rounded-sm px-1 font-mono text-[11px] uppercase tracking-[0.16em] underline-offset-4 transition-colors duration-200 md:-my-2.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none ${
+      // the flow so the visible desktop row keeps its tight V2 rhythm. Wherever
+      // the header CAN wrap (2 nav rows at 375px, gap-y-1 = 4px; and the
+      // [brand] / [nav] container wrap in between), the negative margin is
+      // DROPPED — with no spill, each 44px box equals its flow slot and wrapped
+      // rows (separated by gap) can never overlap.
+      //
+      // Breakpoint is `lg`, not `md` (PF-CERT-02): the 5th nav item ("03 —
+      // Certs") pushed the single-row threshold from ~741px to ~845px, so at
+      // md (768px) the header still wraps. Measured at 768px with the old
+      // `md:-my-2.5`, the brand's 44px box overlapped these items by 5.8px.
+      // Must stay in sync with the same breakpoint on the brand link in
+      // components/sections/header.tsx.
+      className={`inline-flex min-h-[44px] items-center rounded-sm px-1 font-mono text-[11px] uppercase tracking-[0.16em] underline-offset-4 transition-colors duration-200 lg:-my-2.5 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none ${
         isActive
           ? "font-semibold text-primary underline"
           : "text-foreground-secondary"

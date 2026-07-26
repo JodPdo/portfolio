@@ -5,6 +5,7 @@ import { PhotoMat } from "@/components/ui/photo-mat";
 import { Timeline } from "@/components/sections/timeline";
 import jodWorking from "@/public/images/jod-working-duotone.webp";
 import { buildOpenGraph, formatTitle } from "@/lib/site";
+import { getAllCertifications, isThaiTitle } from "@/lib/certifications";
 
 // Copy verbatim from docs/copy/about.md (approved, PF-M1-04). V2 "Editorial
 // Dark" layout per Design Brief V2 §2–3 (card PF-V2-06): numbered mono
@@ -25,18 +26,6 @@ export const metadata: Metadata = {
     path: "/about",
   }),
 };
-
-// Section 4 — "Certifications". Interim rendering rule (copy doc §4): every
-// verify URL is [NEEDS-VERIFICATION], so render name · issuer with NO
-// Verify link — never a dead or placeholder href (0 <a> in this section).
-const CERTIFICATIONS: { name: string; issuer: string }[] = [
-  { name: "API Testing", issuer: "Postman Academy" },
-  { name: "API Prototyping", issuer: "Postman Academy" },
-  { name: "API Documentation", issuer: "Postman Academy" },
-  { name: "Claude 101", issuer: "Anthropic Academy" },
-  { name: "Claude Code", issuer: "Anthropic Academy" },
-  { name: "MCP", issuer: "Anthropic Academy" },
-];
 
 // Section 2 — "How I work". Copy verbatim from about.md §2: a proof line
 // (intro) followed by 4 numbered principles.
@@ -178,7 +167,13 @@ export default function AboutPage() {
         <Timeline />
       </section>
 
-      {/* Section 4 — Certifications */}
+      {/* Section 4 — Certifications.
+          Renders from lib/certifications.ts (the SAME module /certifications
+          reads) — the local CERTIFICATIONS array that used to live in this file
+          is deleted (architect ruling 2026-07-26 §4 / ARCHITECTURE.md §7): two
+          hand-maintained copies of the same facts is exactly the defect that
+          shipped a wrong link sitewide once already. Name + issuer only here —
+          thumbnails, dates and verify links belong to /certifications. */}
       <section
         aria-labelledby="certifications-heading"
         className="border-t border-border px-4 py-16 sm:px-6 lg:px-8"
@@ -187,21 +182,42 @@ export default function AboutPage() {
         <h2 id="certifications-heading" className={H2_CLASSES}>
           Certifications
         </h2>
+        <p className="mt-6 max-w-prose text-base leading-relaxed text-foreground">
+          Eight courses completed in 2026: Claude and MCP at Anthropic, the API
+          testing, prototyping and documentation paths at Postman, and two AI
+          courses at Mahidol University.
+        </p>
         <ul className="mt-10 grid grid-cols-1 gap-px overflow-hidden border border-border bg-border sm:grid-cols-2">
-          {CERTIFICATIONS.map((cert) => (
+          {getAllCertifications().map((cert) => (
             <li
               key={cert.name}
               className="flex flex-col gap-1 bg-background px-5 py-5"
             >
-              <span className="text-base font-medium text-foreground">
+              <span
+                className="text-base font-medium text-foreground"
+                lang={isThaiTitle(cert.name) ? "th" : undefined}
+              >
                 {cert.name}
               </span>
+              {/* The 2 Thai titles carry a short EN gloss so they aren't opaque
+                  to an English reader (descriptor already lives in the shared
+                  module — no fact is duplicated). */}
+              {cert.descriptor ? (
+                <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-foreground-secondary">
+                  {cert.descriptor}
+                </span>
+              ) : null}
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-foreground-secondary">
                 {cert.issuer}
               </span>
             </li>
           ))}
         </ul>
+        <div className="mt-8">
+          <Link href="/certifications" className={CTA_LINK_CLASSES}>
+            See all certifications →
+          </Link>
+        </div>
       </section>
 
       {/* Section 5 — Beyond code */}

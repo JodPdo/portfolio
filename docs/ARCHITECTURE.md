@@ -20,6 +20,7 @@ All routes are **static (SSG)** — no runtime data, no server actions. Prerende
 | `/projects/[slug]` | Static, **generateStaticParams** | Exactly 4 pages; see below |
 | `/about` | Static | Story, timeline, certs |
 | `/resume` | Static | Download-first (buttons + thumbnails); desktop-only inline PDF enhancement |
+| `/certifications` | Static | 8 certificates in 3 issuer groups (added 2026-07-26 — see §8) |
 | `/contact` | Static | Email + LinkedIn + GitHub only (**no phone**) |
 | `*` (unmatched) | `app/not-found.tsx` | Global 404 — add at M1 |
 
@@ -328,3 +329,32 @@ Restating the PF-M4-03 constraint because it now lives in a shared module: **the
 must never be shortened or truncated to fix the wrap** — the short form no longer resolves, and
 `LINKEDIN_DISPLAY` is now consumed from `lib/site.ts`, so shortening it there would be a sitewide
 truthfulness regression, not a local style tweak. Fix the row height, not the string.
+
+---
+
+## 8. Ruling 2026-07-26 — `/certifications` route + `lib/certifications.ts` (cards PF-CERT-01/02)
+
+**Status: Accepted. Net-new post-M4 scope from a direct product-owner brief. The FULL ruling (nav
+measurement, data shape, asset pipeline, DoD) is the dated 2026-07-26 entry in
+`docs/DESIGN_SYSTEM.md`'s decision log — this section records only the parts this document owns:
+routes, folders and `lib/` ownership.** Nothing here supersedes §§1–7.
+
+- **Route:** `app/certifications/page.tsx` — static server component, one page, **no dynamic segment and
+  no per-cert route**. URL is the full word `/certifications`; the header nav label is the abbreviation
+  `Certs` (a measured 375px constraint, not a preference — DESIGN_SYSTEM 2026-07-26 §2).
+- **Nav:** `NAV_LINKS` in `components/sections/header.tsx` becomes `01 Projects · 02 About ·
+  03 Certs · 04 Resume · 05 Contact`. That array is the only place nav ordinals exist (grep-verified);
+  the footer carries no page links. Header stays a server component — no hamburger, no client JS.
+- **Sitemap:** one new entry in the `app/sitemap.ts` `staticRoutes` allowlist (10 URLs total).
+  `app/robots.ts` unchanged.
+- **Data:** new module **`lib/certifications.ts`** — a typed, grouped const array plus a
+  `getAllCertifications()` flatten helper (the `lib/project-previews.ts` pattern: typed const + tiny
+  accessor, no loader). **Not MDX / not `content/`** — there is no narrative body to author.
+  `verifyUrl` is optional and **absence is the only encoding for "no verify link"**, exactly as §3
+  rules for `links` frontmatter: no sentinel, no `#`, no issuer-homepage stand-in.
+- **Two consumers, one array.** `app/about/page.tsx` §4 **deletes its local `CERTIFICATIONS` const** and
+  reads `getAllCertifications()` (name + issuer only) plus one link to `/certifications`. A second
+  hand-maintained copy of these facts is the precise defect §7 exists to prevent.
+- **Assets:** shipped thumbnails at `public/media/certs/*.webp` (static-imported through `next/image`);
+  raw sources stay in `docs/assets/certs/`, **never under `public/`**. **No npm dependency is added** —
+  the conversion is a one-time offline step and no app code may import a conversion library.

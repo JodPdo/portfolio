@@ -46,3 +46,6 @@ next-env.d.ts
 # (displacement-map.png, jod-hero-duotone.webp, jod-working-duotone.webp).
 /public/images/player_style_ref.png
 /public/images/jpd_api.png
+
+# raw certificate sources (working files, never shipped) — architect ruling 2026-07-26
+/docs/assets/certs/

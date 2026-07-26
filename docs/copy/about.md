@@ -98,6 +98,11 @@ Vertical timeline (semantic ordered list). Exactly these four entries, in this o
 
 ## Section 4 — Certifications
 
+> **SUPERSEDED 2026-07-26 by `docs/copy/certifications.md` §5 (card PF-CERT-01).** The table below is
+> historical: the verify URLs and official titles are now known, the list is **eight** certs, not six,
+> and the section renders from the shared `lib/certifications.ts` module — not from a local array.
+> Do not ship anything from this section; use `docs/copy/certifications.md` §5.
+
 **Heading:** `Certifications`
 
 Each entry renders as: name · issuer · a `Verify ↗` link. **The page must not ship with placeholder URLs.** SPEC §4.2 names the certifications but does not include the verify URLs — every link below must come from the product owner.
@@ -155,6 +160,6 @@ Links: `/projects` and `/contact`.
 | CI gate blocks release on any red test | SPEC §5 CS1 + CS2 |
 | Tiger Kick review-gated process (agents, code review, QA gates) | SPEC §5 CS3 |
 | Peer code review at 42; discipline / calm under pressure / teamwork | SPEC §4.2 "Beyond code" |
-| Certifications list (names) | SPEC §4.2 "Certifications" |
-| Certification verify URLs | **NOT in SPEC — all flagged NEEDS-VERIFICATION** |
+| Certifications list (names) | SPEC §4.2 "Certifications" — **superseded 2026-07-26 by `docs/copy/certifications.md`** |
+| Certification verify URLs | **Resolved 2026-07-26 — see `docs/copy/certifications.md` §4/§6** (was NEEDS-VERIFICATION) |
 | B.Sc. CS completion + institution | **Partially in SPEC ("2026 B.Sc. CS") — completion status + institution flagged NEEDS-VERIFICATION** |
